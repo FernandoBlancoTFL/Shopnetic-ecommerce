@@ -1,0 +1,15 @@
+.zoom-img:hover {
+  transform: scale(1.1);
+}
+
+.truncate-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: invert(50%);
+}

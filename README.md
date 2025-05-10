@@ -1,2 +1,0 @@
-# proyecto_final-FernandoBlanco
-proyecto_final-React_TalentoTech2025
