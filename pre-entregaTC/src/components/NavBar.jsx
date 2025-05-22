@@ -20,11 +20,11 @@ export function NavBar ({ handleFilter }) {
             <Nav.Link as={Link} to='/'>Inicio</Nav.Link>
             <Nav.Link as={Link} to='/about'>Sobre Nosotros</Nav.Link>
             <NavDropdown title='Productos' id='basic-nav-dropdown'>
-              <NavDropdown.Item onClick={() => handleFilter('https://dummyjson.com/products', 'Belleza')}>Belleza</NavDropdown.Item>
-              <NavDropdown.Item onClick={() => handleFilter('https://dummyjson.com/products/category/smartphones', 'Celulares')}>Celulares</NavDropdown.Item>
-              <NavDropdown.Item onClick={() => handleFilter('https://dummyjson.com/products/category/home-decoration', 'Decoración para la casa')}>Decoración para la casa</NavDropdown.Item>
-              <NavDropdown.Item onClick={() => handleFilter('https://dummyjson.com/products/category/sports-accessories', 'Deportes')}>Deportes</NavDropdown.Item>
-              <NavDropdown.Item onClick={() => handleFilter('https://dummyjson.com/products/category/vehicle', 'Vehículos')}>Vehículos</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to='/' onClick={() => handleFilter('https://dummyjson.com/products', 'Belleza')}>Belleza</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to='/' onClick={() => handleFilter('https://dummyjson.com/products/category/smartphones', 'Celulares')}>Celulares</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to='/' onClick={() => handleFilter('https://dummyjson.com/products/category/home-decoration', 'Decoración para la casa')}>Decoración para la casa</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to='/' onClick={() => handleFilter('https://dummyjson.com/products/category/sports-accessories', 'Deportes')}>Deportes</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to='/' onClick={() => handleFilter('https://dummyjson.com/products/category/vehicle', 'Vehículos')}>Vehículos</NavDropdown.Item>
             </NavDropdown>
           </Nav>
 
