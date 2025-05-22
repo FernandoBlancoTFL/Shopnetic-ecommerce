@@ -32,8 +32,6 @@ export function Home ({ filterURL, filterName }) {
 
       return [...prevCart, { ...product, quantity: 1 }]
     })
-    setShowAlert(true)
-    setTimeout(() => setShowAlert(false), 3000)
   }
 
   const emptyCart = () => {

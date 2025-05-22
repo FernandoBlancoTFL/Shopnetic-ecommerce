@@ -57,7 +57,7 @@ export function ShoppingCart ({ cartItems, emptyShoppingCart, removeProductFromC
         )}
       </Button>
 
-      <Offcanvas show={show} onHide={handleClose} placement='end' backdrop>
+      <Offcanvas show={show} onHide={handleClose} placement='end' backdrop style={{ zIndex: 9999 }}>
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>Carrito de Compras</Offcanvas.Title>
         </Offcanvas.Header>

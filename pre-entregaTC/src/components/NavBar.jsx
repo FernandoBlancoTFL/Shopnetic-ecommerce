@@ -17,7 +17,7 @@ export function NavBar ({ handleFilter }) {
         <Navbar.Toggle aria-controls='basic-navbar-nav' />
         <Navbar.Collapse id='basic-navbar-nav'>
           <Nav className='me-auto'>
-            <Nav.Link as={Link} to='/'>Inicio</Nav.Link>
+            <Nav.Link as={Link} to='/' onClick={() => handleFilter('https://dummyjson.com/products', 'Nuestros Productos')}>Inicio</Nav.Link>
             <Nav.Link as={Link} to='/about'>Sobre Nosotros</Nav.Link>
             <NavDropdown title='Productos' id='basic-nav-dropdown'>
               <NavDropdown.Item as={Link} to='/' onClick={() => handleFilter('https://dummyjson.com/products', 'Belleza')}>Belleza</NavDropdown.Item>
