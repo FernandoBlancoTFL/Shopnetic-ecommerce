@@ -2,9 +2,30 @@ import { Row, Col, Card, Button, Carousel } from 'react-bootstrap'
 import { useEffect, useState } from 'react'
 
 export function ListOfProducts ({ products, handleClick, handleIds, clickedIds }) {
+  const handleAddProductToCart = (product) => {
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      title: '✅ ¡Producto agregado correctamente!',
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true,
+      background: '#ffffff',
+      customClass: {
+        popup: 'swal2-toast-custom'
+      },
+      didOpen: (toast) => {
+        toast.style.marginTop = '84px'
+      }
+    })
+    handleIds(product.id)
+    handleClick(product)
+  }
+
   return (
-    <Row xs={1} sm={1} md={2} lg={3} xl={3} className='g-4'>
-      {
+    <>
+      <Row xs={1} sm={1} md={2} lg={3} xl={3} className='g-4'>
+        {
         products.slice(0, 9).map(product => (
           <Col key={product.id} className='h-10'>
             <Card className='h-400 overflow-hidden border-0 shadow-sm bg-white rounded' style={{ height: '420px' }}>
@@ -14,12 +35,13 @@ export function ListOfProducts ({ products, handleClick, handleIds, clickedIds }
                     {product.images.slice(0, 3).map((img, index) => (
                       <Carousel.Item key={index}>
                         <img
-                          className='d-block w-100'
+                          className='d-block w-100 zoom-img'
                           src={img}
                           alt={`Imagen ${index + 1}`}
                           style={{
                             height: '185px',
-                            objectFit: 'contain'
+                            objectFit: 'contain',
+                            transition: 'transform 0.3s ease-in-out'
                           }}
                         />
                       </Carousel.Item>
@@ -49,8 +71,7 @@ export function ListOfProducts ({ products, handleClick, handleIds, clickedIds }
                     variant={clickedIds.includes(product.id) ? 'success' : 'primary'}
                     disabled={clickedIds.includes(product.id)}
                     onClick={() => {
-                      handleIds(product.id)
-                      handleClick(product)
+                      handleAddProductToCart(product)
                     }}
                   >
                     {clickedIds.includes(product.id) ? 'Agregado 🛒' : 'Agregar 🛒'}
@@ -61,7 +82,8 @@ export function ListOfProducts ({ products, handleClick, handleIds, clickedIds }
           </Col>
         ))
       }
-    </Row>
+      </Row>
+    </>
   )
 }
 

@@ -13,3 +13,11 @@
 .carousel-control-next-icon {
   filter: invert(50%);
 }
+
+.swal2-toast-custom {
+  min-width: auto !important;
+  max-width: 300px;
+  padding: 8px 16px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  font-size: 16px;
+}
