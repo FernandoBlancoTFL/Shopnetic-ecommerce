@@ -82,10 +82,10 @@ export function ProductDetail () {
                       onClick={() => setMainImage(img)}
                     >
                       <Card.Img
-                          src={img}
-                          alt={`Miniature ${index + 1}`}
-                          style={{ height: '70px', objectFit: 'contain', padding: '2px' }}
-                        />
+                        src={img}
+                        alt={`Miniature ${index + 1}`}
+                        style={{ height: '70px', objectFit: 'contain', padding: '2px' }}
+                      />
                     </Card>
                   </Col>
                 ))}
@@ -111,10 +111,20 @@ export function ProductDetail () {
               </div>
               <QuantitySelector />
               <BuyingButtons firstButtonText='Agregar al carrito 🛒' secondButtonText='Comprar 🛍' firstButtonVariant='success' secondButtonVariant='primary' buttonSize='lg' />
-              <div className='mt-3'>
-                <p className='mb-1'><i class='bi bi-truck' /> {product.shippingInformation}</p>
-                <p className='mb-1'><i class='bi bi-arrow-return-left' /> {product.returnPolicy}</p>
-                <p className='mb-1'><i class='bi bi-shield-check' /> {product.warrantyInformation}</p>
+              <div className='d-flex gap-5'>
+                <div className='mt-3'>
+                  <p className='mb-1'><i class='bi bi-truck' /> {product.shippingInformation}</p>
+                  <p className='mb-1'><i class='bi bi-arrow-return-left' /> {product.returnPolicy}</p>
+                  <p className='mb-1'><i class='bi bi-shield-check' /> {product.warrantyInformation}</p>
+                </div>
+                <div className='mx-5 mt-3'>
+                  <p className='mb-1 fw-semibold'>Compartir:</p>
+                  <div className='d-flex gap-3 mx-2'>
+                    <i className='bi bi-facebook fs-3 text-primary' style={{ cursor: 'pointer' }} />
+                    <i className='bi bi-twitter fs-3' style={{ cursor: 'pointer', color: '#1DA1F2' }} />
+                    <i className='bi bi-pinterest fs-3' style={{ cursor: 'pointer', color: '#E60023' }} />
+                  </div>
+                </div>
               </div>
             </Col>
           </Row>
@@ -125,31 +135,31 @@ export function ProductDetail () {
                 <table className='table table-bordered w-75'>
                   <tbody>
                     <tr>
-                      <td className='align-middle text-center bg-info-subtle'><strong>Marca</strong></td>
+                      <td className='align-middle text-center bg-info-subtle fw-semibold'>Marca</td>
                       <td className='align-middle text-center bg-info-subtle'>{product.brand ? product.brand : 'N/A'}</td>
                     </tr>
                     <tr>
-                      <td className='align-middle text-center'><strong>SKU</strong></td>
+                      <td className='align-middle text-center fw-semibold'>SKU</td>
                       <td className='align-middle text-center'>{product.sku ? product.sku : 'N/A'}</td>
                     </tr>
                     <tr>
-                      <td className='align-middle text-center bg-info-subtle'><strong>Largo</strong></td>
+                      <td className='align-middle text-center bg-info-subtle fw-semibold'>Largo</td>
                       <td className='align-middle text-center bg-info-subtle'>{product.dimensions.width ? product.dimensions.width : 'N/A'} cm</td>
                     </tr>
                     <tr>
-                      <td className='align-middle text-center'><strong>Alto</strong></td>
+                      <td className='align-middle text-center fw-semibold'>Alto</td>
                       <td className='align-middle text-center'>{product.dimensions.height ? product.dimensions.height : 'N/A'} cm</td>
                     </tr>
                     <tr>
-                      <td className='align-middle text-center bg-info-subtle'><strong>Ancho</strong></td>
+                      <td className='align-middle text-center bg-info-subtle fw-semibold'>Ancho</td>
                       <td className='align-middle text-center bg-info-subtle'>{product.dimensions.depth ? product.dimensions.depth : 'N/A'} cm</td>
                     </tr>
                     <tr>
-                      <td className='align-middle text-center'><strong>Peso</strong></td>
+                      <td className='align-middle text-center fw-semibold'>Peso</td>
                       <td className='align-middle text-center'>{product.weight ? product.weight : 'N/A'} g</td>
                     </tr>
                     <tr>
-                      <td className='align-middle text-center bg-info-subtle'><strong>Código de barras</strong></td>
+                      <td className='align-middle text-center bg-info-subtle fw-semibold'>Código de barras</td>
                       <td className='align-middle text-center bg-info-subtle'>{product.meta.barcode ? product.meta.barcode : 'N/A'}</td>
                     </tr>
                   </tbody>

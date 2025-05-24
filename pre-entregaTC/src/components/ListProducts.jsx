@@ -67,13 +67,13 @@ export function ListOfProducts ({ products, handleClick, handleIds, clickedIds }
                   <Card.Title className='text-truncate'>{product.title}</Card.Title>
                   <Card.Text className='truncate-description'>{product.description}</Card.Text>
                   <div
-                    className='d-flex flex-md-column flex-xl-row justify-content-between align-items-center mt-auto'
+                    className='d-flex flex-wrap justify-content-between align-items-center mt-auto'
                     onClick={(e) => {
                       e.stopPropagation()
                       e.preventDefault()
                     }}
                   >
-                    <span className='text-success mb-md-3 mb-xl-0'><h5>$ {product.price}</h5></span>
+                    <span className='text-success'><h5>$ {product.price}</h5></span>
                     <Button
                       style={{ minWidth: '80px', padding: '3px 5px' }}
                       variant={clickedIds.includes(product.id) ? 'success' : 'primary'}
