@@ -1,10 +1,11 @@
 import { QuantitySelector } from '../components/QuantitySelector'
+import { BuyingButtons } from '../components/BuyingButtons'
 import { StarRating } from '../components/StarRating'
 import { UserReview } from '../components/UserReview'
 import { CategoryCarousel } from '../components/CategoryCarousel'
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { Spinner, Row, Col, Container, Card, Button } from 'react-bootstrap'
+import { Spinner, Row, Col, Container, Card } from 'react-bootstrap'
 
 export function ProductDetail () {
   const { id } = useParams()
@@ -45,6 +46,10 @@ export function ProductDetail () {
     fetchRelated()
   }, [product])
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [product])
+
   if (loading) {
     return (
       <div className='d-flex justify-content-center align-items-center vh-100'>
@@ -57,8 +62,8 @@ export function ProductDetail () {
   const priceWithoutDiscount = (product.price / (1 - (product.discountPercentage / 100))).toFixed(2)
 
   return (
-    <>
-      <Container className='py-5'>
+    <main className='flex-grow-1 bg-secondary text-white'>
+      <Container className='py-5 bg-secondary'>
         <Card className='shadow p-4'>
           <Row className='align-items-start'>
             <Col md={6} className='text-center mb-4 mb-md-0'>
@@ -77,10 +82,10 @@ export function ProductDetail () {
                       onClick={() => setMainImage(img)}
                     >
                       <Card.Img
-                        src={img}
-                        alt={`Miniature ${index + 1}`}
-                        style={{ height: '70px', objectFit: 'contain', padding: '2px' }}
-                      />
+                          src={img}
+                          alt={`Miniature ${index + 1}`}
+                          style={{ height: '70px', objectFit: 'contain', padding: '2px' }}
+                        />
                     </Card>
                   </Col>
                 ))}
@@ -105,18 +110,15 @@ export function ProductDetail () {
                 <p className='text-muted mb-0'>({product.stock > 50 ? '+50 disponibles' : `${product.stock} disponibles`})</p>
               </div>
               <QuantitySelector />
-              <div className='d-flex gap-2 my-2'>
-                <Button variant='primary'>Comprar 🛍</Button>
-                <Button variant='success'>Agregar al carrito 🛒</Button>
-              </div>
-              <div className='mt-4'>
+              <BuyingButtons firstButtonText='Agregar al carrito 🛒' secondButtonText='Comprar 🛍' firstButtonVariant='success' secondButtonVariant='primary' buttonSize='lg' />
+              <div className='mt-3'>
                 <p className='mb-1'><i class='bi bi-truck' /> {product.shippingInformation}</p>
                 <p className='mb-1'><i class='bi bi-arrow-return-left' /> {product.returnPolicy}</p>
                 <p className='mb-1'><i class='bi bi-shield-check' /> {product.warrantyInformation}</p>
               </div>
             </Col>
           </Row>
-          <Row className='align-items-start mt-5'>
+          <Row className='align-items-start mt-sm-3 mt-md-5'>
             <Col md={6} className='mb-4 mb-md-0'>
               <h5 className='mb-4 text-start'>Características del producto:</h5>
               <div className='d-flex justify-content-center mb-3'>
@@ -124,31 +126,31 @@ export function ProductDetail () {
                   <tbody>
                     <tr>
                       <td className='align-middle text-center bg-info-subtle'><strong>Marca</strong></td>
-                      <td className='align-middle text-center bg-info-subtle'>{product.brand}</td>
+                      <td className='align-middle text-center bg-info-subtle'>{product.brand ? product.brand : 'N/A'}</td>
                     </tr>
                     <tr>
                       <td className='align-middle text-center'><strong>SKU</strong></td>
-                      <td className='align-middle text-center'>{product.sku}</td>
+                      <td className='align-middle text-center'>{product.sku ? product.sku : 'N/A'}</td>
                     </tr>
                     <tr>
                       <td className='align-middle text-center bg-info-subtle'><strong>Largo</strong></td>
-                      <td className='align-middle text-center bg-info-subtle'>{product.dimensions.width} cm</td>
+                      <td className='align-middle text-center bg-info-subtle'>{product.dimensions.width ? product.dimensions.width : 'N/A'} cm</td>
                     </tr>
                     <tr>
                       <td className='align-middle text-center'><strong>Alto</strong></td>
-                      <td className='align-middle text-center'>{product.dimensions.height} cm</td>
+                      <td className='align-middle text-center'>{product.dimensions.height ? product.dimensions.height : 'N/A'} cm</td>
                     </tr>
                     <tr>
                       <td className='align-middle text-center bg-info-subtle'><strong>Ancho</strong></td>
-                      <td className='align-middle text-center bg-info-subtle'>{product.dimensions.depth} cm</td>
+                      <td className='align-middle text-center bg-info-subtle'>{product.dimensions.depth ? product.dimensions.depth : 'N/A'} cm</td>
                     </tr>
                     <tr>
                       <td className='align-middle text-center'><strong>Peso</strong></td>
-                      <td className='align-middle text-center'>{product.weight} g</td>
+                      <td className='align-middle text-center'>{product.weight ? product.weight : 'N/A'} g</td>
                     </tr>
                     <tr>
                       <td className='align-middle text-center bg-info-subtle'><strong>Código de barras</strong></td>
-                      <td className='align-middle text-center bg-info-subtle'>{product.meta.barcode}</td>
+                      <td className='align-middle text-center bg-info-subtle'>{product.meta.barcode ? product.meta.barcode : 'N/A'}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -182,12 +184,12 @@ export function ProductDetail () {
               )}
             </Col>
           </Row>
-          <Row className='align-items-start mt-5'>
-            <h4 className='mt-4'>También te puede interesar</h4>
+          <Row className='align-items-start mt-2'>
+            <h4 className='mt-2 mb-4'>También te puede interesar</h4>
             <CategoryCarousel products={relatedProducts} />
           </Row>
         </Card>
       </Container>
-    </>
+    </main>
   )
 }
