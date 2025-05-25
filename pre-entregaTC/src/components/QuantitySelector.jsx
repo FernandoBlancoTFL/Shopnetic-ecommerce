@@ -1,18 +1,17 @@
-import { useState } from 'react'
 import { Button } from 'react-bootstrap'
 import * as Icon from 'react-bootstrap-icons'
 
-export function QuantitySelector () {
-  const [quantity, setQuantity] = useState(1)
-
+export function QuantitySelector ({ item, handleAddProductToCart, removeProductFromCart, shouldDecreaseToZero = false }) {
   const decrease = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1)
+    if (item.quantity > 1 || shouldDecreaseToZero) {
+      removeProductFromCart(item.id)
     }
   }
 
   const increase = () => {
-    setQuantity(quantity + 1)
+    if (item.quantity <= item.stock) {
+      handleAddProductToCart(item)
+    }
   }
 
   return (
@@ -29,7 +28,7 @@ export function QuantitySelector () {
       <Button
         variant='light'
         onClick={decrease}
-        disabled={quantity === 1}
+        disabled={shouldDecreaseToZero ? item.quantity === 0 : item.quantity === 1}
         className='border-0'
         style={{
           borderRadius: 0,
@@ -48,8 +47,8 @@ export function QuantitySelector () {
         }}
       />
 
-      <div className='px-3 fw-bold fs-5 text-center' style={{ minWidth: '40px' }}>
-        {quantity}
+      <div className='px-3 fw-semibold fs-5 text-center' style={{ minWidth: '40px' }}>
+        {item.quantity}
       </div>
 
       <div

@@ -109,7 +109,7 @@ export function ProductDetail () {
                 <p className='mb-0'>Cantidad: <strong>1 unidad</strong></p>
                 <p className='text-muted mb-0'>({product.stock > 50 ? '+50 disponibles' : `${product.stock} disponibles`})</p>
               </div>
-              <QuantitySelector />
+              <QuantitySelector item={product} shouldDecreaseToZero={false} />
               <BuyingButtons firstButtonText='Agregar al carrito 🛒' secondButtonText='Comprar 🛍' firstButtonVariant='success' secondButtonVariant='primary' buttonSize='lg' />
               <div className='d-flex gap-5'>
                 <div className='mt-3'>

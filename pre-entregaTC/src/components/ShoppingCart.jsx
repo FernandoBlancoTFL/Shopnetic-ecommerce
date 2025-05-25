@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Button, Offcanvas, ListGroup, Badge, Container } from 'react-bootstrap'
+import { CartItem } from './CartItem'
+import { BuyingButtons } from './BuyingButtons'
+import { Button, Offcanvas, ListGroup, Badge } from 'react-bootstrap'
 
 export function ShoppingCart ({ cartItems, emptyShoppingCart, removeProductFromCart, addProductToCart }) {
   const [show, setShow] = useState(false)
@@ -70,37 +72,24 @@ export function ShoppingCart ({ cartItems, emptyShoppingCart, removeProductFromC
               <ListGroup variant='flush'>
                 {cartItems.map((item, index) => (
                   <ListGroup.Item key={index}>
-                    <Container className='d-flex flex-row justify-content-center'>
-                      <Container className='d-flex align-items-center'>
-                        <img
-                          src={item.images[0]}
-                          alt={item.title}
-                          style={{ width: '80px', height: '80px', objectFit: 'cover', marginRight: '10px' }}
-                        />
-                        <div className='d-flex flex-column' style={{ width: '200px' }}>
-                          <strong>{item.title}</strong>
-                          <div className='d-flex justify-content-between mt-1'>
-                            ${(item.price * item.quantity).toFixed(2)}
-                          </div>
-                        </div>
-                      </Container>
-                      <Container className='d-flex flex-row gap-2 align-items-center m'>
-                        <div className='d-flex flex-column gap-1'>
-                          <Button size='sm' onClick={() => handleAddProductToCart(item)} variant='primary' className='p-2'> <i className='fa-solid fa-plus' /> </Button>
-                          <Button size='sm' onClick={() => removeProductFromCart(item.id)} variant='secondary' className='p-2'><i className='fa-solid fa-minus' /></Button>
-                        </div>
-                        <h5>{item.quantity}</h5>
-                      </Container>
-                    </Container>
-                    {outOfStockIds.includes(item.id) && (
-                      <p className='text-danger mt-1 mb-1 text-center'>Lo siento, el stock máximo es de {item.stock} unidades</p>
-                    )}
+                    <CartItem item={item} index={index} handleAddProductToCart={handleAddProductToCart} removeProductFromCart={removeProductFromCart} outOfStockIds={outOfStockIds} />
                   </ListGroup.Item>
                 )
                 )}
                 <h5 className='mx-auto mt-3'>Total: $ {totalPrice}</h5>
-                <Button variant='success' className='w-50 mx-auto mt-2' onClick={handleBuying}>Finalizar compra <i className='fa-solid fa-bag-shopping' /></Button>
-                <Button variant='danger' className='w-50 mx-auto mt-2' onClick={emptyShoppingCart}>Vaciar carrito <i className='fa-solid fa-trash' /></Button>
+                <BuyingButtons
+                  firstButtonText='Finalizar compra'
+                  secondButtonText='Vaciar carrito'
+                  firstButtonVariant='success'
+                  secondButtonVariant='danger'
+                  firstButtonIconClass='fa-solid fa-bag-shopping'
+                  secondButtonIconClass='fa-solid fa-trash'
+                  firstButtonFontSize='fs-7'
+                  secondButtonFontSize='fs-7'
+                  buttonSize='sm'
+                  firstButtonEvent={handleBuying}
+                  secondButtonEvent={emptyShoppingCart}
+                />
               </ListGroup>
               )}
         </Offcanvas.Body>

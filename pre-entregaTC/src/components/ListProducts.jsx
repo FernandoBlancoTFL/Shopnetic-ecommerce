@@ -17,6 +17,7 @@ export function ListOfProducts ({ products, handleClick, handleIds, clickedIds }
       },
       didOpen: (toast) => {
         toast.style.marginTop = '84px'
+        toast.style.width = '800px'
       }
     })
     handleIds(product.id)
