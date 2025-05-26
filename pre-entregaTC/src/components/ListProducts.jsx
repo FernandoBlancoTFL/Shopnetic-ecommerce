@@ -2,9 +2,15 @@ import { Row, Col, Card, Button, Carousel } from 'react-bootstrap'
 import { useContext, useEffect, useState } from 'react'
 import { ShoppingCartContext } from '../context/ShoppingCartContext'
 import { Link } from 'react-router-dom'
+import { StarRating } from './StarRating'
 
 export function ListOfProducts ({ products }) {
   const { handleAddProductToCart, clickedIds } = useContext(ShoppingCartContext)
+
+  const getPriceWithoutDiscount = (product) => {
+    const priceWithoutDiscount = (product.price / (1 - (product.discountPercentage / 100))).toFixed(2)
+    return priceWithoutDiscount
+  }
 
   return (
     <>
@@ -13,7 +19,7 @@ export function ListOfProducts ({ products }) {
         products.slice(0, 9).map(product => (
           <Col key={product.id} className='h-10'>
             <Link to={`/product/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-              <Card className='h-400 overflow-hidden border-0 shadow-sm bg-white rounded' style={{ height: '420px' }}>
+              <Card className='h-400 overflow-hidden border-0 shadow-sm bg-white rounded' style={{ height: '430px' }}>
                 {product.images.length > 1
                   ? (
                     <Carousel interval={null} indicators={false} className='p-2'>
@@ -47,8 +53,21 @@ export function ListOfProducts ({ products }) {
                     )}
 
                 <Card.Body className='d-flex flex-column bg-dark text-white rounded-bottom'>
-                  <Card.Title className='text-truncate'>{product.title}</Card.Title>
-                  <Card.Text className='truncate-description'>{product.description}</Card.Text>
+                  <Card.Title className='text-truncate mb-0'>{product.title}</Card.Title>
+                  <div
+                    className='d-flex flex-wrap justify-content-between align-items-center  m-1'
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      e.preventDefault()
+                    }}
+                  >
+                    <div className='d-flex gap-2 align-items-center'>
+                      <Card.Text className='text-success fw-bold mb-0' style={{ fontSize: '18px' }}>$ {product.price}</Card.Text>
+                      <Card.Text style={{ fontSize: '14px' }}><s>$ {getPriceWithoutDiscount(product)}</s></Card.Text>
+                    </div>
+                    <StarRating rating={product.rating} size='12px' />
+                  </div>
+                  <Card.Text className='truncate-description mb-0'>{product.description}</Card.Text>
                   <div
                     className='d-flex flex-wrap justify-content-between align-items-center mt-auto'
                     onClick={(e) => {
@@ -56,16 +75,15 @@ export function ListOfProducts ({ products }) {
                       e.preventDefault()
                     }}
                   >
-                    <span className='text-success'><h5>$ {product.price}</h5></span>
                     <Button
-                      style={{ minWidth: '80px', padding: '3px 5px' }}
+                      style={{ marginTop: '10px', minWidth: '80px', width: '100%', padding: '3px 5px' }}
                       variant={clickedIds.includes(product.id) ? 'success' : 'primary'}
                       disabled={clickedIds.includes(product.id)}
                       onClick={() => {
                         handleAddProductToCart(product)
                       }}
                     >
-                      {clickedIds.includes(product.id) ? 'Agregado 🛒' : 'Agregar 🛒'}
+                      {clickedIds.includes(product.id) ? 'Agregado 🛒' : 'Agregar al carrito 🛒'}
                     </Button>
                   </div>
                 </Card.Body>
