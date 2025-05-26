@@ -5,7 +5,7 @@ import { Button, Offcanvas, ListGroup, Badge } from 'react-bootstrap'
 import { ShoppingCartContext } from '../context/ShoppingCartContext'
 
 export function ShoppingCart () {
-  const { shoppingCart, addProductToCart, removeProductFromCartById, emptyShoppingCart } = useContext(ShoppingCartContext)
+  const { shoppingCart, addProductToCart, removeProductFromCartById, emptyShoppingCart, emptyShoppingCartWithConfirmationModal } = useContext(ShoppingCartContext)
   const [show, setShow] = useState(false)
   const [cartSize, setCartSize] = useState(shoppingCart.length)
   const [animate, setAnimate] = useState(false)
@@ -76,7 +76,7 @@ export function ShoppingCart () {
                   secondButtonFontSize='fs-7'
                   buttonSize='sm'
                   firstButtonEvent={handleBuying}
-                  secondButtonEvent={emptyShoppingCart}
+                  secondButtonEvent={emptyShoppingCartWithConfirmationModal}
                 />
               </ListGroup>
               )}

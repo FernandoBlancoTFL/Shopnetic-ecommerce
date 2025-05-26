@@ -78,6 +78,23 @@ export function ShoppingCartProvider ({ children }) {
     setClickedIds([])
   }
 
+  const emptyShoppingCartWithConfirmationModal = () => {
+    Swal.fire({
+      title: 'Vaciar carrito',
+      text: '¿Estas seguro que quieres vaciar el carrito?',
+      icon: 'warning',
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, vaciar carrito'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        emptyShoppingCart()
+      }
+    })
+  }
+
   const removeProductFromCartById = productId => {
     setShoppingCart(prevCart => {
       const existingIndex = prevCart.findIndex(item => item.id === productId)
@@ -96,7 +113,7 @@ export function ShoppingCartProvider ({ children }) {
   }
 
   return (
-    <ShoppingCartContext.Provider value={{ shoppingCart, addProductToCart, handleAddProductToCart, getOrInitializeProductInCart, removeProductFromCartById, emptyShoppingCart, clickedIds, handleClickedIds }}>
+    <ShoppingCartContext.Provider value={{ shoppingCart, addProductToCart, handleAddProductToCart, getOrInitializeProductInCart, removeProductFromCartById, emptyShoppingCart, emptyShoppingCartWithConfirmationModal, clickedIds, handleClickedIds }}>
       {children}
     </ShoppingCartContext.Provider>
   )
