@@ -1,24 +1,25 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { CartItem } from './CartItem'
 import { BuyingButtons } from './BuyingButtons'
 import { Button, Offcanvas, ListGroup, Badge } from 'react-bootstrap'
+import { ShoppingCartContext } from '../context/ShoppingCartContext'
 
-export function ShoppingCart ({ cartItems, emptyShoppingCart, removeProductFromCart, addProductToCart }) {
+export function ShoppingCart () {
+  const { shoppingCart, addProductToCart, removeProductFromCartById, emptyShoppingCart } = useContext(ShoppingCartContext)
   const [show, setShow] = useState(false)
-  const [cartSize, setCartSize] = useState(cartItems.length)
+  const [cartSize, setCartSize] = useState(shoppingCart.length)
   const [animate, setAnimate] = useState(false)
-  const [outOfStockIds, setOutOfStockIds] = useState([])
-  const totalPrice = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0).toFixed(2)
+  const totalPrice = shoppingCart.reduce((acc, item) => acc + (item.price * item.quantity), 0).toFixed(2)
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
   useEffect(() => {
-    if (cartItems.length > cartSize) {
+    if (shoppingCart.length > cartSize) {
       setAnimate(true)
       setTimeout(() => setAnimate(false), 800)
     }
-    setCartSize(cartItems.length)
-  }, [cartItems])
+    setCartSize(shoppingCart.length)
+  }, [shoppingCart])
 
   const handleBuying = () => {
     Swal.fire({
@@ -30,19 +31,6 @@ export function ShoppingCart ({ cartItems, emptyShoppingCart, removeProductFromC
     emptyShoppingCart()
   }
 
-  const handleAddProductToCart = (product) => {
-    if (product.quantity >= product.stock) {
-      if (!outOfStockIds.includes(product.id)) {
-        setOutOfStockIds(prev => [...prev, product.id])
-        setTimeout(() => {
-          setOutOfStockIds(prev => prev.filter(id => id !== product.id))
-        }, 2000)
-      }
-      return
-    }
-    addProductToCart(product)
-  }
-
   return (
     <>
       <Button
@@ -52,9 +40,9 @@ export function ShoppingCart ({ cartItems, emptyShoppingCart, removeProductFromC
         className={`position-fixed top-0 end-0 m-4 mt-4  border border-dark ${animate ? 'animate__animated animate__heartBeat' : ''}`}
       >
         🛒
-        {cartItems.length > 0 && (
+        {shoppingCart.length > 0 && (
           <Badge bg='danger' pill className='ms-2'>
-            {cartItems.length}
+            {shoppingCart.length}
           </Badge>
         )}
       </Button>
@@ -64,15 +52,15 @@ export function ShoppingCart ({ cartItems, emptyShoppingCart, removeProductFromC
           <Offcanvas.Title>Carrito de Compras</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          {cartItems.length === 0
+          {shoppingCart.length === 0
             ? (
               <p>No hay productos en el carrito.</p>
               )
             : (
               <ListGroup variant='flush'>
-                {cartItems.map((item, index) => (
+                {shoppingCart.map((item, index) => (
                   <ListGroup.Item key={index}>
-                    <CartItem item={item} index={index} handleAddProductToCart={handleAddProductToCart} removeProductFromCart={removeProductFromCart} outOfStockIds={outOfStockIds} />
+                    <CartItem item={item} addProductToCart={addProductToCart} removeProductFromCartById={removeProductFromCartById} />
                   </ListGroup.Item>
                 )
                 )}

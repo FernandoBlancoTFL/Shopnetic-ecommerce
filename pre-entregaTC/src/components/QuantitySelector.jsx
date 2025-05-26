@@ -1,24 +1,49 @@
+import { useContext, useState, useEffect } from 'react'
 import { Button } from 'react-bootstrap'
 import * as Icon from 'react-bootstrap-icons'
+import { ShoppingCartContext } from '../context/ShoppingCartContext'
 
-export function QuantitySelector ({ item, handleAddProductToCart, removeProductFromCart, shouldDecreaseToZero = false }) {
+export function QuantitySelector ({ item, handleAddProductToCart, removeProductFromCartById, insertProductQuantity, shouldDecreaseToZero = false, isProductInCart = false }) {
+  const { clickedIds } = useContext(ShoppingCartContext)
+  const [productQuantity, setProductQuantity] = useState(item.quantity)
+
+  useEffect(() => {
+    if (!clickedIds.includes(item.id)) {
+      setProductQuantity(1)
+      insertProductQuantity(1)
+    }
+  }, [clickedIds, item.id])
+
   const decrease = () => {
-    if (item.quantity > 1 || shouldDecreaseToZero) {
-      removeProductFromCart(item.id)
+    if (!isProductInCart) {
+      setProductQuantity(productQuantity - 1)
+      const newQuantity = productQuantity
+      insertProductQuantity(newQuantity - 1)
+    } else {
+      if (item.quantity > 1 || shouldDecreaseToZero) {
+        removeProductFromCartById(item.id)
+      }
     }
   }
 
   const increase = () => {
-    if (item.quantity <= item.stock) {
-      handleAddProductToCart(item)
+    if (!isProductInCart) {
+      if (productQuantity + 1 > item.stock) return
+      setProductQuantity(productQuantity + 1)
+      const newQuantity = productQuantity
+      insertProductQuantity(newQuantity + 1)
+    } else {
+      if (item.quantity + 1 <= item.stock) {
+        handleAddProductToCart(item)
+      }
     }
   }
 
   return (
     <div
-      className='d-flex align-items-center border rounded p-0 my-2'
+      className='d-flex align-items-center justify-content-center border rounded p-0 my-2'
       style={{
-        width: '124px',
+        width: '150px',
         height: '42px',
         backgroundColor: '#f8f9fa',
         overflow: 'hidden',
@@ -28,11 +53,15 @@ export function QuantitySelector ({ item, handleAddProductToCart, removeProductF
       <Button
         variant='light'
         onClick={decrease}
-        disabled={shouldDecreaseToZero ? item.quantity === 0 : item.quantity === 1}
+        disabled={
+          isProductInCart
+            ? shouldDecreaseToZero ? item.quantity === 0 : item.quantity === 1
+            : shouldDecreaseToZero ? productQuantity === 0 : productQuantity === 1
+        }
         className='border-0'
         style={{
           borderRadius: 0,
-          width: '40px',
+          width: '100%',
           height: '100%'
         }}
       >
@@ -47,13 +76,13 @@ export function QuantitySelector ({ item, handleAddProductToCart, removeProductF
         }}
       />
 
-      <div className='px-3 fw-semibold fs-5 text-center' style={{ minWidth: '40px' }}>
-        {item.quantity}
+      <div className='px-3 fw-semibold fs-5 text-center' style={{ minWidth: '60px' }}>
+        {isProductInCart ? item.quantity : productQuantity}
       </div>
 
       <div
         style={{
-          width: '1px',
+          width: '2px',
           height: '80%',
           backgroundColor: '#dee2e6'
         }}
@@ -65,7 +94,7 @@ export function QuantitySelector ({ item, handleAddProductToCart, removeProductF
         className='border-0'
         style={{
           borderRadius: 0,
-          width: '40px',
+          width: '100%',
           height: '100%'
         }}
       >

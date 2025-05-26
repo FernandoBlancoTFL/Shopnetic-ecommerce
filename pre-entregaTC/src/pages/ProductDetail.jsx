@@ -3,13 +3,17 @@ import { BuyingButtons } from '../components/BuyingButtons'
 import { StarRating } from '../components/StarRating'
 import { UserReview } from '../components/UserReview'
 import { CategoryCarousel } from '../components/CategoryCarousel'
+import { ShoppingCart } from '../components/ShoppingCart'
 import { useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Spinner, Row, Col, Container, Card } from 'react-bootstrap'
+import { ShoppingCartContext } from '../context/ShoppingCartContext'
 
 export function ProductDetail () {
   const { id } = useParams()
+  const { addProductToCart, getOrInitializeProductInCart, handleAddProductToCart, removeProductFromCartById, clickedIds } = useContext(ShoppingCartContext)
   const [product, setProduct] = useState(null)
+  const [productQuantity, setProductQuantity] = useState(1)
   const [loading, setLoading] = useState(true)
   const [mainImage, setMainImage] = useState('')
   const [relatedProducts, setRelatedProducts] = useState([])
@@ -17,9 +21,9 @@ export function ProductDetail () {
   useEffect(() => {
     fetch(`https://dummyjson.com/products/${id}`)
       .then(res => res.json())
-      .then(data => {
-        setProduct(data)
-        setMainImage(data.images[0])
+      .then(product => {
+        setProduct(product)
+        setMainImage(product.images[0])
         setLoading(false)
       })
       .catch(err => {
@@ -46,6 +50,17 @@ export function ProductDetail () {
     fetchRelated()
   }, [product])
 
+  const insertProductQuantity = (quantity) => {
+    setProductQuantity(quantity)
+  }
+
+  const handleAddProductToCartWithquantity = (product) => {
+    const newProductQuantity = productQuantity
+    const productWithQuantity = getOrInitializeProductInCart(product)
+    productWithQuantity.quantity = newProductQuantity
+    handleAddProductToCart(productWithQuantity)
+  }
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [product])
@@ -63,6 +78,7 @@ export function ProductDetail () {
 
   return (
     <main className='flex-grow-1 bg-secondary text-white'>
+      <ShoppingCart />
       <Container className='py-5 bg-secondary'>
         <Card className='shadow p-4'>
           <Row className='align-items-start'>
@@ -106,11 +122,22 @@ export function ProductDetail () {
               <p className='text-muted'>{product.description}</p>
               <p className='mb-1'>{product.availabilityStatus}</p>
               <div className='d-flex align-items-center gap-2 mb-2'>
-                <p className='mb-0'>Cantidad: <strong>1 unidad</strong></p>
+                <p className='mb-0'>Cantidad: {clickedIds.includes(product.id)
+                  ? (getOrInitializeProductInCart(product).quantity > 1 ? <strong>{getOrInitializeProductInCart(product).quantity} unidades</strong> : <strong>{getOrInitializeProductInCart(product).quantity} unidad</strong>)
+                  : (productQuantity > 1 ? <strong>{productQuantity} unidades</strong> : <strong>{productQuantity} unidad</strong>)}
+                </p>
                 <p className='text-muted mb-0'>({product.stock > 50 ? '+50 disponibles' : `${product.stock} disponibles`})</p>
               </div>
-              <QuantitySelector item={product} shouldDecreaseToZero={false} />
-              <BuyingButtons firstButtonText='Agregar al carrito 🛒' secondButtonText='Comprar 🛍' firstButtonVariant='success' secondButtonVariant='primary' buttonSize='lg' />
+              <QuantitySelector item={getOrInitializeProductInCart(product)} handleAddProductToCart={addProductToCart} removeProductFromCartById={removeProductFromCartById} insertProductQuantity={quantity => insertProductQuantity(quantity)} shouldDecreaseToZero={false} isProductInCart={clickedIds.includes(product.id)} />
+              <BuyingButtons
+                firstButtonText={clickedIds.includes(product.id) ? 'Agregado 🛒' : 'Agregar al carrito 🛒'}
+                secondButtonText='Comprar 🛍'
+                firstButtonVariant={clickedIds.includes(product.id) ? 'success' : 'success'}
+                firstButtonDisabled={clickedIds.includes(product.id)}
+                secondButtonVariant='primary'
+                firstButtonEvent={clickedIds.includes(product.id) ? () => handleAddProductToCart(product) : () => handleAddProductToCartWithquantity(product)}
+                buttonSize='lg'
+              />
               <div className='d-flex gap-5'>
                 <div className='mt-3'>
                   <p className='mb-1'><i class='bi bi-truck' /> {product.shippingInformation}</p>

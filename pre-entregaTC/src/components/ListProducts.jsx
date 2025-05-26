@@ -1,28 +1,10 @@
 import { Row, Col, Card, Button, Carousel } from 'react-bootstrap'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
+import { ShoppingCartContext } from '../context/ShoppingCartContext'
 import { Link } from 'react-router-dom'
 
-export function ListOfProducts ({ products, handleClick, handleIds, clickedIds }) {
-  const handleAddProductToCart = (product) => {
-    Swal.fire({
-      toast: true,
-      position: 'top-end',
-      title: '✅ ¡Producto agregado correctamente!',
-      showConfirmButton: false,
-      timer: 2000,
-      timerProgressBar: true,
-      background: '#ffffff',
-      customClass: {
-        popup: 'swal2-toast-custom'
-      },
-      didOpen: (toast) => {
-        toast.style.marginTop = '84px'
-        toast.style.width = '800px'
-      }
-    })
-    handleIds(product.id)
-    handleClick(product)
-  }
+export function ListOfProducts ({ products }) {
+  const { handleAddProductToCart, clickedIds } = useContext(ShoppingCartContext)
 
   return (
     <>
@@ -103,7 +85,7 @@ function NoProductsResult () {
   return <h3>{message}</h3>
 }
 
-export function Products ({ filterURL, handleClick, handleIds, clickedIds }) {
+export function Products ({ filterURL }) {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
@@ -132,6 +114,6 @@ export function Products ({ filterURL, handleClick, handleIds, clickedIds }) {
   return (
     loading
       ? <NoProductsResult />
-      : <ListOfProducts products={products} handleClick={handleClick} handleIds={handleIds} clickedIds={clickedIds} />
+      : <ListOfProducts products={products} />
   )
 }
