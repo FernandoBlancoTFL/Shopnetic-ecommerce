@@ -68,16 +68,25 @@ export function ListOfProducts ({ products }) {
                     <StarRating rating={product.rating} size='12px' />
                   </div>
                   <Card.Text className='truncate-description mb-0'>{product.description}</Card.Text>
-                  <Button
-                    style={{ marginTop: '10px', minWidth: '80px', width: '100%', padding: '3px 5px' }}
-                    variant={clickedIds.includes(product.id) ? 'success' : 'primary'}
-                    disabled={clickedIds.includes(product.id)}
-                    onClick={() => {
-                      handleAddProductToCart(product)
+                  <div
+                    className='d-flex flex-wrap justify-content-between align-items-center  m-1'
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      e.preventDefault()
                     }}
                   >
-                    {clickedIds.includes(product.id) ? 'Agregado 🛒' : 'Agregar al carrito 🛒'}
-                  </Button>
+                    <Button
+                      style={{ marginTop: '10px', minWidth: '80px', width: '100%', padding: '3px 5px' }}
+                      variant={clickedIds.includes(product.id) ? 'success' : 'primary'}
+                      disabled={clickedIds.includes(product.id)}
+                      onClick={() => {
+                        handleAddProductToCart(product)
+                      }}
+                    >
+                      {clickedIds.includes(product.id) ? 'Agregado 🛒' : 'Agregar al carrito 🛒'}
+                    </Button>
+                  </div>
+
                 </Card.Body>
               </Card>
             </Link>
