@@ -1,9 +1,10 @@
 import { Navbar, Nav, Container, NavDropdown, Form, Button } from 'react-bootstrap'
+import { ShoppingCart } from './ShoppingCart'
 import { Link } from 'react-router-dom'
 
 export function NavBar ({ handleFilter }) {
   return (
-    <Navbar expand='lg' className='bg-dark py-3 shadow' variant='dark'>
+    <Navbar expand='lg' className='bg-dark py-3 shadow custom-navbar' variant='dark'>
       <Container>
         <Navbar.Brand as={Link} to='/'>
           <img
@@ -14,10 +15,15 @@ export function NavBar ({ handleFilter }) {
             className='d-inline-block align-middle'
           />
         </Navbar.Brand>
-        <Navbar.Toggle aria-controls='basic-navbar-nav' />
+        <div className='d-flex gap-2'>
+          <Button as={Link} to='/login' variant='info' className='d-inline d-lg-none align-content-center'>Iniciar sesión</Button>
+          <ShoppingCart isPositionFixed={false} />
+          <Navbar.Toggle aria-controls='basic-navbar-nav' />
+        </div>
         <Navbar.Collapse id='basic-navbar-nav'>
           <Nav className='me-auto'>
-            <Nav.Link as={Link} to='/' onClick={() => handleFilter('https://dummyjson.com/products', 'Nuestros Productos')}>Inicio</Nav.Link>
+            <Nav.Link as={Link} to='/' onClick={() => handleFilter('https://dummyjson.com/products', 'Nuestros Productos')}>Productos</Nav.Link>
+            <Nav.Link as={Link} to='/contact'>Contacto</Nav.Link>
             <Nav.Link as={Link} to='/about'>Sobre Nosotros</Nav.Link>
             <NavDropdown title='Productos' id='basic-nav-dropdown'>
               <NavDropdown.Item as={Link} to='/' onClick={() => handleFilter('https://dummyjson.com/products', 'Belleza')}>Belleza</NavDropdown.Item>
@@ -27,21 +33,16 @@ export function NavBar ({ handleFilter }) {
               <NavDropdown.Item as={Link} to='/' onClick={() => handleFilter('https://dummyjson.com/products/category/vehicle', 'Vehículos')}>Vehículos</NavDropdown.Item>
             </NavDropdown>
           </Nav>
-
-          <div className='d-flex align-items-center'>
-            <Form className='d-flex me-3'>
+          <div className='d-flex align-items-center justify-content-center my-1 search-input'>
+            <Form className='d-flex align-items-center gap-2 me-3 search-form' style={{ maxWidth: '500px', width: '100%' }}>
               <Form.Control
                 type='search'
                 placeholder='Celulares, Remeras...'
-                className='me-2'
+                className='search-input-control'
                 aria-label='Search'
               />
-              <Button variant='outline-success'>Buscar</Button>
+              <i className='fas fa-search text-white fa-lg' style={{ cursor: 'pointer', margin: '0 5px' }} />
             </Form>
-
-            <Button as={Link} to='/login' variant='info'>
-              Administración
-            </Button>
           </div>
         </Navbar.Collapse>
       </Container>

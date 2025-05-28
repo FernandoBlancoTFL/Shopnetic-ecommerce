@@ -8,6 +8,8 @@ import { useParams } from 'react-router-dom'
 import { useContext, useEffect, useState } from 'react'
 import { Spinner, Row, Col, Container, Card } from 'react-bootstrap'
 import { ShoppingCartContext } from '../context/ShoppingCartContext'
+import { CustomBreadcrumb } from './CustomBreadcrumb'
+import { Box, House } from 'react-bootstrap-icons'
 
 export function ProductDetail () {
   const { id } = useParams()
@@ -78,8 +80,9 @@ export function ProductDetail () {
 
   return (
     <main className='flex-grow-1 bg-secondary text-white'>
-      <ShoppingCart />
+      <ShoppingCart isPositionFixed />
       <Container className='py-5 bg-secondary'>
+        <CustomBreadcrumb routes={[{ name: 'Inicio', path: '/', icon: <House size={16} /> }, { name: product.title, path: `/product/${product.id}`, icon: <Box size={16} /> }]} />
         <Card className='shadow p-4'>
           <Row className='align-items-start'>
             <Col md={6} className='text-center mb-4 mb-md-0'>

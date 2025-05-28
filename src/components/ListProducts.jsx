@@ -17,9 +17,9 @@ export function ListOfProducts ({ products }) {
       <Row xs={1} sm={1} md={2} lg={3} xl={3} className='g-4'>
         {
         products.slice(0, 9).map(product => (
-          <Col key={product.id} className='h-10'>
+          <Col key={product.id}>
             <Link to={`/product/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-              <Card className='h-400 overflow-hidden border-0 shadow-sm bg-white rounded' style={{ height: '430px' }}>
+              <Card className='overflow-hidden border-0 shadow-sm bg-white rounded' style={{ height: '430px' }}>
                 {product.images.length > 1
                   ? (
                     <Carousel interval={null} indicators={false} className='p-2'>

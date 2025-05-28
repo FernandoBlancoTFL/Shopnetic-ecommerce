@@ -4,7 +4,7 @@ import { BuyingButtons } from './BuyingButtons'
 import { Button, Offcanvas, ListGroup, Badge } from 'react-bootstrap'
 import { ShoppingCartContext } from '../context/ShoppingCartContext'
 
-export function ShoppingCart () {
+export function ShoppingCart ({ isPositionFixed = false }) {
   const { shoppingCart, addProductToCart, removeProductFromCartById, emptyShoppingCart, emptyShoppingCartWithConfirmationModal } = useContext(ShoppingCartContext)
   const [show, setShow] = useState(false)
   const [cartSize, setCartSize] = useState(shoppingCart.length)
@@ -35,9 +35,9 @@ export function ShoppingCart () {
     <>
       <Button
         variant='success'
-        style={{ padding: '10px 15px' }}
+        style={{ padding: '10px 15px', zIndex: '1000' }}
         onClick={handleShow}
-        className={`position-fixed top-0 end-0 m-4 mt-4  border border-dark ${animate ? 'animate__animated animate__heartBeat' : ''}`}
+        className={`${isPositionFixed ? 'position-fixed top-0 end-0 m-4 mt-4 d-none d-lg-inline' : 'd-inline d-lg-none'} border border-dark ${animate ? 'animate__animated animate__heartBeat' : ''}`}
       >
         🛒
         {shoppingCart.length > 0 && (
