@@ -47,7 +47,7 @@ export function ShoppingCart ({ isPositionFixed = false }) {
         )}
       </Button>
 
-      <Offcanvas show={show} onHide={handleClose} placement='end' backdrop style={{ zIndex: 9999 }}>
+      <Offcanvas show={show} onHide={handleClose} placement='end' backdrop style={{ zIndex: '2000' }}>
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>Carrito de Compras</Offcanvas.Title>
         </Offcanvas.Header>

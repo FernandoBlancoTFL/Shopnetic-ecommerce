@@ -20,7 +20,6 @@
   white-space: nowrap;
   padding: 8px 16px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  font-size: 16px;
 }
 
 .search-input-control {
@@ -47,10 +46,6 @@
 
 .swal2-timer-progress-bar {
   background-color: #28a745 !important;
-}
-
-.text-custom-blue {
-  color: #0d6efd !important;
 }
 
 .breadcrumb {

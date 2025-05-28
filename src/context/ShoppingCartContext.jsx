@@ -87,7 +87,17 @@ export function ShoppingCartProvider ({ children }) {
       cancelButtonText: 'Cancelar',
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Si, vaciar carrito'
+      confirmButtonText: 'Si, vaciar carrito',
+      customClass: {
+        popup: 'my-swal-popup',
+        backdrop: 'my-swal-backdrop'
+      },
+      willOpen: () => {
+        const swalEl = document.querySelector('.swal2-popup')
+        const backdropEl = document.querySelector('.swal2-backdrop')
+        if (swalEl) swalEl.style.setProperty('z-index', '9999', 'important')
+        if (backdropEl) backdropEl.style.setProperty('z-index', '9998', 'important')
+      }
     }).then((result) => {
       if (result.isConfirmed) {
         emptyShoppingCart()

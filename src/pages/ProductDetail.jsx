@@ -9,7 +9,7 @@ import { useContext, useEffect, useState } from 'react'
 import { Spinner, Row, Col, Container, Card } from 'react-bootstrap'
 import { ShoppingCartContext } from '../context/ShoppingCartContext'
 import { CustomBreadcrumb } from './CustomBreadcrumb'
-import { Box, House } from 'react-bootstrap-icons'
+import { Box } from 'react-bootstrap-icons'
 
 export function ProductDetail () {
   const { id } = useParams()
@@ -63,9 +63,9 @@ export function ProductDetail () {
     handleAddProductToCart(productWithQuantity)
   }
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }, [product])
+  // useEffect(() => {
+  //   window.scrollTo({ top: 0, behavior: 'smooth' })
+  // }, [product])
 
   if (loading) {
     return (
@@ -79,10 +79,10 @@ export function ProductDetail () {
   const priceWithoutDiscount = (product.price / (1 - (product.discountPercentage / 100))).toFixed(2)
 
   return (
-    <main className='flex-grow-1 bg-secondary text-white'>
+    <main className='main flex-grow-1 bg-secondary text-white'>
       <ShoppingCart isPositionFixed />
-      <Container className='py-5 bg-secondary'>
-        <CustomBreadcrumb routes={[{ name: 'Inicio', path: '/', icon: <House size={16} /> }, { name: product.title, path: `/product/${product.id}`, icon: <Box size={16} /> }]} />
+      <Container className='py-2 py-sm-2 py-md-2 py-lg-2 bg-secondary'>
+        <CustomBreadcrumb routes={[{ name: 'Inicio', path: '/', icon: <i class='bi bi-house-fill' /> }, { name: product.title, path: `/product/${product.id}`, icon: <Box size={16} /> }]} />
         <Card className='shadow p-4'>
           <Row className='align-items-start'>
             <Col md={6} className='text-center mb-4 mb-md-0'>
@@ -141,7 +141,7 @@ export function ProductDetail () {
                 firstButtonEvent={clickedIds.includes(product.id) ? () => handleAddProductToCart(product) : () => handleAddProductToCartWithquantity(product)}
                 buttonSize='lg'
               />
-              <div className='d-flex gap-5'>
+              <div className='d-flex flex-wrap my-3 flex-md-nowrap gap-1 gap-md-5 justify-content-center justify-content-md-start '>
                 <div className='mt-3'>
                   <p className='mb-1'><i class='bi bi-truck' /> {product.shippingInformation}</p>
                   <p className='mb-1'><i class='bi bi-arrow-return-left' /> {product.returnPolicy}</p>
@@ -219,9 +219,11 @@ export function ProductDetail () {
                 <p style={{ fontSize: '24px', marginBottom: '5px', color: '#ff8f00' }}>{product.rating}</p>
                 <h3><StarRating rating={product.rating} size={24} /></h3>
               </div>
-              {product.reviews.map((review, index) =>
-                <UserReview key={index} name={review.reviewerName} email={review.reviewerEmail} rating={review.rating} comment={review.comment} date={review.date} />
-              )}
+              <div className='d-flex flex-column align-items-center align-items-md-start'>
+                {product.reviews.map((review, index) =>
+                  <UserReview key={index} name={review.reviewerName} email={review.reviewerEmail} rating={review.rating} comment={review.comment} date={review.date} />
+                )}
+              </div>
             </Col>
           </Row>
           <Row className='align-items-start mt-2'>
