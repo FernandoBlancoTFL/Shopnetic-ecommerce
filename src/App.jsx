@@ -6,6 +6,9 @@ import { Contact } from './pages/Contact'
 import { Footer } from './components/Footer'
 import { Routes, Route } from 'react-router-dom'
 import { ProductDetail } from './pages/ProductDetail'
+import { TemporalFile } from './components/TemporalFile'
+import { ProtectedRoute } from './components/ProtectedRoute'
+import { AuthProvider } from './context/AuthContext'
 import { useState } from 'react'
 import './css/App.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -21,15 +24,18 @@ export function App () {
 
   return (
     <div className='d-flex flex-column min-vh-100'>
-      <Header handleFilter={handleFilters} />
-      <Routes>
-        <Route path='/' element={<Home filterURL={productsURL} filterName={filterName} />} />
-        <Route path='/about' element={<About />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/contact' element={<Contact />} />
-        <Route path='/product/:id' element={<ProductDetail />} />
-      </Routes>
-      <Footer />
+      <AuthProvider>
+        <Header handleFilter={handleFilters} />
+        <Routes>
+          <Route path='/' element={<Home filterURL={productsURL} filterName={filterName} />} />
+          <Route path='/about' element={<About />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/dashboard' element={<ProtectedRoute><TemporalFile /></ProtectedRoute>} />
+          <Route path='/contact' element={<Contact />} />
+          <Route path='/product/:id' element={<ProductDetail />} />
+        </Routes>
+        <Footer />
+      </AuthProvider>
     </div>
   )
 }

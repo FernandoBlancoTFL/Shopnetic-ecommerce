@@ -16,7 +16,7 @@ export function NavBar ({ handleFilter }) {
           />
         </Navbar.Brand>
         <div className='d-flex gap-2'>
-          <Button as={Link} to='/login' variant='info' className='d-inline d-lg-none align-content-center'>Iniciar sesión</Button>
+          <Button as={Link} to='/login' variant='info' className='d-inline d-lg-none align-content-center'>Iniciar sesión <i class='bi bi-person-circle' /></Button>
           <ShoppingCart isPositionFixed={false} />
           <Navbar.Toggle aria-controls='basic-navbar-nav' />
         </div>
@@ -45,6 +45,7 @@ export function NavBar ({ handleFilter }) {
             </Form>
           </div>
         </Navbar.Collapse>
+        <Button as={Link} to='/login' variant='info' className='d-none d-lg-inline align-content-center'>Iniciar sesión <i class='bi bi-person-circle' /></Button>
       </Container>
     </Navbar>
   )
