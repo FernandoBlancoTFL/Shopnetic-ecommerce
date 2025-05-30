@@ -15,7 +15,7 @@ export function Login () {
     if (user === 'admin' && password === '1234') {
       setShowAlert(false)
       login(user)
-      navigate('/dashboard')
+      navigate('/')
     } else {
       setShowAlert(true)
     }

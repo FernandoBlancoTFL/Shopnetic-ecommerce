@@ -8,7 +8,7 @@ import { useParams } from 'react-router-dom'
 import { useContext, useEffect, useState } from 'react'
 import { Spinner, Row, Col, Container, Card } from 'react-bootstrap'
 import { ShoppingCartContext } from '../context/ShoppingCartContext'
-import { CustomBreadcrumb } from './CustomBreadcrumb'
+import { CustomBreadcrumb } from '../components/CustomBreadcrumb'
 import { Box } from 'react-bootstrap-icons'
 
 export function ProductDetail () {
@@ -63,9 +63,9 @@ export function ProductDetail () {
     handleAddProductToCart(productWithQuantity)
   }
 
-  // useEffect(() => {
-  //   window.scrollTo({ top: 0, behavior: 'smooth' })
-  // }, [product])
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [product])
 
   if (loading) {
     return (

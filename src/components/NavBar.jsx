@@ -1,5 +1,6 @@
 import { Navbar, Nav, Container, NavDropdown, Form, Button } from 'react-bootstrap'
 import { ShoppingCart } from './ShoppingCart'
+import { LoginButton } from './LoginButton'
 import { Link } from 'react-router-dom'
 
 export function NavBar ({ handleFilter }) {
@@ -16,7 +17,7 @@ export function NavBar ({ handleFilter }) {
           />
         </Navbar.Brand>
         <div className='d-flex gap-2'>
-          <Button as={Link} to='/login' variant='info' className='d-inline d-lg-none align-content-center'>Iniciar sesión <i class='bi bi-person-circle' /></Button>
+          <LoginButton isMobile />
           <ShoppingCart isPositionFixed={false} />
           <Navbar.Toggle aria-controls='basic-navbar-nav' />
         </div>
@@ -45,7 +46,7 @@ export function NavBar ({ handleFilter }) {
             </Form>
           </div>
         </Navbar.Collapse>
-        <Button as={Link} to='/login' variant='info' className='d-none d-lg-inline align-content-center'>Iniciar sesión <i class='bi bi-person-circle' /></Button>
+        <LoginButton isMobile={false} />
       </Container>
     </Navbar>
   )
