@@ -12,6 +12,7 @@ import { AuthProvider } from './context/AuthContext'
 import { useState } from 'react'
 import './css/App.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import { Checkout } from './pages/Checkout'
 
 export function App () {
   const [productsURL, setProductsURL] = useState('https://dummyjson.com/products')
@@ -32,6 +33,7 @@ export function App () {
           <Route path='/login' element={<Login />} />
           <Route path='/userProfile' element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
           <Route path='/contact' element={<Contact />} />
+          <Route path='/checkout' element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
           <Route path='/product/:id' element={<ProductDetail />} />
         </Routes>
         <Footer />

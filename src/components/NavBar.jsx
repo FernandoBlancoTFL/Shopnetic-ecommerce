@@ -1,4 +1,4 @@
-import { Navbar, Nav, Container, NavDropdown, Form, Button } from 'react-bootstrap'
+import { Navbar, Nav, Container, NavDropdown, Form } from 'react-bootstrap'
 import { ShoppingCart } from './ShoppingCart'
 import { LoginButton } from './LoginButton'
 import { Link } from 'react-router-dom'
@@ -7,7 +7,7 @@ export function NavBar ({ handleFilter }) {
   return (
     <Navbar expand='lg' className='bg-dark py-3 shadow custom-navbar' variant='dark'>
       <Container>
-        <Navbar.Brand as={Link} to='/'>
+        <Navbar.Brand as={Link} to='/' className='m-0 mx-lg-2'>
           <img
             src='https://cdn-icons-png.freepik.com/512/869/869636.png?ga=GA1.1.1678774421.1729989836https://www.freepik.es/iconos/tienda'
             alt='Shopnetic Logo'

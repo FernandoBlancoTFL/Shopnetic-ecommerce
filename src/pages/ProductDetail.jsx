@@ -4,7 +4,7 @@ import { StarRating } from '../components/StarRating'
 import { UserReview } from '../components/UserReview'
 import { CategoryCarousel } from '../components/CategoryCarousel'
 import { ShoppingCart } from '../components/ShoppingCart'
-import { useParams } from 'react-router-dom'
+import { Link, Navigate, useParams } from 'react-router-dom'
 import { useContext, useEffect, useState } from 'react'
 import { Spinner, Row, Col, Container, Card } from 'react-bootstrap'
 import { ShoppingCartContext } from '../context/ShoppingCartContext'
@@ -139,6 +139,8 @@ export function ProductDetail () {
                 firstButtonDisabled={clickedIds.includes(product.id)}
                 secondButtonVariant='primary'
                 firstButtonEvent={clickedIds.includes(product.id) ? () => handleAddProductToCart(product) : () => handleAddProductToCartWithquantity(product)}
+                secondButtonAs={Link}
+                secondButtonTo='/checkout'
                 buttonSize='lg'
               />
               <div className='d-flex flex-wrap my-3 flex-md-nowrap gap-1 gap-md-5 justify-content-center justify-content-md-start '>
