@@ -6,8 +6,8 @@ import { Link } from 'react-router-dom'
 export function NavBar ({ handleFilter }) {
   return (
     <Navbar expand='lg' className='bg-dark py-3 shadow custom-navbar' variant='dark'>
-      <Container>
-        <Navbar.Brand as={Link} to='/' className='m-0 mx-lg-2'>
+      <Container className='d-flex justify-content-between'>
+        <Navbar.Brand as={Link} to='/' className='m-0 mx-lg-2 d-flex flex-grow-1 flex-lg-grow-0'>
           <img
             src='https://cdn-icons-png.freepik.com/512/869/869636.png?ga=GA1.1.1678774421.1729989836https://www.freepik.es/iconos/tienda'
             alt='Shopnetic Logo'
@@ -16,11 +16,9 @@ export function NavBar ({ handleFilter }) {
             className='d-inline-block align-middle'
           />
         </Navbar.Brand>
-        <div className='d-flex gap-2'>
-          <LoginButton isMobile />
-          <ShoppingCart isPositionFixed={false} />
-          <Navbar.Toggle aria-controls='basic-navbar-nav' />
-        </div>
+        <LoginButton isMobile />
+        <ShoppingCart isPositionFixed={false} />
+        <Navbar.Toggle aria-controls='basic-navbar-nav' />
         <Navbar.Collapse id='basic-navbar-nav'>
           <Nav className='me-auto'>
             <Nav.Link as={Link} to='/' onClick={() => handleFilter('https://dummyjson.com/products', 'Nuestros Productos')}>Productos</Nav.Link>
@@ -49,5 +47,6 @@ export function NavBar ({ handleFilter }) {
         <LoginButton isMobile={false} />
       </Container>
     </Navbar>
+
   )
 }

@@ -5,11 +5,10 @@ import { Button, Offcanvas, ListGroup, Badge } from 'react-bootstrap'
 import { ShoppingCartContext } from '../context/ShoppingCartContext'
 
 export function ShoppingCart ({ isPositionFixed = false }) {
-  const { shoppingCart, addProductToCart, removeProductFromCartById, emptyShoppingCart, emptyShoppingCartWithConfirmationModal } = useContext(ShoppingCartContext)
+  const { shoppingCart, totalPrice, addProductToCart, removeProductFromCartById, emptyShoppingCart, emptyShoppingCartWithConfirmationModal } = useContext(ShoppingCartContext)
   const [show, setShow] = useState(false)
   const [cartSize, setCartSize] = useState(shoppingCart.length)
   const [animate, setAnimate] = useState(false)
-  const totalPrice = shoppingCart.reduce((acc, item) => acc + (item.price * item.quantity), 0).toFixed(2)
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 

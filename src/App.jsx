@@ -7,12 +7,12 @@ import { Footer } from './components/Footer'
 import { Routes, Route } from 'react-router-dom'
 import { ProductDetail } from './pages/ProductDetail'
 import { UserProfile } from './pages/UserProfile'
+import { Checkout } from './pages/Checkout'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { AuthProvider } from './context/AuthContext'
 import { useState } from 'react'
 import './css/App.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { Checkout } from './pages/Checkout'
 
 export function App () {
   const [productsURL, setProductsURL] = useState('https://dummyjson.com/products')

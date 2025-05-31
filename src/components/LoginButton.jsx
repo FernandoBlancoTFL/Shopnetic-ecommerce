@@ -19,11 +19,11 @@ function LoginButtonDisplay ({ user, isMobile }) {
   )
 }
 
-function UserDropdownButton ({ logout, isMobile = false }) {
+function UserDropdownButton ({ user, logout, isMobile = false }) {
   return (
     <Dropdown>
-      <Dropdown.Toggle variant='primary' id='dropdown-basic' className={`${isMobile ? 'd-inline d-lg-none' : 'd-none d-lg-inline'}`}>
-        <i class='bi bi-person-circle' />
+      <Dropdown.Toggle variant='primary' id='dropdown-basic' className={`${isMobile ? 'd-inline d-lg-none' : 'd-none d-lg-inline'}`} style={{ height: '45px'}}>
+        {user} <i class='bi bi-person-circle' />
       </Dropdown.Toggle>
 
       <Dropdown.Menu>
@@ -39,7 +39,7 @@ export function LoginButton ({ isMobile = false }) {
 
   return (
     user
-      ? <UserDropdownButton logout={logout} isMobile={isMobile} />
+      ? <UserDropdownButton user={user} logout={logout} isMobile={isMobile} />
       : <LoginButtonDisplay user={user} isMobile={isMobile} />
   )
 }

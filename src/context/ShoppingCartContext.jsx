@@ -11,6 +11,7 @@ export function ShoppingCartProvider ({ children }) {
     const clickedIds = window.localStorage.getItem('clickedIds')
     return clickedIds ? JSON.parse(clickedIds) : []
   })
+  const totalPrice = Number(shoppingCart.reduce((acc, item) => acc + (item.price * item.quantity), 0).toFixed(2))
 
   useEffect(() => {
     window.localStorage.setItem('shoppingCart', JSON.stringify(shoppingCart))
@@ -123,7 +124,7 @@ export function ShoppingCartProvider ({ children }) {
   }
 
   return (
-    <ShoppingCartContext.Provider value={{ shoppingCart, addProductToCart, handleAddProductToCart, getOrInitializeProductInCart, removeProductFromCartById, emptyShoppingCart, emptyShoppingCartWithConfirmationModal, clickedIds, handleClickedIds }}>
+    <ShoppingCartContext.Provider value={{ shoppingCart, totalPrice, addProductToCart, handleAddProductToCart, getOrInitializeProductInCart, removeProductFromCartById, emptyShoppingCart, emptyShoppingCartWithConfirmationModal, clickedIds, handleClickedIds }}>
       {children}
     </ShoppingCartContext.Provider>
   )
