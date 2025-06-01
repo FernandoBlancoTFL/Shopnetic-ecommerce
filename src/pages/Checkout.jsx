@@ -18,7 +18,9 @@ export function Checkout () {
             <Col md={8} className='text-center mb-4 mb-md-0 px-4'>
               <h3 className='text-start'>Checkout</h3>
               <hr className='border-white-50' />
-              <CheckoutForm setShippingPrice={price => setShippingPrice(price)} />
+              <div className='d-flex justify-content-center w-100'>
+                <CheckoutForm setShippingPrice={price => setShippingPrice(price)} />
+              </div>
             </Col>
             <Col md={4} className='px-4'>
               <h4>Resumen de compra</h4>
