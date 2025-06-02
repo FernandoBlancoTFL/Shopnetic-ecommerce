@@ -13,18 +13,21 @@ export function Checkout () {
   return (
     <main className='main flex-grow-1 bg-secondary text-white'>
       <Container className='py-2 py-sm-2 py-md-2 py-lg-2 bg-secondary'>
-        <Card className='shadow p-4'>
-          <Row className='align-items-start'>
-            <Col md={8} className='text-center mb-4 mb-md-0 px-4'>
-              <h3 className='text-start'>Checkout</h3>
+        <Card className='shadow' style={{ backgroundColor: '#f2f2f2', paddingRight: '12px' }}>
+          <Row className='align-items-start justify-content-between'>
+            <Col md={8} className='text-center mb-4 mb-md-0 p-4 px-5'>
+              <div className='d-flex align-items-center justify-content-between'>
+                <h3 className='text-start m-0'>Checkout</h3>
+                <p className='m-0 mt-2 fw-semibold'>{`Subtotal ${(shoppingCart.length > 1 ? `(${shoppingCart.length} Items)` : '(1 Item)')}: $${totalPrice}`}</p>
+              </div>
               <hr className='border-white-50' />
-              <div className='d-flex justify-content-center w-100'>
-                <CheckoutForm setShippingPrice={price => setShippingPrice(price)} />
+              <div className='d-flex justify-content-center w-100' style={{ minHeight: '400px' }}>
+                <CheckoutForm shippingPrice={shippingPrice} setShippingPrice={price => setShippingPrice(price)} />
               </div>
             </Col>
-            <Col md={4} className='px-4'>
+            <Col md={4} className='p-4 bg-white rounded-end-1'>
               <h4>Resumen de compra</h4>
-              <div className='my-4' style={{ maxWidth: '350px' }}>
+              <div className='d-flex flex-column my-4 mx-auto' style={{ maxWidth: '350px' }}>
                 <div className='d-flex justify-content-between'>
                   <p>Subtotal:</p>
                   <p>$ {totalPrice}</p>

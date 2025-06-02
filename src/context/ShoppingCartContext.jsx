@@ -53,23 +53,25 @@ export function ShoppingCartProvider ({ children }) {
     setClickedIds([...clickedIds, productId])
   }
 
-  const handleAddProductToCart = (product) => {
-    Swal.fire({
-      toast: true,
-      position: 'top-end',
-      title: '✅ ¡Producto agregado correctamente!',
-      showConfirmButton: false,
-      timer: 2000,
-      timerProgressBar: true,
-      background: '#ffffff',
-      customClass: {
-        popup: 'swal2-toast-custom'
-      },
-      didOpen: (toast) => {
-        toast.style.marginTop = '84px'
-        toast.style.width = '800px'
-      }
-    })
+  const handleAddProductToCart = (product, shouldShowAlert = true) => {
+    if (shouldShowAlert) {
+      Swal.fire({
+        toast: true,
+        position: 'top-end',
+        title: '✅ ¡Producto agregado correctamente!',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+        background: '#ffffff',
+        customClass: {
+          popup: 'swal2-toast-custom'
+        },
+        didOpen: (toast) => {
+          toast.style.marginTop = '84px'
+          toast.style.width = '800px'
+        }
+      })
+    }
     handleClickedIds(product.id)
     addProductToCart(product)
   }

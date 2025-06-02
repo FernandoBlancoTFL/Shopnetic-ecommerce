@@ -1,5 +1,7 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useContext } from 'react'
 import { Container, Row, Col, Form, Button } from 'react-bootstrap'
+import { ShoppingCartContext } from '../context/ShoppingCartContext'
+import { useNavigate } from 'react-router-dom'
 
 export const validateForm = (form) => {
   if (form.checkValidity()) {
@@ -9,21 +11,21 @@ export const validateForm = (form) => {
   return false
 }
 
-function AddressForm ({ setShowComponent, setUserInfo }) {
+function AddressForm ({ userInfo, setShowComponent, setUserInfo }) {
   const formRef = useRef(null)
 
   const [addressFormData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    address1: '',
-    address2: '',
-    postalCode: '',
-    city: ''
+    firstName: userInfo.firstName || '',
+    lastName: userInfo.lastName || '',
+    address1: userInfo.address1 || '',
+    address2: userInfo.address2 || '',
+    postalCode: userInfo.postalCode || '',
+    city: userInfo.city || ''
   })
 
   const handleChange = (e) => {
     const { id, value } = e.target
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [id]: value
     }))
@@ -35,16 +37,16 @@ function AddressForm ({ setShowComponent, setUserInfo }) {
     const form = formRef.current
 
     if (validateForm(form)) {
-      setUserInfo(prev => ({
+      setUserInfo((prev) => ({
         ...prev,
-        addressFormData
+        ...addressFormData
       }))
       setShowComponent(2)
     }
   }
 
   return (
-    <Container className='border border-1 p-3 m-2' style={{ maxWidth: '600px' }}>
+    <Container className='border border-1 p-3 bg-white' style={{ maxWidth: '600px' }}>
       <h4 className='mb-3 text-start'>Dirección del envío</h4>
       <p className='text-start text-muted'>* Indica campos obligatorios</p>
       <Form ref={formRef} className='my-4' noValidate>
@@ -138,7 +140,7 @@ function AddressForm ({ setShowComponent, setUserInfo }) {
             </Form.Group>
           </Col>
         </Row>
-        <div className='d-flex gap-2 justify-content-center'>
+        <div className='d-flex justify-content-center mt-5'>
           <Button variant='primary' onClick={handleSubmit}>
             Siguiente
           </Button>
@@ -148,50 +150,53 @@ function AddressForm ({ setShowComponent, setUserInfo }) {
   )
 }
 
-function ShippingMethod ({ setShowComponent, setShippingPrice }) {
-  const [selected, setSelected] = useState('standard')
-
+function ShippingMethod ({ userInfo, setUserInfo, setShowComponent, setShippingPrice, shippingPrice }) {
+  const [selected, setSelected] = useState(userInfo?.shippingMethod || 'standard')
   const formRef = useRef(null)
 
   const handleSubmit = (e) => {
     e.preventDefault()
-
     const form = formRef.current
 
     if (validateForm(form)) {
+      setUserInfo(prev => ({
+        ...prev,
+        shippingMethod: selected,
+        shippingPrice
+      }))
       setShowComponent(3)
     }
   }
 
   useEffect(() => {
     switch (selected) {
-      case 'standard':
+      case 'Standard':
         setShippingPrice(0)
         break
-      case 'premium':
+      case 'Premium':
         setShippingPrice(10.00)
         break
-      case 'express':
+      case 'Express':
         setShippingPrice(15.00)
         break
     }
-  }, [selected])
+  }, [selected, setShippingPrice])
 
   const options = [
     {
-      id: 'standard',
+      id: 'Standard',
       title: 'Standard',
       description: 'De 3 a 6 días hábiles',
       price: 'Gratis'
     },
     {
-      id: 'premium',
+      id: 'Premium',
       title: 'Premium',
       description: 'De 2 a 3 días hábiles',
       price: '$10.00'
     },
     {
-      id: 'express',
+      id: 'Express',
       title: 'Express',
       description: 'De 1 a 2 días hábiles',
       price: '$15.00'
@@ -199,7 +204,7 @@ function ShippingMethod ({ setShowComponent, setShippingPrice }) {
   ]
 
   return (
-    <Container className='p-3 border border-1' style={{ maxWidth: '600px' }}>
+    <Container className='p-3 border border-1 bg-white' style={{ maxWidth: '600px' }}>
       <Form ref={formRef} noValidate>
         <h4 className='mb-3 text-start'>Método de envío</h4>
         <p className='text-start text-muted'>Selecciona el método de envío</p>
@@ -244,18 +249,18 @@ function ShippingMethod ({ setShowComponent, setShippingPrice }) {
       </Form>
     </Container>
   )
-};
+}
 
-function PaymentForm ({ setShowComponent, setUserInfo }) {
+function PaymentForm ({ userInfo, setShowComponent, setUserInfo }) {
   const formRef = useRef(null)
 
   const [payFormData, setFormDataPay] = useState({
-    formEmail: '',
-    formCard: '',
-    formCardExp: '',
-    formCardCvc: '',
-    formCardName: '',
-    formCountry: ''
+    formEmail: userInfo.formEmail || '',
+    formCard: userInfo.formCard || '',
+    formCardExp: userInfo.formCardExp || '',
+    formCardCvc: userInfo.formCardCvc || '',
+    formCardName: userInfo.formCardName || '',
+    formCountry: userInfo.formCountry || ''
   })
 
   const handleChange = (e) => {
@@ -273,9 +278,9 @@ function PaymentForm ({ setShowComponent, setUserInfo }) {
     if (validateForm(form)) {
       setUserInfo(prev => ({
         ...prev,
-        payFormData
+        ...payFormData
       }))
-      setShowComponent(3)
+      setShowComponent(4)
     }
   }
 
@@ -296,7 +301,7 @@ function PaymentForm ({ setShowComponent, setUserInfo }) {
   }
 
   return (
-    <Container className='border border-1 p-3' style={{ maxWidth: '600px' }}>
+    <Container className='border border-1 p-3 bg-white' style={{ maxWidth: '600px' }}>
       <h4 className='mb-4 text-start'>Pago</h4>
       <Container style={{ maxWidth: '450px' }}>
         <Form ref={formRef} noValidate>
@@ -304,7 +309,7 @@ function PaymentForm ({ setShowComponent, setUserInfo }) {
             <Col md={100}>
               <Form.Group controlId='formEmail'>
                 <Form.Label className='mb-0'>EMAIL</Form.Label>
-                <Form.Control className='rounded-0' type='email' placeholder='Ingresa tu email' maxLength={60} onChange={handleChange} required />
+                <Form.Control className='rounded-0' type='email' placeholder='Ingresa tu email' value={payFormData.formEmail} maxLength={60} onChange={handleChange} required />
               </Form.Group>
             </Col>
           </Row>
@@ -319,6 +324,7 @@ function PaymentForm ({ setShowComponent, setUserInfo }) {
                   maxLength={19}
                   onChange={handleCardChange}
                   required
+                  value={payFormData.formCard}
                 />
               </Form.Group>
             </Col>
@@ -332,12 +338,13 @@ function PaymentForm ({ setShowComponent, setUserInfo }) {
                     maxLength={5}
                     onChange={handleExpirationChange}
                     required
+                    value={payFormData.formCardExp}
                   />
                 </Form.Group>
               </Col>
               <Col md={6} className='p-0'>
                 <Form.Group controlId='formCardCvc'>
-                  <Form.Control className='rounded-0' type='text' placeholder='CVC' maxLength={3} pattern='^[0-9]{3}$' onChange={handleChange} required />
+                  <Form.Control className='rounded-0' type='text' placeholder='CVC' value={payFormData.formCardCvc} maxLength={3} pattern='^[0-9]{3}$' onChange={handleChange} required />
                 </Form.Group>
               </Col>
             </Row>
@@ -346,7 +353,7 @@ function PaymentForm ({ setShowComponent, setUserInfo }) {
             <Col md={100}>
               <Form.Group controlId='formCardName'>
                 <Form.Label className='mb-0'>NOMBRE COMO FIGURA EN LA TARJETA</Form.Label>
-                <Form.Control className='rounded-0' type='text' placeholder='Juan C Lopez' maxLength={50} onChange={handleChange} required />
+                <Form.Control className='rounded-0' type='text' placeholder='Juan C Lopez' value={payFormData.formCardName} maxLength={50} onChange={handleChange} required />
               </Form.Group>
             </Col>
           </Row>
@@ -354,7 +361,7 @@ function PaymentForm ({ setShowComponent, setUserInfo }) {
             <Col md={100}>
               <Form.Group controlId='formCountry'>
                 <Form.Label className='mb-0'>PAIS</Form.Label>
-                <Form.Control className='rounded-0' as='select' onChange={handleChange} required>
+                <Form.Control className='rounded-0' as='select' onChange={handleChange} value={payFormData.formCountry} required>
                   <option value=''>Selecciona un país</option>
                   <option value='Argentina'>Argentina</option>
                   <option value='Brasil'>Brasil</option>
@@ -383,14 +390,109 @@ function PaymentForm ({ setShowComponent, setUserInfo }) {
   )
 }
 
-export function CheckoutForm ({ setShippingPrice }) {
+function ReviewAndOrder ({ userInfo, setShowComponent }) {
+  const { emptyShoppingCart } = useContext(ShoppingCartContext)
+  const navigate = useNavigate()
+
+  const handleSubmit = () => {
+    Swal.fire({
+      title: 'Compra finalizada!',
+      text: 'Te enviaremos por mail los detalles de la compra',
+      icon: 'success'
+    }).then(() => {
+      emptyShoppingCart()
+      navigate('/')
+    })
+  }
+
+  return (
+    <Container className='border border-1 p-3 bg-white' style={{ maxWidth: '600px' }}>
+      <h4 className='mb-3 text-start'>Revisar y realizar pedido</h4>
+      <Container className='d-flex flex-column text-start gap-4'>
+        <Container>
+          <Container>
+            <div className='d-flex justify-content-between'>
+              <h5>1. Dirección</h5>
+              <a
+                onClick={() => setShowComponent(1)}
+                style={{ textDecoration: 'underline', cursor: 'pointer' }}
+              >
+                Cambiar
+              </a>
+            </div>
+            <div className='d-flex flex-column px-3'>
+              <span>{userInfo.firstName} {userInfo.lastName}</span>
+              <span>{userInfo.address1}</span>
+              {userInfo.address2 !== '' ? <span>{userInfo.address2}</span> : null}
+              <span>Código postal: {userInfo.postalCode}</span>
+              <span>{userInfo.formCountry}, {userInfo.city}</span>
+            </div>
+            <hr className='border-white-50 my-2' />
+          </Container>
+          <Container>
+            <div className='d-flex justify-content-between'>
+              <h5>2. Método de envío</h5>
+              <a
+                onClick={() => setShowComponent(2)}
+                style={{ textDecoration: 'underline', cursor: 'pointer' }}
+              >
+                Cambiar
+              </a>
+            </div>
+            <div className='d-flex flex-column px-3'>
+              <span>{userInfo.shippingMethod} - ${userInfo.shippingPrice}</span>
+            </div>
+            <hr className='border-white-50' />
+          </Container>
+          <Container>
+            <div className='d-flex justify-content-between'>
+              <h5>3. Datos del pago</h5>
+              <a
+                onClick={() => setShowComponent(3)}
+                style={{ textDecoration: 'underline', cursor: 'pointer' }}
+              >
+                Cambiar
+              </a>
+            </div>
+            <div className='d-flex gap-5 px-3'>
+              <div className='d-flex flex-column'>
+                <p className='m-0 fw-semibold'>Información de la tarjeta</p>
+                <span>{userInfo.formCardName}</span>
+                <span>**** **** **** {userInfo.formCard.slice(14, 19)}</span>
+                <span>Vence: {userInfo.formCardExp}</span>
+              </div>
+              <div className='d-flex flex-column'>
+                <p className='m-0 fw-semibold'>Dirección de envío</p>
+                <span>{userInfo.firstName} {userInfo.lastName}</span>
+                <span>{userInfo.address1}</span>
+                {userInfo.address2 !== '' ? <span>{userInfo.address2}</span> : null}
+                <span>{userInfo.formCountry}, {userInfo.city}</span>
+              </div>
+            </div>
+          </Container>
+        </Container>
+        <div className='d-flex gap-2 m-2 justify-content-center'>
+          <Button variant='secondary' onClick={() => setShowComponent(3)}>
+            Volver
+          </Button>
+          <Button variant='success' onClick={handleSubmit}>
+            Realizar pedido
+          </Button>
+        </div>
+      </Container>
+    </Container>
+  )
+}
+
+export function CheckoutForm ({ shippingPrice, setShippingPrice }) {
   const [showComponent, setShowComponent] = useState(1)
   const [userInfo, setUserInfo] = useState([])
 
   const components = {
-    1: <AddressForm setShowComponent={setShowComponent} setUserInfo={setUserInfo} />,
-    2: <ShippingMethod setShowComponent={setShowComponent} setShippingPrice={setShippingPrice} />,
-    3: <PaymentForm setShowComponent={setShowComponent} setUserInfo={setUserInfo} />
+    1: <AddressForm userInfo={userInfo} setShowComponent={setShowComponent} setUserInfo={setUserInfo} />,
+    2: <ShippingMethod userInfo={userInfo} setUserInfo={setUserInfo} setShowComponent={setShowComponent} setShippingPrice={setShippingPrice} shippingPrice={shippingPrice} />,
+    3: <PaymentForm userInfo={userInfo} setShowComponent={setShowComponent} setUserInfo={setUserInfo} />,
+    4: <ReviewAndOrder userInfo={userInfo} setShowComponent={setShowComponent} />
   }
 
   return components[showComponent] || null

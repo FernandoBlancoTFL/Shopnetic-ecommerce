@@ -4,7 +4,7 @@ import { StarRating } from '../components/StarRating'
 import { UserReview } from '../components/UserReview'
 import { CategoryCarousel } from '../components/CategoryCarousel'
 import { ShoppingCart } from '../components/ShoppingCart'
-import { Link, Navigate, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useContext, useEffect, useState } from 'react'
 import { Spinner, Row, Col, Container, Card } from 'react-bootstrap'
 import { ShoppingCartContext } from '../context/ShoppingCartContext'
@@ -56,11 +56,11 @@ export function ProductDetail () {
     setProductQuantity(quantity)
   }
 
-  const handleAddProductToCartWithquantity = (product) => {
+  const handleAddProductToCartWithquantity = (product, shouldShowAlert) => {
     const newProductQuantity = productQuantity
     const productWithQuantity = getOrInitializeProductInCart(product)
     productWithQuantity.quantity = newProductQuantity
-    handleAddProductToCart(productWithQuantity)
+    handleAddProductToCart(productWithQuantity, shouldShowAlert)
   }
 
   useEffect(() => {
@@ -141,6 +141,7 @@ export function ProductDetail () {
                 firstButtonEvent={clickedIds.includes(product.id) ? () => handleAddProductToCart(product) : () => handleAddProductToCartWithquantity(product)}
                 secondButtonAs={Link}
                 secondButtonTo='/checkout'
+                secondButtonEvent={clickedIds.includes(product.id) ? null : () => handleAddProductToCartWithquantity(product, false)}
                 buttonSize='lg'
               />
               <div className='d-flex flex-wrap my-3 flex-md-nowrap gap-1 gap-md-5 justify-content-center justify-content-md-start '>

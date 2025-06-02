@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from 'react'
 import { CartItem } from './CartItem'
 import { BuyingButtons } from './BuyingButtons'
 import { Button, Offcanvas, ListGroup, Badge } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 import { ShoppingCartContext } from '../context/ShoppingCartContext'
 
 export function ShoppingCart ({ isPositionFixed = false }) {
@@ -19,16 +20,6 @@ export function ShoppingCart ({ isPositionFixed = false }) {
     }
     setCartSize(shoppingCart.length)
   }, [shoppingCart])
-
-  const handleBuying = () => {
-    Swal.fire({
-      title: 'Ding ding!',
-      text: 'Compra finalizada',
-      icon: 'success'
-    })
-    handleClose()
-    emptyShoppingCart()
-  }
 
   return (
     <>
@@ -74,7 +65,8 @@ export function ShoppingCart ({ isPositionFixed = false }) {
                   firstButtonFontSize='fs-7'
                   secondButtonFontSize='fs-7'
                   buttonSize='sm'
-                  firstButtonEvent={handleBuying}
+                  firstButtonAs={Link}
+                  firstButtonTo='/checkout'
                   secondButtonEvent={emptyShoppingCartWithConfirmationModal}
                 />
               </ListGroup>
