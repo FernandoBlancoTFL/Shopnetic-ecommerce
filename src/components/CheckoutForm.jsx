@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useContext } from 'react'
-import { Container, Row, Col, Form, Button } from 'react-bootstrap'
+import { Container, Row, Col, Form, Button, Spinner } from 'react-bootstrap'
 import { ShoppingCartContext } from '../context/ShoppingCartContext'
 import { useNavigate } from 'react-router-dom'
 
@@ -150,58 +150,58 @@ function AddressForm ({ userInfo, setShowComponent, setUserInfo }) {
   )
 }
 
-function ShippingMethod ({ userInfo, setUserInfo, setShowComponent, setShippingPrice, shippingPrice }) {
-  const [selected, setSelected] = useState(userInfo?.shippingMethod || 'standard')
-  const formRef = useRef(null)
+function ShippingMethod({ userInfo, setUserInfo, setShowComponent, setShippingPrice, shippingPrice }) {
+  const [selected, setSelected] = useState(userInfo?.shippingMethod || 'Standard');  // Valor predeterminado "Standard"
+  const formRef = useRef(null);
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    const form = formRef.current
+    e.preventDefault();
+    const form = formRef.current;
 
     if (validateForm(form)) {
-      setUserInfo(prev => ({
+      setUserInfo((prev) => ({
         ...prev,
         shippingMethod: selected,
-        shippingPrice
-      }))
-      setShowComponent(3)
+        shippingPrice,
+      }));
+      setShowComponent(3);
     }
-  }
+  };
 
   useEffect(() => {
     switch (selected) {
       case 'Standard':
-        setShippingPrice(0)
-        break
+        setShippingPrice(0);
+        break;
       case 'Premium':
-        setShippingPrice(10.00)
-        break
+        setShippingPrice(10.00);
+        break;
       case 'Express':
-        setShippingPrice(15.00)
-        break
+        setShippingPrice(15.00);
+        break;
     }
-  }, [selected, setShippingPrice])
+  }, [selected, setShippingPrice]);
 
   const options = [
     {
       id: 'Standard',
       title: 'Standard',
       description: 'De 3 a 6 días hábiles',
-      price: 'Gratis'
+      price: 'Gratis',
     },
     {
       id: 'Premium',
       title: 'Premium',
       description: 'De 2 a 3 días hábiles',
-      price: '$10.00'
+      price: '$10.00',
     },
     {
       id: 'Express',
       title: 'Express',
       description: 'De 1 a 2 días hábiles',
-      price: '$15.00'
-    }
-  ]
+      price: '$15.00',
+    },
+  ];
 
   return (
     <Container className='p-3 border border-1 bg-white' style={{ maxWidth: '600px' }}>
@@ -248,7 +248,7 @@ function ShippingMethod ({ userInfo, setUserInfo, setShowComponent, setShippingP
         </div>
       </Form>
     </Container>
-  )
+  );
 }
 
 function PaymentForm ({ userInfo, setShowComponent, setUserInfo }) {
@@ -484,15 +484,32 @@ function ReviewAndOrder ({ userInfo, setShowComponent }) {
   )
 }
 
-export function CheckoutForm ({ shippingPrice, setShippingPrice }) {
+export function CheckoutForm({ shippingPrice, setShippingPrice }) {
   const [showComponent, setShowComponent] = useState(1)
   const [userInfo, setUserInfo] = useState([])
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    setLoading(true)
+    const timeout = setTimeout(() => {
+      setLoading(false)
+    }, 500)
+    return () => clearTimeout(timeout)
+  }, [showComponent])
 
   const components = {
     1: <AddressForm userInfo={userInfo} setShowComponent={setShowComponent} setUserInfo={setUserInfo} />,
     2: <ShippingMethod userInfo={userInfo} setUserInfo={setUserInfo} setShowComponent={setShowComponent} setShippingPrice={setShippingPrice} shippingPrice={shippingPrice} />,
     3: <PaymentForm userInfo={userInfo} setShowComponent={setShowComponent} setUserInfo={setUserInfo} />,
     4: <ReviewAndOrder userInfo={userInfo} setShowComponent={setShowComponent} />
+  }
+
+  if (loading) {
+    return (
+      <div className='d-flex justify-content-center align-items-center vh-100'>
+        <Spinner animation='border' />
+      </div>
+    )
   }
 
   return components[showComponent] || null

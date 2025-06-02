@@ -47,6 +47,5 @@ export function NavBar ({ handleFilter }) {
         <LoginButton isMobile={false} />
       </Container>
     </Navbar>
-
   )
 }

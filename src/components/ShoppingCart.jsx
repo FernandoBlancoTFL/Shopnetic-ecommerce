@@ -65,6 +65,7 @@ export function ShoppingCart ({ isPositionFixed = false }) {
                   firstButtonFontSize='fs-7'
                   secondButtonFontSize='fs-7'
                   buttonSize='sm'
+                  firstButtonEvent={handleClose}
                   firstButtonAs={Link}
                   firstButtonTo='/checkout'
                   secondButtonEvent={emptyShoppingCartWithConfirmationModal}
