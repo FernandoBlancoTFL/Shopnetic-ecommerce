@@ -121,7 +121,7 @@
 
 @media (min-width: 992px) {
   .custom-navbar {
-    position: fixed;
+    position: static;
   }
 
   .search-input {

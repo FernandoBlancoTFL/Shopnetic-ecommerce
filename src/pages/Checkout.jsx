@@ -43,7 +43,7 @@ export function Checkout () {
                 <hr className='border-white-50' />
                 <div className='d-flex justify-content-between'>
                   <p>Total:</p>
-                  <p>$ {totalPriceCheckout}</p>
+                  <p>$ {totalPriceCheckout.toFixed(2)}</p>
                 </div>
                 <hr className='border-white-50' />
               </div>

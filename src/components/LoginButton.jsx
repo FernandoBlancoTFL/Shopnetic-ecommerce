@@ -55,6 +55,7 @@ function UserDropdownButton ({ user, logout, isMobile = false }) {
 
       <Dropdown.Menu>
         <Dropdown.Item as={Link} to='/userProfile'>Perfil</Dropdown.Item>
+        <Dropdown.Item as={Link} to='/userAdmin'>Administrar usuarios</Dropdown.Item>
         <Dropdown.Item onClick={handleLogout}>Cerrar sesión</Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>

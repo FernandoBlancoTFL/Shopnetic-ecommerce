@@ -26,7 +26,7 @@ export function Login () {
       <Container className='my-5'>
         <Row className='justify-content-center'>
           <Col xs={12} sm={10} md={8} lg={6} xl={4}>
-            <Card className='shadow-lg p-4'>
+            <Card className='shadow-lg p-4 pb-1'>
               <Card.Body>
                 <h2 className='mb-4 text-center'>Iniciar Sesión</h2>
                 {showAlert && (
@@ -58,6 +58,10 @@ export function Login () {
                   <Button variant='primary' type='submit' className='w-100'>
                     Ingresar
                   </Button>
+                  <div className='d-flex flex-column mt-3'>
+                    <p className='text-black m-0'>Cuenta administrador:</p>
+                    <p className='text-black m-0'>Usuario: admin - Contraseña: 1234</p>
+                  </div>
                 </Form>
               </Card.Body>
             </Card>
