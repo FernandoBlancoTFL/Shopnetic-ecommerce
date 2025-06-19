@@ -8,7 +8,7 @@ import { Routes, Route } from 'react-router-dom'
 import { ProductDetail } from './pages/ProductDetail'
 import { UserProfile } from './pages/UserProfile'
 import { Checkout } from './pages/Checkout'
-import { UsersAdministration } from './pages/UsersAdministration'
+import { UsersCrud } from './pages/UsersCrud'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { AuthProvider } from './context/AuthContext'
 import { useState } from 'react'
@@ -35,7 +35,7 @@ export function App () {
           <Route path='/userProfile' element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
           <Route path='/contact' element={<Contact />} />
           <Route path='/checkout' element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
-          <Route path='/userAdmin' element={<ProtectedRoute><UsersAdministration /></ProtectedRoute>} />
+          <Route path='/userAdmin' element={<ProtectedRoute><UsersCrud /></ProtectedRoute>} />
           <Route path='/product/:id' element={<ProductDetail />} />
         </Routes>
         <Footer />
