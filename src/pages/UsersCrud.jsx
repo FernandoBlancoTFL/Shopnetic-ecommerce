@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
+import { AddUserModal } from '../components/AddUserModal'
+import { EditUserModal } from '../components/EditUserModal'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import * as bootstrap from 'bootstrap'
 import { Button } from 'react-bootstrap'
 
-export function UsersCrud() {
+export function UsersCrud () {
   const [usersData, setUsersData] = useState([])
   const [selectedUser, setSelectedUser] = useState(null)
   const [newUser, setNewUser] = useState({
@@ -44,7 +46,6 @@ export function UsersCrud() {
   }
 
   const putUser = async () => {
-    console.log(selectedUser)
     try {
       const response = await fetch(`https://684f5092f0c9c9848d2aaa70.mockapi.io/users/${selectedUser.id}`, {
         method: 'PUT',
@@ -236,93 +237,8 @@ export function UsersCrud() {
         </table>
       </div>
 
-      <div className='modal fade' id='editModal' tabIndex='-1' aria-hidden='true'>
-        <div className='modal-dialog modal-dialog-centered modal-lg'>
-          <div className='modal-content bg-dark text-white'>
-            <div className='modal-header'>
-              <h5 className='modal-title'>Editar Usuario</h5>
-              <button type='button' className='btn-close btn-close-white' data-bs-dismiss='modal' />
-            </div>
-            <div className='modal-body'>
-              {selectedUser && (
-                <form className='row g-3'>
-                  <div className='col-md-6'>
-                    <label className='form-label'>Usuario</label>
-                    <input type='text' className='form-control' name='userName' value={selectedUser.userName} onChange={handleInputChange} />
-                  </div>
-                  <div className='col-md-6'>
-                    <label className='form-label'>Email</label>
-                    <input type='email' className='form-control' name='email' value={selectedUser.email} onChange={handleInputChange} />
-                  </div>
-                  <div className='col-md-6'>
-                    <label className='form-label'>Nombre</label>
-                    <input type='text' className='form-control' name='firstName' value={selectedUser.firstName} onChange={handleInputChange} />
-                  </div>
-                  <div className='col-md-6'>
-                    <label className='form-label'>Apellido</label>
-                    <input type='text' className='form-control' name='lastname' value={selectedUser.lastname} onChange={handleInputChange} />
-                  </div>
-                  <div className='col-md-12'>
-                    <label className='form-label'>Contraseña</label>
-                    <input type='password' className='form-control' name='password' value={selectedUser.password} onChange={handleInputChange} />
-                  </div>
-                </form>
-              )}
-            </div>
-            <div className='modal-footer'>
-              <button className='btn btn-secondary' data-bs-dismiss='modal'>Cancelar</button>
-              <button className='btn btn-primary' onClick={putUser}>Guardar Cambios</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className='modal fade' id='addUserModal' tabIndex='-1' aria-hidden='true'>
-        <div className='modal-dialog modal-dialog-centered modal-lg'>
-          <div className='modal-content bg-dark text-white'>
-            <div className='modal-header'>
-              <h5 className='modal-title'>Agregar Usuario</h5>
-              <button type='button' className='btn-close btn-close-white' data-bs-dismiss='modal' />
-            </div>
-            <div className='modal-body'>
-              <form className='row g-3'>
-                <div className='col-md-6'>
-                  <label className='form-label'>Nombre</label>
-                  <input type='text' className='form-control' name='firstName' value={newUser.firstName} onChange={handleNewInputChange} />
-                </div>
-                <div className='col-md-6'>
-                  <label className='form-label'>Apellido</label>
-                  <input type='text' className='form-control' name='lastname' value={newUser.lastname} onChange={handleNewInputChange} />
-                </div>
-                <div className='col-md-6'>
-                  <label className='form-label'>Nombre de Usuario</label>
-                  <input type='text' className='form-control' name='userName' value={newUser.userName} onChange={handleNewInputChange} />
-                </div>
-                <div className='col-md-6'>
-                  <label className='form-label'>Email</label>
-                  <input type='email' className='form-control' name='email' value={newUser.email} onChange={handleNewInputChange} />
-                </div>
-                <div className='col-md-6'>
-                  <label className='form-label'>Contraseña</label>
-                  <input type='password' className='form-control' name='password' value={newUser.password} onChange={handleNewInputChange} />
-                </div>
-                <div className='col-md-6'>
-                  <label className='form-label'>País</label>
-                  <input type='text' className='form-control' name='country' value={newUser.country} onChange={handleNewInputChange} />
-                </div>
-                <div className='col-12'>
-                  <label className='form-label'>Descripción</label>
-                  <textarea className='form-control' name='description' rows='3' value={newUser.description} onChange={handleNewInputChange} />
-                </div>
-              </form>
-            </div>
-            <div className='modal-footer'>
-              <button className='btn btn-secondary' data-bs-dismiss='modal'>Cancelar</button>
-              <button className='btn btn-success' onClick={handleAddUser}>Agregar Usuario</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <AddUserModal handleAddUser={handleAddUser} newUser={newUser} handleNewInputChange={handleNewInputChange} />
+      <EditUserModal handleInputChange={handleInputChange} onSave={putUser} selectedUser={selectedUser} />
     </main>
   )
 }
