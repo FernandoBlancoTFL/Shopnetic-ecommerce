@@ -1,22 +1,31 @@
-import { Row, Col, Card, Button, Carousel } from 'react-bootstrap'
+import { Row, Col, Card, Button, Carousel, Pagination } from 'react-bootstrap'
 import { useContext, useEffect, useState } from 'react'
 import { ShoppingCartContext } from '../context/ShoppingCartContext'
 import { Link } from 'react-router-dom'
 import { StarRating } from './StarRating'
+import { CustomPagination } from './CustomPagination'
 
-export function ListOfProducts ({ products }) {
+export function ListOfProducts ({ products, currentPage, setCurrentPage }) {
   const { handleAddProductToCart, clickedIds } = useContext(ShoppingCartContext)
+  const productsPerPage = 9
+  const indexOfLastProduct = currentPage * productsPerPage
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage
+  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct)
+  const totalPages = Math.ceil(products.length / productsPerPage)
 
   const getPriceWithoutDiscount = (product) => {
-    const priceWithoutDiscount = (product.price / (1 - (product.discountPercentage / 100))).toFixed(2)
-    return priceWithoutDiscount
+    return (product.price / (1 - (product.discountPercentage / 100))).toFixed(2)
+  }
+
+  const handlePageChange = (number) => {
+    setCurrentPage(number)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   return (
     <>
       <Row xs={1} sm={1} md={2} lg={3} xl={3} className='g-4'>
-        {
-        products.slice(0, 9).map(product => (
+        {currentProducts.map(product => (
           <Col key={product.id}>
             <Link to={`/product/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
               <Card className='overflow-hidden border-0 shadow-sm bg-white rounded' style={{ height: '430px' }}>
@@ -29,11 +38,7 @@ export function ListOfProducts ({ products }) {
                             className='d-block w-100 zoom-img'
                             src={img}
                             alt={`Imagen ${index + 1}`}
-                            style={{
-                              height: '185px',
-                              objectFit: 'contain',
-                              transition: 'transform 0.3s ease-in-out'
-                            }}
+                            style={{ height: '185px', objectFit: 'contain', transition: 'transform 0.3s ease-in-out' }}
                           />
                         </Carousel.Item>
                       ))}
@@ -44,23 +49,13 @@ export function ListOfProducts ({ products }) {
                       className='p-2 zoom-img'
                       variant='top'
                       src={product.thumbnail}
-                      style={{
-                        height: '200px',
-                        objectFit: 'contain',
-                        transition: 'transform 0.3s ease-in-out'
-                      }}
+                      style={{ height: '200px', objectFit: 'contain', transition: 'transform 0.3s ease-in-out' }}
                     />
                     )}
 
                 <Card.Body className='d-flex flex-column bg-dark text-white rounded-bottom'>
                   <Card.Title className='text-truncate mb-0'>{product.title}</Card.Title>
-                  <div
-                    className='d-flex flex-wrap justify-content-between align-items-center  m-1'
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      e.preventDefault()
-                    }}
-                  >
+                  <div className='d-flex flex-wrap justify-content-between align-items-center m-1' onClick={(e) => { e.stopPropagation(); e.preventDefault() }}>
                     <div className='d-flex gap-2 align-items-center'>
                       <Card.Text className='text-success fw-bold mb-0' style={{ fontSize: '18px' }}>$ {product.price}</Card.Text>
                       <Card.Text style={{ fontSize: '14px' }}><s>$ {getPriceWithoutDiscount(product)}</s></Card.Text>
@@ -68,32 +63,30 @@ export function ListOfProducts ({ products }) {
                     <StarRating rating={product.rating} size='12px' />
                   </div>
                   <Card.Text className='truncate-description mb-0'>{product.description}</Card.Text>
-                  <div
-                    className='d-flex flex-wrap justify-content-between align-items-center  m-1'
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      e.preventDefault()
-                    }}
-                  >
+                  <div className='d-flex flex-wrap justify-content-between align-items-center m-1' onClick={(e) => { e.stopPropagation(); e.preventDefault() }}>
                     <Button
                       style={{ marginTop: '10px', minWidth: '80px', width: '100%', padding: '3px 5px' }}
                       variant={clickedIds.includes(product.id) ? 'success' : 'primary'}
                       disabled={clickedIds.includes(product.id)}
-                      onClick={() => {
-                        handleAddProductToCart(product)
-                      }}
+                      onClick={() => handleAddProductToCart(product)}
                     >
                       {clickedIds.includes(product.id) ? 'Agregado 🛒' : 'Agregar al carrito 🛒'}
                     </Button>
                   </div>
-
                 </Card.Body>
               </Card>
             </Link>
           </Col>
-        ))
-      }
+        ))}
       </Row>
+
+      <div className='d-flex justify-content-center mt-4'>
+        <CustomPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      </div>
     </>
   )
 }
@@ -108,8 +101,12 @@ export function Products ({ filterURL }) {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
 
   useEffect(() => {
+    setCurrentPage(1)
+
+    setLoading(true)
     fetch(filterURL)
       .then(res => {
         if (!res.ok) {
@@ -133,6 +130,6 @@ export function Products ({ filterURL }) {
   return (
     loading
       ? <NoProductsResult />
-      : <ListOfProducts products={products} />
+      : <ListOfProducts products={products} currentPage={currentPage} setCurrentPage={setCurrentPage} />
   )
 }

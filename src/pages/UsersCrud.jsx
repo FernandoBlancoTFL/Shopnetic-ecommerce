@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import * as bootstrap from 'bootstrap'
 import { Button } from 'react-bootstrap'
+import { CustomPagination } from '../components/CustomPagination'
 
 export function UsersCrud () {
   const [usersData, setUsersData] = useState([])
@@ -18,12 +19,19 @@ export function UsersCrud () {
     description: '',
     country: ''
   })
+  const [currentPage, setCurrentPage] = useState(1)
+  const usersPerPage = 10
+  const indexOfLastUser = currentPage * usersPerPage
+  const indexOfFirstUser = indexOfLastUser - usersPerPage
+  const currentUsers = usersData.slice(indexOfFirstUser, indexOfLastUser)
+  const totalPages = Math.ceil(usersData.length / usersPerPage)
 
   useEffect(() => {
     getUsers()
   }, [])
 
   const getUsers = async () => {
+    setCurrentPage(1)
     try {
       const response = await fetch('https://684f5092f0c9c9848d2aaa70.mockapi.io/users')
       if (!response.ok) throw new Error('Error al obtener los productos')
@@ -191,19 +199,24 @@ export function UsersCrud () {
     }
   }
 
-  return (
-    <main className='flex-grow-1 bg-secondary text-white p-4'>
-      <h1 className='mb-4'>Administración de Usuarios</h1>
-      <Button
-        variant='primary' onClick={() => {
-          const modal = new bootstrap.Modal(document.getElementById('addUserModal'))
-          modal.show()
-        }}
-      >
-        Agregar usuario
-      </Button>
+  const handlePageChange = (number) => {
+    setCurrentPage(number)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
-      <div className='table-responsive mx-auto mt-3'>
+  return (
+    <main className='main flex-grow-1 bg-secondary text-white p-4'>
+      <div className='table-responsive mx-auto mt-0' style={{ maxWidth: '1200px' }}>
+        <h2 className='mb-3'>Administración de Usuarios</h2>
+        <Button
+          className='mb-2'
+          variant='primary' onClick={() => {
+            const modal = new bootstrap.Modal(document.getElementById('addUserModal'))
+            modal.show()
+          }}
+        >
+          Agregar usuario
+        </Button>
         <table className='table table-dark table-bordered table-hover align-middle'>
           <thead>
             <tr>
@@ -214,10 +227,10 @@ export function UsersCrud () {
             </tr>
           </thead>
           <tbody>
-            {usersData.map(user => (
+            {currentUsers.map(user => (
               <tr key={user.id}>
                 <td>
-                  <div className='d-flex align-items-center gap-3'>
+                  <div className='d-flex align-items-center gap-3 mx-2'>
                     <img src={user.image} alt={user.userName} className='rounded-circle' width='50' height='50' />
                     <div>
                       <div className='fw-bold'>{user.userName}</div>
@@ -239,6 +252,14 @@ export function UsersCrud () {
 
       <AddUserModal handleAddUser={handleAddUser} newUser={newUser} handleNewInputChange={handleNewInputChange} />
       <EditUserModal handleInputChange={handleInputChange} onSave={putUser} selectedUser={selectedUser} />
+
+      <div className='d-flex justify-content-center mt-4'>
+        <CustomPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      </div>
     </main>
   )
 }
