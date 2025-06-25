@@ -38,7 +38,7 @@ export function Footer () {
 
         <hr className='border-white-50' />
         <div className='text-center text-white-50'>
-          <small>© {new Date().getFullYear()} TechStore. Todos los derechos reservados.</small>
+          <small>© {new Date().getFullYear()} Shopnetic. Todos los derechos reservados.</small>
         </div>
       </div>
     </footer>

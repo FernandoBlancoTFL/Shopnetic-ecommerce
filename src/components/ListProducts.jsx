@@ -1,4 +1,4 @@
-import { Row, Col, Card, Button, Carousel, Pagination } from 'react-bootstrap'
+import { Row, Col, Card, Button, Carousel } from 'react-bootstrap'
 import { useContext, useEffect, useState } from 'react'
 import { ShoppingCartContext } from '../context/ShoppingCartContext'
 import { Link } from 'react-router-dom'
