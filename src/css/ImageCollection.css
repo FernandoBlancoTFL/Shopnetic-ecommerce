@@ -1,0 +1,63 @@
+.image-container {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 0.5rem;
+}
+
+.image-label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: white;
+    color: black;
+    padding: 0.4rem 0.8rem;
+    font-weight: bold;
+    font-size: 0.9rem;
+    border-top-right-radius: 0.5rem;
+}
+
+.image-hover {
+    transition: transform 0.4s ease;
+}
+
+.image-hover:hover {
+    transform: scale(1.05);
+}
+
+.img-collection-col1 {
+    height: 700px;
+}
+
+.img-collection-col2 {
+    height: 500px;
+}
+
+@media (max-width: 991.98px) {
+    .img-collection {
+        max-width: 90%;
+    }
+
+    .img-collection-col1 {
+        height: 350px;
+    }
+
+    .img-collection-col2 {
+        height: 650px;
+    }
+}
+
+@media (min-width: 992px) {
+    .img-collection {
+        max-width: 55%;
+    }
+
+    .img-collection-col1 {
+        height: 100%;
+    }
+
+    .img-collection-col2 {
+        height: 100%;
+    }
+
+}

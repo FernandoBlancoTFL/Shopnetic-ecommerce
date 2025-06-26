@@ -118,6 +118,9 @@
   object-position: center;
 }
 
+.searchBar-mobile {
+  display: none !important;
+}
 
 @media (max-width: 991.98px) {
   .custom-navbar {
@@ -128,11 +131,15 @@
   }
 
   .carousel-home {
-    width: 90%;
+    width: 98%;
   }
 
   .main {
     margin-top: 92px;
+  }
+
+  .img-collection {
+    max-width: 90%;
   }
 }
 
@@ -151,5 +158,13 @@
 
   .main {
     margin-top: 0;
+  }
+
+  .img-collection {
+    max-width: 55%;
+  }
+
+  .searchBar-mobile {
+    display: block !important;
   }
 }

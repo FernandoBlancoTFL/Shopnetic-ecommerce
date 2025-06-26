@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap'
+import { Navbar, Nav, Container } from 'react-bootstrap'
 import { ShoppingCart } from './ShoppingCart'
 import { LoginButton } from './LoginButton'
 import { Link } from 'react-router-dom'
@@ -44,8 +44,8 @@ export function NavBar ({ handleFilter }) {
             <Nav.Link as={Link} to='/contact'>Contacto</Nav.Link>
             <Nav.Link as={Link} to='/about'>Sobre Nosotros</Nav.Link>
           </Nav>
-          <div className='d-flex align-items-center justify-content-center my-1 search-input'>
-            <SearchBar onSearch={handleSearch} />
+          <div className='searchBar-mobile d-flex align-items-center justify-content-center my-1 search-input'>
+            <SearchBar onSearch={handleSearch} ref={searchRef} />
           </div>
         </Navbar.Collapse>
         <LoginButton isMobile={false} />
