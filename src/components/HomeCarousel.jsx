@@ -6,7 +6,7 @@ export function HomeCarousel ({ onImageClick }) {
       <Carousel.Item onClick={onImageClick} style={{ cursor: 'pointer' }}>
         <img
           className='d-block w-100 carousel-image rounded'
-          src='src/public/img/muebleriaBanner.png'
+          src='/img/muebleriaBanner.png'
           alt='HomeDecoration'
         />
         <Carousel.Caption>
@@ -17,7 +17,7 @@ export function HomeCarousel ({ onImageClick }) {
       <Carousel.Item onClick={onImageClick} style={{ cursor: 'pointer' }}>
         <img
           className='d-block w-100 carousel-image rounded'
-          src='src/public/img/FashionStyleBanner.png'
+          src='/img/FashionStyleBanner.png'
           alt='ModernCloth'
         />
         <Carousel.Caption>
@@ -28,7 +28,7 @@ export function HomeCarousel ({ onImageClick }) {
       <Carousel.Item onClick={onImageClick} style={{ cursor: 'pointer' }}>
         <img
           className='d-block w-100 carousel-image rounded'
-          src='src/public/img/BannerOfertaTecnologia.png'
+          src='/img/BannerOfertaTecnologia.png'
           alt='TechSale'
         />
         <Carousel.Caption>
