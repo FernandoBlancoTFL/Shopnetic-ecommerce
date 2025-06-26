@@ -29,7 +29,7 @@ export function App () {
       <AuthProvider>
         <Header handleFilter={handleFilters} />
         <Routes>
-          <Route path='/' element={<Home filterURL={productsURL} filterName={filterName} />} />
+          <Route path='/' element={<Home filterURL={productsURL} filterName={filterName} handleFilter={handleFilters} />} />
           <Route path='/about' element={<About />} />
           <Route path='/login' element={<Login />} />
           <Route path='/userProfile' element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />

@@ -19,7 +19,7 @@ export function NavBar ({ handleFilter }) {
   const handleCategoryClick = (url, name) => {
     handleFilter(url, name)
     if (searchRef.current) {
-      searchRef.current.clear() // limpia el input
+      searchRef.current.clear()
     }
   }
 
@@ -43,13 +43,6 @@ export function NavBar ({ handleFilter }) {
             <Nav.Link as={Link} to='/' onClick={() => handleCategoryClick('https://dummyjson.com/products', 'Nuestros Productos')}>Inicio</Nav.Link>
             <Nav.Link as={Link} to='/contact'>Contacto</Nav.Link>
             <Nav.Link as={Link} to='/about'>Sobre Nosotros</Nav.Link>
-            <NavDropdown title='Productos' id='basic-nav-dropdown'>
-              <NavDropdown.Item as={Link} to='/' onClick={() => handleCategoryClick('https://dummyjson.com/products', 'Belleza')}>Belleza</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to='/' onClick={() => handleCategoryClick('https://dummyjson.com/products/category/smartphones', 'Celulares')}>Celulares</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to='/' onClick={() => handleCategoryClick('https://dummyjson.com/products/category/home-decoration', 'Decoración para la casa')}>Decoración para la casa</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to='/' onClick={() => handleCategoryClick('https://dummyjson.com/products/category/sports-accessories', 'Deportes')}>Deportes</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to='/' onClick={() => handleCategoryClick('https://dummyjson.com/products/category/vehicle', 'Vehículos')}>Vehículos</NavDropdown.Item>
-            </NavDropdown>
           </Nav>
           <div className='d-flex align-items-center justify-content-center my-1 search-input'>
             <SearchBar onSearch={handleSearch} />
