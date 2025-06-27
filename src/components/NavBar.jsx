@@ -2,11 +2,12 @@ import { useRef } from 'react'
 import { Navbar, Nav, Container } from 'react-bootstrap'
 import { ShoppingCart } from './ShoppingCart'
 import { LoginButton } from './LoginButton'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { SearchBar } from './SearchBar'
 
 export function NavBar ({ handleFilter }) {
   const searchRef = useRef()
+  const location = useLocation()
 
   const handleSearch = (query) => {
     if (!query.trim()) {
@@ -23,6 +24,9 @@ export function NavBar ({ handleFilter }) {
     }
   }
 
+  const shouldShowCart = location.pathname === '/' || location.pathname.startsWith('/product/')
+  const shouldShowLoginButton = location.pathname !== '/login'
+
   return (
     <Navbar expand='lg' className='bg-dark py-3 shadow custom-navbar' variant='dark'>
       <Container className='d-flex justify-content-between'>
@@ -35,8 +39,11 @@ export function NavBar ({ handleFilter }) {
             className='d-inline-block align-middle'
           />
         </Navbar.Brand>
-        <LoginButton isMobile />
-        <ShoppingCart isPositionFixed={false} />
+
+        {shouldShowLoginButton && <LoginButton isMobile />}
+
+        {shouldShowCart && <ShoppingCart isPositionFixed={false} />}
+
         <Navbar.Toggle aria-controls='basic-navbar-nav' />
         <Navbar.Collapse id='basic-navbar-nav'>
           <Nav className='me-auto'>
@@ -48,7 +55,8 @@ export function NavBar ({ handleFilter }) {
             <SearchBar onSearch={handleSearch} ref={searchRef} />
           </div>
         </Navbar.Collapse>
-        <LoginButton isMobile={false} />
+
+        {shouldShowLoginButton && <LoginButton isMobile={false} />}
       </Container>
     </Navbar>
   )
