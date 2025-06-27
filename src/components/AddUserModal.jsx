@@ -1,10 +1,18 @@
 import { useState } from 'react'
+import { USERS_URL } from '../constants/constants'
 
 export function AddUserModal ({ newUser, handleNewInputChange, handleAddUser }) {
   const [errors, setErrors] = useState({})
   const [userAdded, setUserAdded] = useState(false)
 
-  const validate = () => {
+  const isUserNameTaken = async () => {
+    const response = await fetch(USERS_URL)
+    const data = await response.json()
+    const exists = data.some(user => user.userName === newUser.userName)
+    return exists
+  }
+
+  const validate = async () => {
     const newErrors = {}
 
     if (!newUser.firstName.trim()) {
@@ -12,26 +20,37 @@ export function AddUserModal ({ newUser, handleNewInputChange, handleAddUser }) 
     } else if (newUser.firstName.length > 25) {
       newErrors.firstName = 'El nombre no puede tener más de 25 caracteres'
     }
+
     if (!newUser.lastname.trim()) {
       newErrors.lastname = 'El apellido es obligatorio'
     } else if (newUser.lastname.length > 25) {
       newErrors.lastname = 'El apellido no puede tener más de 25 caracteres'
     }
+
     if (!newUser.userName.trim()) {
       newErrors.userName = 'El nombre de usuario es obligatorio'
     } else if (newUser.userName.length > 40) {
       newErrors.userName = 'El nombre de usuario no puede tener más de 40 caracteres'
+    } else if (await isUserNameTaken()) {
+      newErrors.userName = 'El nombre de usuario ya está en uso'
     }
+
     if (!newUser.email.trim()) {
       newErrors.email = 'El correo es obligatorio'
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newUser.email)) {
       newErrors.email = 'El correo no es válido'
     }
+
     if (!newUser.password.trim()) {
       newErrors.password = 'La contraseña es obligatoria'
     } else if (newUser.password.length > 30) {
       newErrors.password = 'La contraseña no puede tener más de 30 caracteres'
     }
+
+    if (!newUser.country) {
+      newErrors.country = 'El país es obligatorio'
+    }
+
     if (!newUser.description.trim()) {
       newErrors.description = 'La descripción es obligatoria'
     } else if (newUser.description.length > 200) {
@@ -43,7 +62,8 @@ export function AddUserModal ({ newUser, handleNewInputChange, handleAddUser }) 
   }
 
   const handleSubmit = async () => {
-    if (validate()) {
+    const isValid = await validate()
+    if (isValid) {
       setUserAdded(true)
       await handleAddUser()
       setUserAdded(false)
@@ -103,6 +123,7 @@ export function AddUserModal ({ newUser, handleNewInputChange, handleAddUser }) 
                   <option value='EEUU'>EE.UU.</option>
                   <option value='Uruguay'>Uruguay</option>
                 </select>
+                {errors.country && <div className='invalid-feedback'>{errors.country}</div>}
               </div>
               <div className='col-12'>
                 <label className='form-label'>Descripción</label>

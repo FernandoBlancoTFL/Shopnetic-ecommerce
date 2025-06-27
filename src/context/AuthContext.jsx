@@ -1,17 +1,35 @@
-import { createContext, useState } from 'react'
+import { createContext, useState, useEffect } from 'react'
+import { ADMIN_USER, USERS_URL } from '../constants/constants'
 
 export const AuthContext = createContext()
 
 export function AuthProvider ({ children }) {
-  const [user, setUser] = useState(() => {
-    const tokenFromLocalStorage = window.localStorage.getItem('authToken')
-    return tokenFromLocalStorage ? 'admin' : null
-  })
+  const getUserByToken = async (tokenFromLocalStorage) => {
+    const response = await fetch(USERS_URL)
+    const data = await response.json()
+    const userData = data.find(user => user.token === tokenFromLocalStorage)
+    return userData
+  }
 
-  const login = (username) => {
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
-    window.localStorage.setItem('authToken', token)
-    setUser(username)
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    const loadUser = async () => {
+      const tokenFromLocalStorage = window.localStorage.getItem('authToken')
+      if (tokenFromLocalStorage === ADMIN_USER.token) {
+        setUser(ADMIN_USER)
+      } else if (tokenFromLocalStorage) {
+        const userFromApi = await getUserByToken(tokenFromLocalStorage)
+        setUser(userFromApi)
+      }
+    }
+
+    loadUser()
+  }, [])
+
+  const login = (user) => {
+    window.localStorage.setItem('authToken', user.token)
+    setUser(user)
   }
 
   const logout = () => {

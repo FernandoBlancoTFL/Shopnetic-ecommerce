@@ -17,7 +17,7 @@ export function UsersCrud () {
     email: '',
     password: '',
     description: '',
-    country: ''
+    country: 'Argentina'
   })
   const [currentPage, setCurrentPage] = useState(1)
   const usersPerPage = 10
@@ -26,17 +26,28 @@ export function UsersCrud () {
   const currentUsers = usersData.slice(indexOfFirstUser, indexOfLastUser)
   const totalPages = Math.ceil(usersData.length / usersPerPage)
 
+  const refreshUsersPreservingPage = async (change = 0) => {
+    await getUsers(true)
+    const newTotalPages = Math.ceil((usersData.length + change) / usersPerPage)
+    if (currentPage > newTotalPages) {
+      setCurrentPage(newTotalPages)
+    } else if (change > 0 && currentPage < newTotalPages) {
+      setCurrentPage(newTotalPages)
+    }
+  }
+
   useEffect(() => {
     getUsers()
   }, [])
 
-  const getUsers = async () => {
-    setCurrentPage(1)
+  const getUsers = async (preservePage = false) => {
     try {
       const response = await fetch('https://684f5092f0c9c9848d2aaa70.mockapi.io/users')
-      if (!response.ok) throw new Error('Error al obtener los productos')
+      if (!response.ok) throw new Error('Error al obtener los usuarios')
       const data = await response.json()
       setUsersData(data)
+
+      if (!preservePage) setCurrentPage(1)
     } catch (error) {
       console.error(error.message)
     }
@@ -65,7 +76,7 @@ export function UsersCrud () {
 
       if (!response.ok) throw new Error('Error al modificar el usuario')
 
-      await getUsers()
+      refreshUsersPreservingPage(0)
 
       Swal.fire({
         title: 'Actualizado!',
@@ -103,7 +114,11 @@ export function UsersCrud () {
     const addedUser = await postUser(userToAdd)
 
     if (addedUser) {
-      await getUsers()
+      refreshUsersPreservingPage(1)
+      const updatedTotalPages = Math.ceil((usersData.length + 1) / usersPerPage)
+      if (currentPage < updatedTotalPages) {
+        setCurrentPage(updatedTotalPages)
+      }
       const modal = bootstrap.Modal.getInstance(document.getElementById('addUserModal'))
       modal.hide()
       setNewUser({
@@ -113,7 +128,7 @@ export function UsersCrud () {
         email: '',
         password: '',
         description: '',
-        country: ''
+        country: 'Argentina'
       })
       Swal.fire({
         title: 'Agregado!',
@@ -161,7 +176,12 @@ export function UsersCrud () {
 
           if (!response.ok) throw new Error('Error al eliminar al usuario')
 
-          await getUsers()
+          refreshUsersPreservingPage(-1)
+
+          const newTotalPages = Math.ceil((usersData.length - 1) / usersPerPage)
+          if (currentPage > newTotalPages) {
+            setCurrentPage(newTotalPages)
+          }
 
           Swal.fire({
             title: 'Eliminado!',
@@ -239,7 +259,12 @@ export function UsersCrud () {
                   </div>
                 </td>
                 <td>Cliente</td>
-                <td>{new Date(user.accountCreationDate).toISOString().split('T')[0]}</td>
+                <td>{new Date(user.accountCreationDate).toLocaleDateString('es-AR', {
+                  day: '2-digit',
+                  month: '2-digit',
+                  year: 'numeric'
+                })}
+                </td>
                 <td className='text-center'>
                   <button className='btn btn-sm btn-outline-light me-2' onClick={() => handleEditClick(user)}>Modificar</button>
                   <button className='btn btn-sm btn-outline-danger' onClick={() => deleteUser(user.id)}>Eliminar</button>

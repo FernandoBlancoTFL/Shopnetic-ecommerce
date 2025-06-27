@@ -12,6 +12,10 @@ export function ProtectedRoute ({ children }) {
     return <Navigate to='/login' />
   }
 
+  if (location.pathname === '/userAdmin' && user.userName !== 'admin') {
+    return <Navigate to='/' />
+  }
+
   if (location.pathname === '/checkout' && shoppingCart.length === 0) {
     return <Navigate to='/' />
   }

@@ -50,12 +50,21 @@ function UserDropdownButton ({ user, logout, isMobile = false }) {
   return (
     <Dropdown>
       <Dropdown.Toggle variant='primary' id='dropdown-basic' className={`${isMobile ? 'd-inline d-lg-none' : 'd-none d-lg-inline'}`} style={{ height: '45px' }}>
-        {user} <i class='bi bi-person-circle' />
+        {user && user.userName
+          ? (
+            <>
+              {user.userName.length > 5
+                ? `${user.userName.slice(0, 5)}...`
+                : user.userName}
+              <i className='bi bi-person-circle ms-2' />
+            </>
+            )
+          : null}
       </Dropdown.Toggle>
 
       <Dropdown.Menu>
         <Dropdown.Item as={Link} to='/userProfile'>Perfil</Dropdown.Item>
-        <Dropdown.Item as={Link} to='/userAdmin'>Administrar usuarios</Dropdown.Item>
+        {user.userName === 'admin' ? <Dropdown.Item as={Link} to='/userAdmin'>Administrar usuarios</Dropdown.Item> : null}
         <Dropdown.Item onClick={handleLogout}>Cerrar sesión</Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>

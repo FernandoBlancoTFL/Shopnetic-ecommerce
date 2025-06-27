@@ -2,6 +2,7 @@ import { useContext, useState } from 'react'
 import { Button, Form, Container, Card, Alert, Row, Col } from 'react-bootstrap'
 import { AuthContext } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import { ADMIN_USER, USERS_URL } from '../constants/constants'
 
 export function Login () {
   const [user, setUser] = useState('')
@@ -10,11 +11,23 @@ export function Login () {
   const [showAlert, setShowAlert] = useState(false)
   const navigate = useNavigate()
 
-  const handleSubmit = (e) => {
+  const getUserByUserName = async () => {
+    const response = await fetch(USERS_URL)
+    const data = await response.json()
+    const userData = data.find(userFromList => userFromList.userName === user)
+    return userData
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    const userData = await getUserByUserName()
     if (user === 'admin' && password === '1234') {
       setShowAlert(false)
-      login(user)
+      login(ADMIN_USER)
+      navigate('/')
+    } else if (userData && userData.password === password) {
+      setShowAlert(false)
+      login(userData)
       navigate('/')
     } else {
       setShowAlert(true)
