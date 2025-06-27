@@ -6,7 +6,7 @@ const CATEGORIES = [
   { label: 'Portátiles', value: 'laptops' },
   { label: 'Fragancias', value: 'fragrances' },
   { label: 'Accesorios de cocina', value: 'kitchen-accessories' },
-  { label: 'Cremas para la piel', value: 'skin-care' },
+  { label: 'Vehículos', value: 'vehicle' },
   { label: 'Decoración para el hogar', value: 'home-decoration' },
   { label: 'Muebles', value: 'furniture' },
   { label: 'Tops', value: 'tops' },
@@ -14,7 +14,7 @@ const CATEGORIES = [
   { label: 'Camisas de hombre', value: 'mens-shirts' }
 ]
 
-export function FilterMenu({ onApplyFilters }) {
+export function FilterMenu ({ onApplyFilters }) {
   const [collapsed, setCollapsed] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState('')
   const [sortBy, setSortBy] = useState('')

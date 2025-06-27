@@ -41,7 +41,7 @@
 .custom-select:focus {
   border-color: #007bff;
   box-shadow: 0 0 5px rgba(0,123,255,0.5);
-  background-color: #222;
+  background-color: white;
 }
 
 .apply-btn {
@@ -53,4 +53,8 @@
 
 .apply-btn:hover {
   background-color: #0b5ed7;
+}
+
+.custom-select option {
+  background-color: white;
 }
