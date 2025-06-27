@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { QuantitySelector } from './QuantitySelector'
 import { Container } from 'react-bootstrap'
 
-export function CartItem ({ item, addProductToCart, removeProductFromCartById }) {
+export function CartItem ({ item, addProductToCart, reduceProductFromCartById }) {
   const [outOfStockIds, setOutOfStockIds] = useState([])
 
   const handleAddProductToCart = (product) => {
@@ -33,7 +33,7 @@ export function CartItem ({ item, addProductToCart, removeProductFromCartById })
           <div className='d-flex justify-content-between mt-1' style={{ fontSize: '18px' }}>
             ${(item.price * item.quantity).toFixed(2)}
           </div>
-          <QuantitySelector item={item} handleAddProductToCart={handleAddProductToCart} removeProductFromCartById={removeProductFromCartById} shouldDecreaseToZero isProductInCart />
+          <QuantitySelector item={item} handleAddProductToCart={handleAddProductToCart} reduceProductFromCartById={reduceProductFromCartById} shouldDecreaseToZero isProductInCart />
         </div>
       </Container>
       {outOfStockIds.includes(item.id) && (

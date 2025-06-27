@@ -108,7 +108,7 @@ export function ShoppingCartProvider ({ children }) {
     })
   }
 
-  const removeProductFromCartById = productId => {
+  const reduceProductFromCartById = productId => {
     setShoppingCart(prevCart => {
       const existingIndex = prevCart.findIndex(item => item.id === productId)
       if (existingIndex !== -1) {
@@ -125,8 +125,13 @@ export function ShoppingCartProvider ({ children }) {
     })
   }
 
+  const removeProductFromCartById = productId => {
+    setShoppingCart(prevCart => prevCart.filter(item => item.id !== productId))
+    setClickedIds(prevIds => prevIds.filter(id => id !== productId))
+  }
+
   return (
-    <ShoppingCartContext.Provider value={{ shoppingCart, totalPrice, addProductToCart, handleAddProductToCart, getOrInitializeProductInCart, removeProductFromCartById, emptyShoppingCart, emptyShoppingCartWithConfirmationModal, clickedIds, handleClickedIds }}>
+    <ShoppingCartContext.Provider value={{ shoppingCart, totalPrice, addProductToCart, handleAddProductToCart, getOrInitializeProductInCart, removeProductFromCartById, reduceProductFromCartById, emptyShoppingCart, emptyShoppingCartWithConfirmationModal, clickedIds, handleClickedIds }}>
       {children}
     </ShoppingCartContext.Provider>
   )

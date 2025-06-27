@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap'
 import * as Icon from 'react-bootstrap-icons'
 import { ShoppingCartContext } from '../context/ShoppingCartContext'
 
-export function QuantitySelector ({ item, handleAddProductToCart, removeProductFromCartById, insertProductQuantity, shouldDecreaseToZero = false, isProductInCart = false }) {
+export function QuantitySelector ({ item, handleAddProductToCart, reduceProductFromCartById, insertProductQuantity, shouldDecreaseToZero = false, isProductInCart = false }) {
   const { clickedIds } = useContext(ShoppingCartContext)
   const [productQuantity, setProductQuantity] = useState(item.quantity)
 
@@ -21,7 +21,7 @@ export function QuantitySelector ({ item, handleAddProductToCart, removeProductF
       insertProductQuantity(newQuantity - 1)
     } else {
       if (item.quantity > 1 || shouldDecreaseToZero) {
-        removeProductFromCartById(item.id)
+        reduceProductFromCartById(item.id)
       }
     }
   }
@@ -55,7 +55,7 @@ export function QuantitySelector ({ item, handleAddProductToCart, removeProductF
         onClick={decrease}
         disabled={
           isProductInCart
-            ? shouldDecreaseToZero ? item.quantity === 0 : item.quantity === 1
+            ? shouldDecreaseToZero ? item.quantity === 0 : true
             : shouldDecreaseToZero ? productQuantity === 0 : productQuantity === 1
         }
         className='border-0'
@@ -97,6 +97,11 @@ export function QuantitySelector ({ item, handleAddProductToCart, removeProductF
           width: '100%',
           height: '100%'
         }}
+        disabled={
+          isProductInCart
+            ? !shouldDecreaseToZero
+            : false
+        }
       >
         <Icon.Plus />
       </Button>

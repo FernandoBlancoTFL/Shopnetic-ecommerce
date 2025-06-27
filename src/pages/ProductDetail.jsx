@@ -13,7 +13,7 @@ import { Box } from 'react-bootstrap-icons'
 
 export function ProductDetail () {
   const { id } = useParams()
-  const { addProductToCart, getOrInitializeProductInCart, handleAddProductToCart, removeProductFromCartById, clickedIds } = useContext(ShoppingCartContext)
+  const { addProductToCart, getOrInitializeProductInCart, handleAddProductToCart, removeProductFromCartById, reduceProductFromCartById, clickedIds } = useContext(ShoppingCartContext)
   const [product, setProduct] = useState(null)
   const [productQuantity, setProductQuantity] = useState(1)
   const [loading, setLoading] = useState(true)
@@ -131,14 +131,13 @@ export function ProductDetail () {
                 </p>
                 <p className='text-muted mb-0'>({product.stock > 50 ? '+50 disponibles' : `${product.stock} disponibles`})</p>
               </div>
-              <QuantitySelector item={getOrInitializeProductInCart(product)} handleAddProductToCart={addProductToCart} removeProductFromCartById={removeProductFromCartById} insertProductQuantity={quantity => insertProductQuantity(quantity)} shouldDecreaseToZero={false} isProductInCart={clickedIds.includes(product.id)} />
+              <QuantitySelector item={getOrInitializeProductInCart(product)} handleAddProductToCart={addProductToCart} reduceProductFromCartById={reduceProductFromCartById} insertProductQuantity={quantity => insertProductQuantity(quantity)} shouldDecreaseToZero={false} isProductInCart={clickedIds.includes(product.id)} />
               <BuyingButtons
-                firstButtonText={clickedIds.includes(product.id) ? 'Agregado 🛒' : 'Agregar al carrito 🛒'}
+                firstButtonText={clickedIds.includes(product.id) ? 'Eliminar del carrito 🗑️' : 'Agregar al carrito 🛒'}
                 secondButtonText='Comprar 🛍'
-                firstButtonVariant={clickedIds.includes(product.id) ? 'success' : 'success'}
-                firstButtonDisabled={clickedIds.includes(product.id)}
+                firstButtonVariant={clickedIds.includes(product.id) ? 'danger' : 'success'}
                 secondButtonVariant='primary'
-                firstButtonEvent={clickedIds.includes(product.id) ? () => handleAddProductToCart(product) : () => handleAddProductToCartWithquantity(product)}
+                firstButtonEvent={clickedIds.includes(product.id) ? () => removeProductFromCartById(product.id) : () => handleAddProductToCartWithquantity(product)}
                 secondButtonAs={Link}
                 secondButtonTo='/checkout'
                 secondButtonEvent={clickedIds.includes(product.id) ? null : () => handleAddProductToCartWithquantity(product, false)}

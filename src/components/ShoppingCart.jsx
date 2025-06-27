@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import { ShoppingCartContext } from '../context/ShoppingCartContext'
 
 export function ShoppingCart ({ isPositionFixed = false }) {
-  const { shoppingCart, totalPrice, addProductToCart, removeProductFromCartById, emptyShoppingCartWithConfirmationModal } = useContext(ShoppingCartContext)
+  const { shoppingCart, totalPrice, addProductToCart, reduceProductFromCartById, emptyShoppingCartWithConfirmationModal } = useContext(ShoppingCartContext)
   const [show, setShow] = useState(false)
   const [cartSize, setCartSize] = useState(shoppingCart.length)
   const [animate, setAnimate] = useState(false)
@@ -50,7 +50,7 @@ export function ShoppingCart ({ isPositionFixed = false }) {
               <ListGroup variant='flush'>
                 {shoppingCart.map((item, index) => (
                   <ListGroup.Item key={index}>
-                    <CartItem item={item} addProductToCart={addProductToCart} removeProductFromCartById={removeProductFromCartById} />
+                    <CartItem item={item} addProductToCart={addProductToCart} reduceProductFromCartById={reduceProductFromCartById} />
                   </ListGroup.Item>
                 )
                 )}
