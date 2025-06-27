@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react'
 import { Form } from 'react-bootstrap'
+import { useNavigate } from 'react-router-dom'
 
 export const SearchBar = forwardRef(({ onSearch }, ref) => {
   const [query, setQuery] = useState('')
   const debounceTimeout = useRef(null)
+  const navigate = useNavigate()
 
   useImperativeHandle(ref, () => ({
     clear: () => {
@@ -32,6 +34,7 @@ export const SearchBar = forwardRef(({ onSearch }, ref) => {
   const handleSubmit = (event) => {
     event.preventDefault()
     onSearch(query)
+    navigate('/')
   }
 
   return (

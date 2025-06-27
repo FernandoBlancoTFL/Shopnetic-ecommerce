@@ -54,7 +54,7 @@ export function ListOfProducts ({ products, currentPage, setCurrentPage, scrollT
                     )}
 
                 <Card.Body className='d-flex flex-column bg-dark text-white rounded-bottom'>
-                  <Card.Title className='text-truncate mb-0'>{product.title}</Card.Title>
+                  <Card.Title className='text-truncate mb-0 text-white'>{product.title}</Card.Title>
                   <div className='d-flex flex-wrap justify-content-between align-items-center m-1' onClick={(e) => { e.stopPropagation(); e.preventDefault() }}>
                     <div className='d-flex gap-2 align-items-center'>
                       <Card.Text className='text-success fw-bold mb-0' style={{ fontSize: '18px' }}>$ {product.price}</Card.Text>

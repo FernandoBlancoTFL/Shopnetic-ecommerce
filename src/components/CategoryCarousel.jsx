@@ -57,7 +57,7 @@ export function CategoryCarousel ({ products }) {
               </div>
               <Card.Body className='text-center p-2 d-flex flex-column justify-content-between bg-dark text-white' style={{ height: '160px' }}>
                 <div className='d-flex flex-column align-items-center gap-1'>
-                  <Card.Title className='fs-6 mb-1'>{product.title}</Card.Title>
+                  <Card.Title className='fs-6 mb-1 text-white'>{product.title}</Card.Title>
                   <StarRating rating={product.rating} size={12} />
                   <div className='d-flex gap-2 mt-2 align-items-center'>
                     <Card.Text className='mb-2' style={{ color: '#FAF9F6' }}><s>${getProductPriceWithoutDiscount(product)}</s></Card.Text>

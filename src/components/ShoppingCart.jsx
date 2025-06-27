@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import { ShoppingCartContext } from '../context/ShoppingCartContext'
 
 export function ShoppingCart ({ isPositionFixed = false }) {
-  const { shoppingCart, totalPrice, addProductToCart, removeProductFromCartById, emptyShoppingCart, emptyShoppingCartWithConfirmationModal } = useContext(ShoppingCartContext)
+  const { shoppingCart, totalPrice, addProductToCart, removeProductFromCartById, emptyShoppingCartWithConfirmationModal } = useContext(ShoppingCartContext)
   const [show, setShow] = useState(false)
   const [cartSize, setCartSize] = useState(shoppingCart.length)
   const [animate, setAnimate] = useState(false)
