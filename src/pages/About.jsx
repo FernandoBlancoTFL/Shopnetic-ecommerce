@@ -1,6 +1,6 @@
 export function About () {
   return (
-    <main className='flex-grow-1 bg-secondary text-dark py-5'>
+    <main className='main flex-grow-1 bg-secondary text-dark py-5'>
       <div className='container'>
         <div className='row align-items-center mb-5 text-black'>
           <div className='col-md-6'>

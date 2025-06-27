@@ -4,7 +4,7 @@ export const AuthContext = createContext()
 
 export function AuthProvider ({ children }) {
   const [user, setUser] = useState(() => {
-    const tokenFromLocalStorage = window.localStorage.getItem('shoppingCart')
+    const tokenFromLocalStorage = window.localStorage.getItem('authToken')
     return tokenFromLocalStorage ? 'admin' : null
   })
 

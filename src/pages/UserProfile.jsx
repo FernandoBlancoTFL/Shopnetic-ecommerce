@@ -1,5 +1,3 @@
-import React from 'react'
-
 export function UserProfile () {
   const user = {
     username: 'admin',
@@ -14,7 +12,7 @@ export function UserProfile () {
 
   return (
     <div className='container my-5'>
-      <div className='row justify-content-center'>
+      <div className='main row justify-content-center'>
         <div className='col-lg-8 col-md-10'>
           <div className='card shadow-lg'>
             <div className='card-body text-center p-4'>
@@ -48,7 +46,7 @@ export function UserProfile () {
                 </div>
                 <div className='col-sm-6 mb-3'>
                   <h6 className='mb-0 text-muted'>Contraseña:</h6>
-                  <span>••••</span> {/* Por seguridad, no se muestra */}
+                  <span>••••</span>
                 </div>
               </div>
 

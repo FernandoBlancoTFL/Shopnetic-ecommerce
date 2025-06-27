@@ -1,6 +1,6 @@
 export function Contact () {
   return (
-    <main className='flex-grow-1 bg-secondary py-5'>
+    <main className='main flex-grow-1 bg-secondary py-5'>
       <div className='container'>
         <h2 className='text-center mb-4'>Contacto</h2>
         <p className='text-center text-black mb-5'>
