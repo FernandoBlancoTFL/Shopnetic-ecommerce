@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import '../css/FilterMenu.css'
 
 const CATEGORIES = [
   { label: 'Celulares', value: 'smartphones' },
@@ -13,7 +14,7 @@ const CATEGORIES = [
   { label: 'Camisas de hombre', value: 'mens-shirts' }
 ]
 
-export function FilterMenu ({ onApplyFilters }) {
+export function FilterMenu({ onApplyFilters }) {
   const [collapsed, setCollapsed] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState('')
   const [sortBy, setSortBy] = useState('')
@@ -41,42 +42,40 @@ export function FilterMenu ({ onApplyFilters }) {
   }
 
   return (
-    <div className='bg-dark text-white p-3 rounded position-relative'>
+    <div className='filter-menu-container shadow'>
       <button
-        className='btn btn-sm btn-outline-light position-absolute top-0 end-0 m-2'
+        className='collapse-btn'
         onClick={() => setCollapsed(prev => !prev)}
         aria-label='Alternar filtros'
       >
-        {collapsed ? '▼' : '▲'}
+        {collapsed ? '▼ Mostrar filtros' : '▲ Ocultar filtros'}
       </button>
 
-      <h5 className='mt-4 mt-lg-0'>Filtrar por</h5>
-      <hr className='my-1' />
+      <h5 className='menu-title'>Filtrar productos</h5>
+      <hr />
 
       {!collapsed && (
-        <div>
+        <div className='filter-form'>
           <div className='mb-3'>
-            <label htmlFor='category-select'>Categoría:</label>
+            <label htmlFor='category-select'>📂 Categoría:</label>
             <select
               id='category-select'
-              className='form-select'
+              className='form-select custom-select'
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
             >
               <option value=''>Todas</option>
               {CATEGORIES.map(({ label, value }) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
+                <option key={value} value={value}>{label}</option>
               ))}
             </select>
           </div>
 
           <div className='mb-3'>
-            <label htmlFor='sort-by-select'>Ordenar por:</label>
+            <label htmlFor='sort-by-select'>🔢 Ordenar por:</label>
             <select
               id='sort-by-select'
-              className='form-select'
+              className='form-select custom-select'
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
             >
@@ -87,10 +86,10 @@ export function FilterMenu ({ onApplyFilters }) {
           </div>
 
           <div className='mb-3'>
-            <label htmlFor='order-select'>Orden:</label>
+            <label htmlFor='order-select'>↕️ Orden:</label>
             <select
               id='order-select'
-              className='form-select'
+              className='form-select custom-select'
               value={order}
               onChange={(e) => setOrder(e.target.value)}
             >
@@ -99,8 +98,8 @@ export function FilterMenu ({ onApplyFilters }) {
             </select>
           </div>
 
-          <button className='btn btn-primary w-100' onClick={applyFilters}>
-            Aplicar filtros
+          <button className='btn btn-primary w-100 mt-2 apply-btn' onClick={applyFilters}>
+            Aplicar filtros 🔍
           </button>
         </div>
       )}

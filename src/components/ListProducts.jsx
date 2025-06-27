@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { StarRating } from './StarRating'
 import { CustomPagination } from './CustomPagination'
 
-export function ListOfProducts ({ products, currentPage, setCurrentPage }) {
+export function ListOfProducts ({ products, currentPage, setCurrentPage, scrollToProducts }) {
   const { handleAddProductToCart, clickedIds } = useContext(ShoppingCartContext)
   const productsPerPage = 9
   const indexOfLastProduct = currentPage * productsPerPage
@@ -19,7 +19,7 @@ export function ListOfProducts ({ products, currentPage, setCurrentPage }) {
 
   const handlePageChange = (number) => {
     setCurrentPage(number)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    if (scrollToProducts) scrollToProducts()
   }
 
   return (
@@ -97,7 +97,7 @@ function NoProductsResult () {
   return <h3>{message}</h3>
 }
 
-export function Products ({ filterURL }) {
+export function Products ({ filterURL, scrollToProducts }) {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
@@ -130,6 +130,11 @@ export function Products ({ filterURL }) {
   return (
     loading
       ? <NoProductsResult />
-      : <ListOfProducts products={products} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+      : <ListOfProducts
+          products={products}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          scrollToProducts={scrollToProducts}
+        />
   )
 }

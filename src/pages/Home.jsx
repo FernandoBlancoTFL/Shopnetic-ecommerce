@@ -52,7 +52,7 @@ export function Home ({ filterURL, filterName, handleFilter }) {
             </div>
             <h2 className='mb-4'>{filterName}</h2>
             <ShoppingCart isPositionFixed />
-            <Products filterURL={filterURL} />
+            <Products filterURL={filterURL} scrollToProducts={scrollToProducts} />
           </Col>
         </Row>
       </Container>
