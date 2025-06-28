@@ -3,6 +3,7 @@ import { Button, Form, Container, Card, Alert, Row, Col } from 'react-bootstrap'
 import { AuthContext } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { ADMIN_USER, USERS_URL } from '../constants/constants'
+import { Seo } from '../components/Seo'
 
 export function Login () {
   const [user, setUser] = useState('')
@@ -36,6 +37,12 @@ export function Login () {
 
   return (
     <main className='d-flex align-items-center justify-content-center bg-secondary flex-grow-1 min-vh-100 px-3'>
+      <Seo
+        title='Login | Shopnetic'
+        description='Inicia sesión en tu cuenta de Shopnetic.'
+        keywords='login, iniciar sesión, shopnetic'
+        url='https://shopneticfb.netlify.app/login'
+      />
       <Container className='my-5'>
         <Row className='justify-content-center'>
           <Col xs={12} sm={10} md={8} lg={6} xl={4}>

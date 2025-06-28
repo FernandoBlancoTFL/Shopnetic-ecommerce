@@ -6,6 +6,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import * as bootstrap from 'bootstrap'
 import { Button } from 'react-bootstrap'
 import { CustomPagination } from '../components/CustomPagination'
+import { Seo } from '../components/Seo'
 
 export function UsersCrud () {
   const [usersData, setUsersData] = useState([])
@@ -226,6 +227,13 @@ export function UsersCrud () {
 
   return (
     <main className='main flex-grow-1 bg-secondary text-white p-4'>
+      <Seo
+        title='UsersCrud | Shopnetic'
+        description='Administra los usuarios.'
+        keywords='administración, usuarios, shopnetic'
+        url='https://shopneticfb.netlify.app/userAdmin'
+      />
+
       <div className='table-responsive mx-auto mt-0' style={{ maxWidth: '1200px' }}>
         <h2 className='mb-3'>Administración de Usuarios</h2>
         <Button

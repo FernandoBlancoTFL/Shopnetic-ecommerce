@@ -6,6 +6,7 @@ import { FilterMenu } from '../components/FilterMenu'
 import { HomeCarousel } from '../components/HomeCarousel'
 import { ImageCollection } from '../components/ImageCollection'
 import { SearchBar } from '../components/SearchBar'
+import { Seo } from '../components/Seo'
 
 export function Home ({ filterURL, filterName, handleFilter }) {
   const productsRef = useRef(null)
@@ -32,6 +33,12 @@ export function Home ({ filterURL, filterName, handleFilter }) {
 
   return (
     <main className='main flex-grow-1 d-flex flex-column align-items-center bg-secondary text-white'>
+      <Seo
+        title={`Shopnetic - ${filterName}`}
+        description='Explorá nuestros productos destacados en tecnología, hogar y más.'
+        keywords='shopnetic, productos, tecnología, hogar, ofertas'
+        url='https://shopneticfb.netlify.app/'
+      />
       <HomeCarousel onImageClick={scrollToProducts} />
       <ImageCollection handleFilter={handleFilter} scrollToProducts={scrollToProducts} />
       <Container>

@@ -3,6 +3,7 @@ import { CheckoutForm } from '../components/CheckoutForm'
 import { CartItemCheckout } from '../components/CartItemCheckout'
 import { useContext, useState } from 'react'
 import { ShoppingCartContext } from '../context/ShoppingCartContext'
+import { Seo } from '../components/Seo'
 
 export function Checkout () {
   const { shoppingCart, totalPrice } = useContext(ShoppingCartContext)
@@ -12,6 +13,12 @@ export function Checkout () {
 
   return (
     <main className='main flex-grow-1 bg-secondary text-white'>
+      <Seo
+        title='Checkout | Shopnetic'
+        description='Realiza tu compra en shopnetic.'
+        keywords='checkout, finalizar compra, compra, shopnetic'
+        url='https://shopneticfb.netlify.app/checkout'
+      />
       <Container className='py-2 py-sm-2 py-md-2 py-lg-2 bg-secondary'>
         <Card className='shadow' style={{ backgroundColor: '#f2f2f2', paddingRight: '12px' }}>
           <Row className='align-items-start justify-content-between'>

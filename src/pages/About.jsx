@@ -1,6 +1,14 @@
+import { Seo } from '../components/Seo'
+
 export function About () {
   return (
     <main className='main flex-grow-1 bg-secondary text-dark py-5'>
+      <Seo
+        title='Sobre Nosotros - Shopnetic'
+        description='Conocé más sobre Shopnetic y nuestra misión como tienda online.'
+        keywords='sobre nosotros, quienes somos, tienda shopnetic, ecommerce'
+        url='https://shopneticfb.netlify.app/about'
+      />
       <div className='container'>
         <div className='row align-items-center mb-5 text-black'>
           <div className='col-md-6 mb-4 mb-md-0'>

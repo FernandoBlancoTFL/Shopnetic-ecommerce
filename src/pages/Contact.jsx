@@ -1,6 +1,14 @@
+import { Seo } from '../components/Seo'
+
 export function Contact () {
   return (
     <main className='main flex-grow-1 bg-secondary py-5'>
+      <Seo
+        title='Contact | Shopnetic'
+        description='Contacta con nosotros.'
+        keywords='contacto, envía un mensaje, shopnetic'
+        url='https://shopneticfb.netlify.app/contact'
+      />
       <div className='container'>
         <h2 className='text-center mb-4 text-white'>Contacto</h2>
         <p className='text-center text-light mb-5'>
