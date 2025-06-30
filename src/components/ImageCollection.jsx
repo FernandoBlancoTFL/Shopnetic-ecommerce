@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
 import '../css/ImageCollection.css'
 
-export function ImageCollection ({ handleFilter, scrollToProducts }) {
+export function ImageCollection ({ handleFilter }) {
   const sectionRef = useRef(null)
   const [isVisible, setIsVisible] = useState(false)
   const rightImages = [
@@ -35,7 +35,6 @@ export function ImageCollection ({ handleFilter, scrollToProducts }) {
 
   const handleCategoryClick = (categoryName, label) => {
     handleFilter(`https://dummyjson.com/products/category/${categoryName}`, label)
-    scrollToProducts()
   }
 
   return (

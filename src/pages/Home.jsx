@@ -17,7 +17,17 @@ export function Home ({ filterURL, filterName, handleFilter }) {
   const [activeKey, setActiveKey] = useState('0')
   const [wasFilterManuallyApplied, setWasFilterManuallyApplied] = useState(false)
   const [showScrollButton, setShowScrollButton] = useState(false)
+  const [shouldScroll, setShouldScroll] = useState(false)
   const toggleMenu = () => setMenuOpen(prev => !prev)
+
+  useEffect(() => {
+    if (shouldScroll && productsRef.current) {
+      setTimeout(() => {
+        productsRef.current.scrollIntoView({ behavior: 'smooth' })
+        setShouldScroll(false)
+      }, 100)
+    }
+  }, [filterURL, shouldScroll])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -74,10 +84,15 @@ export function Home ({ filterURL, filterName, handleFilter }) {
         url='https://shopneticfb.netlify.app/'
       />
       <HomeCarousel onImageClick={scrollToProducts} />
-      <ImageCollection handleFilter={handleFilter} scrollToProducts={scrollToProducts} />
+      <ImageCollection handleFilter={(url, name) => {
+        handleFilter(url, name)
+        setShouldScroll(true)
+      }}
+      />
       <Container>
         <Row className='justify-content-center'>
           <Col
+            ref={productsRef}
             xs={11}
             sm={10}
             md={10}
