@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { Products } from '../components/ListProducts'
 import { ShoppingCart } from '../components/ShoppingCart'
 import { Row, Col, Container, Button } from 'react-bootstrap'
@@ -16,7 +16,21 @@ export function Home ({ filterURL, filterName, handleFilter }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeKey, setActiveKey] = useState('0')
   const [wasFilterManuallyApplied, setWasFilterManuallyApplied] = useState(false)
+  const [showScrollButton, setShowScrollButton] = useState(false)
   const toggleMenu = () => setMenuOpen(prev => !prev)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollButton(window.scrollY > 200)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   const scrollToProducts = () => {
     productsRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -105,6 +119,34 @@ export function Home ({ filterURL, filterName, handleFilter }) {
         </Row>
       </Container>
       <NewsletterCard />
+      <div
+        className={`position-fixed ${
+    showScrollButton ? 'animate__animated animate__fadeIn' : 'animate__animated animate__fadeOut'
+  }`}
+        style={{
+          bottom: '20px',
+          right: '20px',
+          zIndex: 1000
+        }}
+      >
+        {(showScrollButton || !showScrollButton) && (
+          <button
+            onClick={scrollToTop}
+            className='btn btn-light'
+            style={{
+              borderRadius: '50%',
+              width: '50px',
+              height: '50px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '24px'
+            }}
+          >
+            <i className='bi bi-chevron-up' />
+          </button>
+        )}
+      </div>
     </main>
   )
 }

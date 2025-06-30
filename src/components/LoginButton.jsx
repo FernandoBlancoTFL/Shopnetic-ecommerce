@@ -7,14 +7,17 @@ function LoginButtonDisplay ({ user, isMobile }) {
   return (
     <Button
       as={Link} to={user ? '' : '/login'} variant='info'
-      className={`${isMobile ? 'd-inline d-lg-none' : 'd-none d-lg-inline'} align-content-center`}
+      className={`${isMobile ? 'd-inline d-lg-none' : 'd-none d-lg-inline'} align-content-center rounded-5`}
+      style={{ height: '46px' }}
     >
       {user
         ? <i class='bi bi-person-circle' />
-        : (<span className='d-flex align-items-center'>
-          <i className='bi bi-person-circle me-2' />
-          Iniciar sesión
-           </span>)}
+        : isMobile
+          ? (<i className='bi bi-person-circle fs-3' />)
+          : (<span className='d-flex align-items-center'>
+            <i className='bi bi-person-circle me-2 fs-5' />
+            Iniciar sesión
+             </span>)}
     </Button>
   )
 }
@@ -49,7 +52,7 @@ function UserDropdownButton ({ user, logout, isMobile = false }) {
 
   return (
     <Dropdown>
-      <Dropdown.Toggle variant='primary' id='dropdown-basic' className={`${isMobile ? 'd-inline d-lg-none' : 'd-none d-lg-inline'}`} style={{ height: '45px' }}>
+      <Dropdown.Toggle variant='primary' id='dropdown-basic' className={`${isMobile ? 'd-inline d-lg-none' : 'd-none d-lg-inline'} rounded-5`} style={{ height: '45px' }}>
         {user && user.userName
           ? (
             <>

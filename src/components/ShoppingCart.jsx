@@ -29,7 +29,7 @@ export function ShoppingCart ({ isPositionFixed = false }) {
         onClick={handleShow}
         className={`${isPositionFixed ? 'position-fixed top-0 end-0 m-4 mt-4 d-none d-lg-inline' : 'd-inline d-lg-none'} border border-dark ${animate ? 'animate__animated animate__heartBeat' : ''}`}
       >
-        🛒
+        <i class='bi bi-cart-fill' />
         {shoppingCart.length > 0 && (
           <Badge bg='danger' pill className='ms-2'>
             {shoppingCart.length}

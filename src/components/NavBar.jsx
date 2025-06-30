@@ -73,15 +73,41 @@ export function NavBar ({ handleFilter }) {
           />
         </Navbar.Brand>
 
-        {shouldShowLoginButton && <LoginButton isMobile />}
-        {shouldShowCart && <ShoppingCart isPositionFixed={false} />}
+        <div className='d-flex gap-1'>
+          {shouldShowLoginButton && <LoginButton isMobile />}
+          {shouldShowCart && <ShoppingCart isPositionFixed={false} />}
+        </div>
 
-        <Navbar.Toggle aria-controls='basic-navbar-nav' />
+        <Navbar.Toggle aria-controls='basic-navbar-nav' style={{ marginLeft: '5px' }} />
         <Navbar.Collapse id='basic-navbar-nav'>
           <Nav className='me-auto'>
-            <Nav.Link as={Link} to='/' onClick={() => handleCategoryClick('https://dummyjson.com/products', 'Nuestros Productos')}>Inicio</Nav.Link>
-            <Nav.Link as={Link} to='/contact' onClick={closeMenu}>Contacto</Nav.Link>
-            <Nav.Link as={Link} to='/about' onClick={closeMenu}>Sobre Nosotros</Nav.Link>
+            <Nav.Link
+              as={Link}
+              to='/'
+              onClick={() => handleCategoryClick('https://dummyjson.com/products', 'Nuestros Productos')}
+              className={location.pathname === '/' ? 'text-primary fw-bold' : 'text-white'}
+            >
+              Inicio
+            </Nav.Link>
+
+            <Nav.Link
+              as={Link}
+              to='/contact'
+              onClick={closeMenu}
+              className={location.pathname === '/contact' ? 'text-primary fw-bold' : 'text-white'}
+            >
+              Contacto
+            </Nav.Link>
+
+            <Nav.Link
+              as={Link}
+              to='/about'
+              onClick={closeMenu}
+              className={location.pathname === '/about' ? 'text-primary fw-bold' : 'text-white'}
+            >
+              Sobre Nosotros
+            </Nav.Link>
+
           </Nav>
           <div className='searchBar-mobile d-flex align-items-center justify-content-center my-1 me-3 search-input'>
             <SearchBar onSearch={handleSearch} ref={searchRef} />

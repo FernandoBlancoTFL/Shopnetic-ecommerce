@@ -10,7 +10,7 @@ export function About () {
         url='https://shopneticfb.netlify.app/about'
       />
       <div className='container'>
-        <div className='row align-items-center mb-5 text-black'>
+        <div className='row align-items-center mb-5 text-white'>
           <div className='col-md-6 mb-4 mb-md-0'>
             <img
               src='https://www.nubixstore.ar/img/posts/2023/05/como_armar_una_tienda_online_pasos_clave_para_el_exito.jpg'

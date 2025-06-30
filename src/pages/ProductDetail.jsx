@@ -20,6 +20,7 @@ export function ProductDetail () {
   const [loading, setLoading] = useState(true)
   const [mainImage, setMainImage] = useState('')
   const [relatedProducts, setRelatedProducts] = useState([])
+  const [showScrollButton, setShowScrollButton] = useState(false)
 
   useEffect(() => {
     fetch(`https://dummyjson.com/products/${id}`)
@@ -52,6 +53,19 @@ export function ProductDetail () {
 
     fetchRelated()
   }, [product])
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollButton(window.scrollY > 200)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   const insertProductQuantity = (quantity) => {
     setProductQuantity(quantity)
@@ -243,6 +257,35 @@ export function ProductDetail () {
             </Row>
           </Card>
         </Container>
+        <div
+          className={`position-fixed ${
+    showScrollButton ? 'animate__animated animate__fadeIn' : 'animate__animated animate__fadeOut'
+  }`}
+          style={{
+            bottom: '20px',
+            right: '20px',
+            zIndex: 1000
+          }}
+        >
+          {(showScrollButton || !showScrollButton) && (
+            <button
+              onClick={scrollToTop}
+              className='btn btn-light'
+              style={{
+                borderRadius: '50%',
+                width: '50px',
+                height: '50px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '24px'
+              }}
+            >
+              <i className='bi bi-chevron-up' />
+            </button>
+          )}
+        </div>
+
       </main>
     </>
   )
