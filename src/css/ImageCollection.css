@@ -33,7 +33,7 @@
     height: 500px;
 }
 
-@media (max-width: 991.98px) {
+@media (max-width: 768px) {
     .img-collection {
         max-width: 90%;
     }
@@ -44,6 +44,20 @@
 
     .img-collection-col2 {
         height: 650px;
+    }
+}
+
+@media (min-width: 768.98px) {
+    .img-collection {
+        max-width: 90%;
+    }
+
+    .img-collection-col1 {
+        height: 90%;
+    }
+
+    .img-collection-col2 {
+        height: 90%;
     }
 }
 
@@ -59,5 +73,4 @@
     .img-collection-col2 {
         height: 100%;
     }
-
 }

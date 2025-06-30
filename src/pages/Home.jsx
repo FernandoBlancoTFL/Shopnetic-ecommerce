@@ -34,10 +34,9 @@ export function Home ({ filterURL, filterName, handleFilter }) {
     setMenuOpen(false)
     handleFilter(filterURL, filterName)
 
-    // Scroll solo si fue hecho por el usuario
     if (wasFilterManuallyApplied) {
       titleRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      setWasFilterManuallyApplied(false) // lo apagamos después de usarlo
+      setWasFilterManuallyApplied(false)
     }
 
     if (searchRef.current) {
