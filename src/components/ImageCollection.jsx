@@ -45,18 +45,16 @@ export function ImageCollection ({ handleFilter, scrollToProducts }) {
       style={{ maxWidth: '1100px' }}
     >
       <Row
-        ref={sectionRef}
-        className={`gx-2 align-items-stretch flex-column flex-md-row ${
-    isVisible ? 'animate__animated animate__fadeInUp' : ''
-  }`}
+        className='gx-2 align-items-stretch flex-column flex-md-row'
         style={{ minHeight: '850px' }}
       >
         <h2 className='mb-4'>Principales categorías</h2>
 
         <Col
+          ref={sectionRef}
           xs={12}
           md={6}
-          className='img-collection-col1 mb-2 mb-md-0 d-flex flex-column'
+          className={`img-collection-col1 mb-2 mb-md-0 d-flex flex-column ${isVisible ? 'animate__animated animate__fadeInUp' : ''}`}
         >
           <div
             className='image-container shadow'
