@@ -3,7 +3,7 @@ import { Collapse, Card, Accordion, Button } from 'react-bootstrap'
 import { BuyingButtons } from './BuyingButtons'
 import { CATEGORIES } from '../constants/constants'
 
-export function FilterMenuAccordion ({ menuOpen, activeKey, handleSelect, onApplyFilters }) {
+export function FilterMenuAccordion ({ menuOpen, activeKey, handleSelect, onApplyFilters, setWasFilterManuallyApplied }) {
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [selectedOrderBy, setSelectedOrderBy] = useState('')
   const [selectedOrder, setSelectedOrder] = useState('asc')
@@ -53,6 +53,7 @@ export function FilterMenuAccordion ({ menuOpen, activeKey, handleSelect, onAppl
       label += ` | Ordenado por: ${selectedOrderBy} ${selectedOrder === 'asc' ? 'ascendente' : 'descendente'}`
     }
 
+    setWasFilterManuallyApplied(true)
     onApplyFilters(url, label)
   }
 

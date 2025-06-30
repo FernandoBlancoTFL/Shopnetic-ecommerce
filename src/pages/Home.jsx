@@ -15,6 +15,7 @@ export function Home ({ filterURL, filterName, handleFilter }) {
   const titleRef = useRef(null)
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeKey, setActiveKey] = useState('0')
+  const [wasFilterManuallyApplied, setWasFilterManuallyApplied] = useState(false)
   const toggleMenu = () => setMenuOpen(prev => !prev)
 
   const scrollToProducts = () => {
@@ -33,7 +34,11 @@ export function Home ({ filterURL, filterName, handleFilter }) {
     setMenuOpen(false)
     handleFilter(filterURL, filterName)
 
-    titleRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    // Scroll solo si fue hecho por el usuario
+    if (wasFilterManuallyApplied) {
+      titleRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      setWasFilterManuallyApplied(false) // lo apagamos después de usarlo
+    }
 
     if (searchRef.current) {
       searchRef.current.clear()
@@ -93,6 +98,7 @@ export function Home ({ filterURL, filterName, handleFilter }) {
               activeKey={activeKey}
               handleSelect={handleSelect}
               onApplyFilters={handleFiltersAndClearSearch}
+              setWasFilterManuallyApplied={setWasFilterManuallyApplied}
             />
             <ShoppingCart isPositionFixed />
             <Products filterURL={filterURL} scrollToProducts={scrollToProducts} />
