@@ -6,6 +6,7 @@ import { FilterMenu } from '../components/FilterMenu'
 import { HomeCarousel } from '../components/HomeCarousel'
 import { ImageCollection } from '../components/ImageCollection'
 import { SearchBar } from '../components/SearchBar'
+import { NewsletterCard } from '../components/NewsletterCard'
 import { Seo } from '../components/Seo'
 
 export function Home ({ filterURL, filterName, handleFilter }) {
@@ -52,7 +53,7 @@ export function Home ({ filterURL, filterName, handleFilter }) {
             md={10}
             lg={10}
             xl={8}
-            className='p-2 mt-3 mb-3 d-flex flex-column justify-content-center'
+            className='p-2 mt-3 mb-2 d-flex flex-column justify-content-center'
           >
             <div className='d-flex justify-content-end mb-3'>
               <SearchBar ref={searchRef} onSearch={handleSearch} />
@@ -63,6 +64,7 @@ export function Home ({ filterURL, filterName, handleFilter }) {
           </Col>
         </Row>
       </Container>
+      <NewsletterCard />
     </main>
   )
 }

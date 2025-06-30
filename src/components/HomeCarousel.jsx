@@ -2,10 +2,10 @@ import { Carousel } from 'react-bootstrap'
 
 export function HomeCarousel ({ onImageClick }) {
   return (
-    <Carousel className='carousel-home my-2 m-lg-3 rounded'>
+    <Carousel className='carousel-home my-2 m-lg-3'>
       <Carousel.Item onClick={onImageClick} style={{ cursor: 'pointer' }}>
         <img
-          className='d-block w-100 carousel-image rounded'
+          className='d-block w-100 carousel-image'
           src='/img/muebleriaBanner.png'
           alt='HomeDecoration'
         />
@@ -16,7 +16,7 @@ export function HomeCarousel ({ onImageClick }) {
 
       <Carousel.Item onClick={onImageClick} style={{ cursor: 'pointer' }}>
         <img
-          className='d-block w-100 carousel-image rounded'
+          className='d-block w-100 carousel-image'
           src='/img/FashionStyleBanner.png'
           alt='ModernCloth'
         />
@@ -27,7 +27,7 @@ export function HomeCarousel ({ onImageClick }) {
 
       <Carousel.Item onClick={onImageClick} style={{ cursor: 'pointer' }}>
         <img
-          className='d-block w-100 carousel-image rounded'
+          className='d-block w-100 carousel-image'
           src='/img/BannerOfertaTecnologia.png'
           alt='TechSale'
         />
