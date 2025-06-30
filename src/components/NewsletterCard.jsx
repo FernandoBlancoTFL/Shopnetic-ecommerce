@@ -59,6 +59,7 @@ export function NewsletterCard () {
               className={`d-flex rounded-pill p-1 bg-white w-100 align-items-center ${
                 isFocused ? 'shadow border border-primary' : ''
               }`}
+              style={{ maxWidth: '600px' }}
             >
               <Form.Control
                 type='email'
@@ -76,7 +77,7 @@ export function NewsletterCard () {
                 type='submit'
                 className='rounded-pill px-4 ms-2'
               >
-                Suscribir
+                Suscribirse
               </Button>
             </div>
           </Row>
