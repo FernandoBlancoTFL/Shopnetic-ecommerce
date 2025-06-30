@@ -70,7 +70,7 @@ export function ListOfProducts ({ products, currentPage, setCurrentPage, scrollT
                       disabled={clickedIds.includes(product.id)}
                       onClick={() => handleAddProductToCart(product)}
                     >
-                      {clickedIds.includes(product.id) ? 'Agregado 🛒' : 'Agregar al carrito 🛒'}
+                      {clickedIds.includes(product.id) ? 'Agregado' : 'Agregar al carrito'}
                     </Button>
                   </div>
                 </Card.Body>

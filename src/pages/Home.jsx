@@ -32,6 +32,9 @@ export function Home ({ filterURL, filterName, handleFilter }) {
   const handleFiltersAndClearSearch = (filterURL, filterName) => {
     setMenuOpen(false)
     handleFilter(filterURL, filterName)
+
+    titleRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+
     if (searchRef.current) {
       searchRef.current.clear()
     }
