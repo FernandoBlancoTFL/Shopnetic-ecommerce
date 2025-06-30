@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react'
 import { Button, Form, Container, Card, Alert, Row, Col } from 'react-bootstrap'
+import { Link, useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
-import { useNavigate } from 'react-router-dom'
 import { ADMIN_USER, USERS_URL } from '../constants/constants'
 import { Seo } from '../components/Seo'
 
@@ -36,7 +36,7 @@ export function Login () {
   }
 
   return (
-    <main className='d-flex align-items-center justify-content-center bg-secondary flex-grow-1 min-vh-100 px-3'>
+    <main className='main d-flex align-items-center justify-content-center bg-secondary flex-grow-1 px-3'>
       <Seo
         title='Login | Shopnetic'
         description='Inicia sesión en tu cuenta de Shopnetic.'
@@ -46,6 +46,9 @@ export function Login () {
       <Container className='my-5'>
         <Row className='justify-content-center'>
           <Col xs={12} sm={10} md={8} lg={6} xl={4}>
+            <div className='text-end my-2'>
+              <Link to='/'><Button variant='primary' className='px-4 py-2 fw-semibold shadow-sm rounded-2' style={{ minWidth: '120px' }}><i class='bi bi-arrow-left' /> Volver</Button></Link>
+            </div>
             <Card className='shadow-lg p-4 pb-1'>
               <Card.Body>
                 <h2 className='mb-4 text-center'>Iniciar Sesión</h2>

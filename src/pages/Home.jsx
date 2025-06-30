@@ -1,17 +1,21 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { Products } from '../components/ListProducts'
 import { ShoppingCart } from '../components/ShoppingCart'
-import { Row, Col, Container } from 'react-bootstrap'
-import { FilterMenu } from '../components/FilterMenu'
+import { Row, Col, Container, Button } from 'react-bootstrap'
 import { HomeCarousel } from '../components/HomeCarousel'
 import { ImageCollection } from '../components/ImageCollection'
 import { SearchBar } from '../components/SearchBar'
 import { NewsletterCard } from '../components/NewsletterCard'
+import { FilterMenuAccordion } from '../components/FilterMenuAccordion'
 import { Seo } from '../components/Seo'
 
 export function Home ({ filterURL, filterName, handleFilter }) {
   const productsRef = useRef(null)
   const searchRef = useRef()
+  const titleRef = useRef(null)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [activeKey, setActiveKey] = useState('0')
+  const toggleMenu = () => setMenuOpen(prev => !prev)
 
   const scrollToProducts = () => {
     productsRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -26,10 +30,18 @@ export function Home ({ filterURL, filterName, handleFilter }) {
   }
 
   const handleFiltersAndClearSearch = (filterURL, filterName) => {
+    setMenuOpen(false)
     handleFilter(filterURL, filterName)
     if (searchRef.current) {
       searchRef.current.clear()
     }
+  }
+
+  const handleSelect = (eventKey) => {
+    if (activeKey === '0' && eventKey !== '0') {
+      titleRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+    setActiveKey(eventKey)
   }
 
   return (
@@ -44,9 +56,6 @@ export function Home ({ filterURL, filterName, handleFilter }) {
       <ImageCollection handleFilter={handleFilter} scrollToProducts={scrollToProducts} />
       <Container>
         <Row className='justify-content-center'>
-          <Col xs={12} lg={3} className='mb-3 mt-4' ref={productsRef}>
-            <FilterMenu onApplyFilters={handleFiltersAndClearSearch} />
-          </Col>
           <Col
             xs={11}
             sm={10}
@@ -55,10 +64,33 @@ export function Home ({ filterURL, filterName, handleFilter }) {
             xl={8}
             className='p-2 mt-3 mb-2 d-flex flex-column justify-content-center'
           >
-            <div className='d-flex justify-content-end mb-3'>
-              <SearchBar ref={searchRef} onSearch={handleSearch} />
+            <h2 className='mb-4' ref={titleRef}>{filterName}</h2>
+            <div className='d-flex justify-content-between align-items-center gap-2 mb-3'>
+              <Button
+                className='p-1 h-100 rounded-4'
+                variant={menuOpen ? 'primary' : 'light'}
+                onClick={toggleMenu}
+                style={{ minWidth: '110px' }}
+              >
+                {menuOpen
+                  ? (<><i className='bi bi-funnel' /> Filtros <i class='bi bi-chevron-up' /></>)
+                  : (
+                    <>
+                      <i className='bi bi-funnel' /> Filtros <i class='bi bi-chevron-down' />
+                    </>
+                    )}
+
+              </Button>
+              <div className='p-2 px-3 rounded-4' style={{ width: '400px', backgroundColor: '#121212' }}>
+                <SearchBar ref={searchRef} onSearch={handleSearch} />
+              </div>
             </div>
-            <h2 className='mb-4'>{filterName}</h2>
+            <FilterMenuAccordion
+              menuOpen={menuOpen}
+              activeKey={activeKey}
+              handleSelect={handleSelect}
+              onApplyFilters={handleFiltersAndClearSearch}
+            />
             <ShoppingCart isPositionFixed />
             <Products filterURL={filterURL} scrollToProducts={scrollToProducts} />
           </Col>

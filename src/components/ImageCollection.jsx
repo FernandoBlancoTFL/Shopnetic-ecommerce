@@ -17,7 +17,7 @@ export function ImageCollection ({ handleFilter, scrollToProducts }) {
   return (
     <Container
       fluid
-      className='img-collection py-4 mx-1'
+      className='img-collection py-2 mx-1'
       style={{ maxWidth: '1100px' }}
     >
       <Row

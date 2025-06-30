@@ -38,7 +38,7 @@ export const SearchBar = forwardRef(({ onSearch }, ref) => {
   }
 
   return (
-    <Form onSubmit={handleSubmit} className='d-flex align-items-center gap-2 me-3 search-form' style={{ maxWidth: '500px', width: '100%' }}>
+    <Form onSubmit={handleSubmit} className='d-flex align-items-center gap-2 search-form' style={{ maxWidth: '450px' }}>
       <Form.Control
         type='search'
         placeholder='Celulares, Remeras...'

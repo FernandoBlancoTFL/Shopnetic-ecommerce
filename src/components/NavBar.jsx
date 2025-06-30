@@ -83,11 +83,10 @@ export function NavBar ({ handleFilter }) {
             <Nav.Link as={Link} to='/contact' onClick={closeMenu}>Contacto</Nav.Link>
             <Nav.Link as={Link} to='/about' onClick={closeMenu}>Sobre Nosotros</Nav.Link>
           </Nav>
-          <div className='searchBar-mobile d-flex align-items-center justify-content-center my-1 search-input'>
+          <div className='searchBar-mobile d-flex align-items-center justify-content-center my-1 me-3 search-input'>
             <SearchBar onSearch={handleSearch} ref={searchRef} />
           </div>
         </Navbar.Collapse>
-
         {shouldShowLoginButton && <LoginButton isMobile={false} />}
       </Container>
     </Navbar>
