@@ -11,6 +11,7 @@ export function Login () {
   const [user, setUser] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const { login } = useContext(AuthContext)
   const navigate = useNavigate()
 
@@ -27,6 +28,8 @@ export function Login () {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setIsLoading(true)
+
     const userData = await getUserByUserName()
     if (user === 'admin' && password === '1234') {
       login(ADMIN_USER)
@@ -44,6 +47,7 @@ export function Login () {
         draggable: false,
         theme: 'colored'
       })
+      setIsLoading(false)
     }
   }
 
@@ -99,9 +103,17 @@ export function Login () {
                     </button>
                   </div>
 
-                  <Button variant='primary' type='submit' className='w-100 rounded-pill'>
-                    Ingresar
+                  <Button
+                    variant='primary'
+                    type='submit'
+                    className='w-100 rounded-pill d-flex align-items-center justify-content-center'
+                    disabled={isLoading}
+                  >
+                    {isLoading
+                      ? <span className='spinner-border spinner-border-sm' role='status' aria-hidden='true' />
+                      : 'Ingresar'}
                   </Button>
+
                   <div className='d-flex flex-column mt-3'>
                     <p className='text-black m-0 fw-semibold text-white'>Cuenta administrador:</p>
                     <p className='text-black m-0 text-white'>Usuario: admin - Contraseña: 1234</p>

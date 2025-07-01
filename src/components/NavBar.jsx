@@ -62,8 +62,8 @@ export function NavBar ({ handleFilter }) {
       className='bg-dark py-3 shadow custom-navbar'
       variant='dark'
     >
-      <Container className='d-flex justify-content-between'>
-        <Navbar.Brand as={Link} to='/' onClick={closeMenu} className='m-0 mx-lg-2 d-flex flex-grow-1 flex-lg-grow-0'>
+      <Container className='d-flex justify-content-between align-content-center'>
+        <Navbar.Brand as={Link} to='/' onClick={closeMenu} className='m-0 mx-lg-2 d-flex flex-grow-1 flex-lg-grow-0 align-items-center'>
           <img
             src='https://cdn-icons-png.freepik.com/512/869/869636.png?ga=GA1.1.1678774421.1729989836https://www.freepik.es/iconos/tienda'
             alt='Shopnetic Logo'
@@ -71,6 +71,7 @@ export function NavBar ({ handleFilter }) {
             height='50'
             className='d-inline-block align-middle'
           />
+          <h3 className='m-0 mx-2 d-none d-lg-block' style={{ fontFamily: 'Poppins, sans-serif' }}>Shopnetic</h3>
         </Navbar.Brand>
 
         <div className='d-flex gap-1'>
