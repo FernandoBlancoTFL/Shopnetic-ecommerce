@@ -44,13 +44,18 @@ export function ShoppingCart ({ isPositionFixed = false }) {
         <Offcanvas.Body>
           {shoppingCart.length === 0
             ? (
-              <p>No hay productos en el carrito.</p>
+              <p className='text-center'>No hay productos en el carrito.</p>
               )
             : (
               <ListGroup variant='flush'>
                 {shoppingCart.map((item, index) => (
                   <ListGroup.Item key={index}>
-                    <CartItem item={item} addProductToCart={addProductToCart} reduceProductFromCartById={reduceProductFromCartById} />
+                    <CartItem
+                      item={item}
+                      addProductToCart={addProductToCart}
+                      reduceProductFromCartById={reduceProductFromCartById}
+                      setShow={setShow}
+                    />
                   </ListGroup.Item>
                 )
                 )}
