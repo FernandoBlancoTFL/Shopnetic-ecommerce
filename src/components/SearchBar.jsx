@@ -47,8 +47,8 @@ export const SearchBar = forwardRef(({ onSearch }, ref) => {
         value={query}
         onChange={handleChange}
       />
-      <button type='submit' style={{ background: 'none', border: 'none', padding: 0 }}>
-        <i className='fas fa-search text-white fa-lg' style={{ cursor: 'pointer', margin: '0 5px' }} />
+      <button className='search-btn' type='submit'>
+        <i className='fas fa-search' />
       </button>
     </Form>
   )

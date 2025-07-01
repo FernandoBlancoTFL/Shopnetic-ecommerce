@@ -6,7 +6,7 @@ import { AuthContext } from '../context/AuthContext'
 function LoginButtonDisplay ({ user, isMobile }) {
   return (
     <Button
-      as={Link} to={user ? '' : '/login'} variant='info'
+      as={Link} to={user ? '' : '/login'} variant='primary'
       className={`${isMobile ? 'd-inline d-lg-none' : 'd-none d-lg-inline'} align-content-center rounded-5`}
       style={{ height: '46px' }}
     >

@@ -123,11 +123,22 @@
   display: none !important;
 }
 
-form input:focus,
-form textarea:focus {
-  border-color: #0d6efd;
-  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
-  transition: box-shadow 0.2s ease-in-out;
+.search-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.search-btn i {
+  color: white;
+  font-size: 1.25rem;
+  margin-right: 8px;
+  transition: color 0.3s;
+}
+
+.search-btn:hover i {
+  color: #0d6efd;
 }
 
 .card-title {
@@ -141,6 +152,62 @@ form textarea:focus {
 
 .nl-banner {
   border-radius: 0;
+}
+
+.login-background {
+  background-image: url('/img/loginBg.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  border-radius: 1rem;
+  padding: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.login-background::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.1);
+  z-index: -1;
+  border-radius: 1rem;
+}
+
+.custom-input {
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid white;
+  padding: 8px 0;
+  position: relative;
+  transition: border-color 0.3s;
+}
+
+.custom-input:focus-within {
+  border-color: #0d6efd;
+}
+
+.custom-input i {
+  color: white;
+  margin-right: 2px;
+  font-size: 1.2rem;
+}
+
+.custom-input input {
+  border: none;
+  outline: none;
+  background: transparent;
+  flex: 1;
+  color: white;
+  font-size: 1rem;
+}
+
+.btn-eye {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  margin-left: 10px;
 }
 
 @media (max-width: 991.98px) {
