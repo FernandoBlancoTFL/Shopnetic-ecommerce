@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import { ShoppingCartContext } from '../context/ShoppingCartContext'
 
 export function ShoppingCart ({ isPositionFixed = false }) {
-  const { shoppingCart, totalPrice, addProductToCart, reduceProductFromCartById, emptyShoppingCart, emptyShoppingCartWithConfirmationModal } = useContext(ShoppingCartContext)
+  const { shoppingCart, totalPrice, addProductToCart, reduceProductFromCartById, emptyShoppingCart } = useContext(ShoppingCartContext)
   const [show, setShow] = useState(false)
   const [cartSize, setCartSize] = useState(shoppingCart.length)
   const [animate, setAnimate] = useState(false)
@@ -57,7 +57,7 @@ export function ShoppingCart ({ isPositionFixed = false }) {
         variant='success'
         style={{ padding: '10px 15px', zIndex: '1000' }}
         onClick={handleShow}
-        className={`${isPositionFixed ? 'position-fixed top-0 end-0 m-4 mt-4 d-none d-lg-inline' : 'd-inline d-lg-none bg-transparent'} border border-dark ${animate ? 'animate__animated animate__heartBeat' : ''}`}
+        className={`${isPositionFixed ? 'position-fixed top-0 end-0 m-4 mt-4 d-none d-lg-inline border border-dark' : 'd-inline d-lg-none bg-transparent border-0'} ${animate ? 'animate__animated animate__heartBeat' : ''}`}
       >
         <div style={{ position: 'relative', display: 'inline-block' }}>
           <i className={`bi bi-cart-fill ${isPositionFixed ? '' : 'fs-2'}`} />
