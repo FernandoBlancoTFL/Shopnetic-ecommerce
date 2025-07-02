@@ -1,6 +1,6 @@
 ## Proyecto React Talento Tech
 
-![Vista principal](docs/img/Capture.png)
+![Vista principal](docs/img/Portada.png)
 
 Este proyecto es un ecommerce desarrollado con el framework **React**, como trabajo final del curso de React de **Talento Tech**. El objetivo es aplicar los conocimientos aprendidos y sumar nuevas prácticas profesionales en el desarrollo frontend.
 
