@@ -248,6 +248,7 @@ export function UsersCrud () {
         <table className='table table-dark table-bordered table-hover align-middle'>
           <thead>
             <tr>
+              <th>ID</th>
               <th>Usuario</th>
               <th>Rol</th>
               <th>Fecha Agregado</th>
@@ -257,6 +258,11 @@ export function UsersCrud () {
           <tbody>
             {currentUsers.map(user => (
               <tr key={user.id}>
+                <td>
+                  <div className='d-flex justify-content-center'>
+                    {user.id}
+                  </div>
+                </td>
                 <td>
                   <div className='d-flex align-items-center gap-3 mx-2'>
                     <img src={user.image} alt={user.userName} className='rounded-circle' width='50' height='50' />
@@ -274,8 +280,10 @@ export function UsersCrud () {
                 })}
                 </td>
                 <td className='text-center'>
-                  <button className='btn btn-sm btn-outline-light me-2' onClick={() => handleEditClick(user)}>Modificar</button>
-                  <button className='btn btn-sm btn-outline-danger' onClick={() => deleteUser(user.id)}>Eliminar</button>
+                  <div className='d-flex flex-wrap justify-content-center gap-2'>
+                    <button className='btn btn-sm btn-outline-light' onClick={() => handleEditClick(user)}>Modificar</button>
+                    <button className='btn btn-sm btn-outline-danger' onClick={() => deleteUser(user.id)}>Eliminar</button>
+                  </div>
                 </td>
               </tr>
             ))}
