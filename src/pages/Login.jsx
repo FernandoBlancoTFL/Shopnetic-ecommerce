@@ -74,7 +74,7 @@ export function Login () {
                   <div className='custom-input mb-4'>
                     <i className='bi bi-person' />
                     <input
-                      className='no-border-input'
+                      className='no-border-input w-75'
                       type='text'
                       placeholder='Usuario'
                       value={user}
@@ -91,7 +91,7 @@ export function Login () {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
-                      className='flex-grow-1'
+                      className='w-75'
                     />
                     <button
                       type='button'

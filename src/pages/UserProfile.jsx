@@ -1,5 +1,7 @@
 import { useContext, useState } from 'react'
 import { AuthContext } from '../context/AuthContext'
+import { Button } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 import { Seo } from '../components/Seo'
 
 export function UserProfile () {
@@ -25,8 +27,12 @@ export function UserProfile () {
         url='https://shopneticfb.netlify.app/userProfile'
       />
       <div className='d-flex p-5 bg-secondary justify-items-center'>
+
         <div className='main container bg-secondary'>
           <div className='col-lg-8 col-md-10 mx-auto bg-secondary'>
+            <div className='text-end my-2'>
+              <Link to='/'><Button variant='primary' className='px-4 py-2 fw-semibold shadow-sm rounded-2' style={{ minWidth: '120px' }}><i className='bi bi-arrow-left' /> Volver</Button></Link>
+            </div>
             <div className='card shadow-lg'>
               <div className='card-body text-center p-4'>
                 <img

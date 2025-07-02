@@ -27,14 +27,35 @@ export function ShoppingCart ({ isPositionFixed = false }) {
         variant='success'
         style={{ padding: '10px 15px', zIndex: '1000' }}
         onClick={handleShow}
-        className={`${isPositionFixed ? 'position-fixed top-0 end-0 m-4 mt-4 d-none d-lg-inline' : 'd-inline d-lg-none'} border border-dark ${animate ? 'animate__animated animate__heartBeat' : ''}`}
+        className={`${isPositionFixed ? 'position-fixed top-0 end-0 m-4 mt-4 d-none d-lg-inline' : 'd-inline d-lg-none bg-transparent'} border border-dark ${animate ? 'animate__animated animate__heartBeat' : ''}`}
       >
-        <i class='bi bi-cart-fill' />
-        {shoppingCart.length > 0 && (
-          <Badge bg='danger' pill className='ms-2'>
-            {shoppingCart.length}
-          </Badge>
-        )}
+        <div style={{ position: 'relative', display: 'inline-block' }}>
+          <i className={`bi bi-cart-fill ${isPositionFixed ? '' : 'fs-2'}`} />
+
+          {shoppingCart.length > 0
+            ? isPositionFixed
+              ? (
+                <Badge bg='danger' pill className='ms-2'>
+                  {shoppingCart.length}
+                </Badge>
+                )
+              : (
+                <Badge
+                  bg='danger'
+                  pill
+                  style={{
+                    position: 'absolute',
+                    top: '-8px',
+                    right: '-10px',
+                    fontSize: '0.75rem',
+                    padding: '4px 6px'
+                  }}
+                >
+                  {shoppingCart.length}
+                </Badge>
+                )
+            : null}
+        </div>
       </Button>
 
       <Offcanvas show={show} onHide={handleClose} placement='end' backdrop style={{ zIndex: '2000' }}>

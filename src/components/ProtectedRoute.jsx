@@ -4,12 +4,16 @@ import { ShoppingCartContext } from '../context/ShoppingCartContext'
 import { useContext } from 'react'
 
 export function ProtectedRoute ({ children }) {
-  const { user } = useContext(AuthContext)
+  const { user, loading } = useContext(AuthContext)
   const { shoppingCart } = useContext(ShoppingCartContext)
   const location = useLocation()
 
+  if (loading) {
+    return null
+  }
+
   if (!user) {
-    return <Navigate to='/login' />
+    return <Navigate to='/login' state={{ from: location }} replace />
   }
 
   if (location.pathname === '/userAdmin' && user.userName !== 'admin') {
@@ -22,3 +26,4 @@ export function ProtectedRoute ({ children }) {
 
   return children
 }
+

@@ -7,17 +7,17 @@ function LoginButtonDisplay ({ user, isMobile }) {
   return (
     <Button
       as={Link} to={user ? '' : '/login'} variant='primary'
-      className={`${isMobile ? 'd-inline d-lg-none' : 'd-none d-lg-inline'} align-content-center rounded-5`}
+      className={`${isMobile ? 'd-inline d-lg-none p-2 border-0 bg-transparent' : 'd-none d-lg-inline p-1 px-2 me-5 me-xl-4 me-xxl-2'} d-flex align-items-center rounded-5 `}
       style={{ height: '46px' }}
     >
       {user
         ? <i class='bi bi-person-circle' />
         : isMobile
-          ? (<i className='bi bi-person-circle fs-3' />)
+          ? (<i className='bi bi-person-circle fs-1' />)
           : (<span className='d-flex align-items-center'>
-            <i className='bi bi-person-circle me-2 fs-5' />
+            <i className='bi bi-person-circle me-2 fs-4' />
             Iniciar sesión
-             </span>)}
+          </span>)}
     </Button>
   )
 }
@@ -52,25 +52,33 @@ function UserDropdownButton ({ user, logout, isMobile = false }) {
 
   return (
     <Dropdown>
-      <Dropdown.Toggle variant='primary' id='dropdown-basic' className={`${isMobile ? 'd-inline d-lg-none' : 'd-none d-lg-inline'} rounded-5`} style={{ height: '45px' }}>
-        {user && user.userName
+      <Dropdown.Toggle
+        variant='primary'
+        id='dropdown-basic'
+        className={`${isMobile ? 'd-inline d-lg-none' : 'd-none d-lg-inline me-5 me-xl-4 me-xxl-2'} bg-transparent border-0 p-0`}
+        style={{ height: '45px' }}
+      >
+        {user && user.image
           ? (
-            <>
-              {user.userName.length > 5
-                ? `${user.userName.slice(0, 5)}...`
-                : user.userName}
-              <i className='bi bi-person-circle ms-2' />
-            </>
+            <img
+              src={user.image}
+              alt={user.userName}
+              className='rounded-5'
+              style={{ width: '40px', height: '40px', border: '1px solid white' }}
+            />
             )
           : null}
       </Dropdown.Toggle>
 
-      <Dropdown.Menu>
+      <Dropdown.Menu className={`${isMobile ? 'dropdown-center' : ''}`}>
         <Dropdown.Item as={Link} to='/userProfile'>Perfil</Dropdown.Item>
-        {user.userName === 'admin' ? <Dropdown.Item as={Link} to='/userAdmin'>Administrar usuarios</Dropdown.Item> : null}
+        {user.userName === 'admin' && (
+          <Dropdown.Item as={Link} to='/userAdmin'>Administrar usuarios</Dropdown.Item>
+        )}
         <Dropdown.Item onClick={handleLogout}>Cerrar sesión</Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
+
   )
 }
 

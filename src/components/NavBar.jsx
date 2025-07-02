@@ -71,15 +71,15 @@ export function NavBar ({ handleFilter }) {
             height='50'
             className='d-inline-block align-middle'
           />
-          <h3 className='m-0 mx-2 d-none d-lg-block' style={{ fontFamily: 'Poppins, sans-serif' }}>Shopnetic</h3>
+          <h3 className='m-0 mx-2 d-none d-xl-block' style={{ fontFamily: 'Poppins, sans-serif' }}>Shopnetic</h3>
         </Navbar.Brand>
 
-        <div className='d-flex gap-1'>
-          {shouldShowLoginButton && <LoginButton isMobile />}
+        <div className='d-flex align-items-center gap-1'>
           {shouldShowCart && <ShoppingCart isPositionFixed={false} />}
+          {shouldShowLoginButton && <LoginButton isMobile />}
         </div>
 
-        <Navbar.Toggle aria-controls='basic-navbar-nav' style={{ marginLeft: '5px' }} />
+        <Navbar.Toggle aria-controls='basic-navbar-nav' style={{ marginLeft: '12px' }} />
         <Navbar.Collapse id='basic-navbar-nav'>
           <Nav className='me-auto'>
             <Nav.Link
