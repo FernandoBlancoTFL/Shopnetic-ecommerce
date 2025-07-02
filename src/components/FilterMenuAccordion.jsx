@@ -33,7 +33,7 @@ export function FilterMenuAccordion ({ menuOpen, activeKey, handleSelect, onAppl
 
   const applyFilters = () => {
     let url = 'https://dummyjson.com/products'
-    let label = 'Todos los productos'
+    let label = 'Nuestros productos'
 
     if (selectedCategory) {
       url += `/category/${selectedCategory}`

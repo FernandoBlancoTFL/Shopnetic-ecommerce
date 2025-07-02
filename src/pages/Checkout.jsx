@@ -20,9 +20,9 @@ export function Checkout () {
         url='https://shopneticfb.netlify.app/checkout'
       />
       <Container className='py-2 py-sm-2 py-md-2 py-lg-2 bg-secondary'>
-        <Card className='shadow' style={{ backgroundColor: '#f2f2f2', paddingRight: '12px' }}>
-          <Row className='align-items-start justify-content-between'>
-            <Col md={8} className='text-center mb-4 mb-md-0 p-2 p-lg-4 px-4 px-lg-5'>
+        <Card className='shadow' style={{ backgroundColor: '#f2f2f2' }}>
+          <Row className='align-items-start m-1 mb-2 m-md-0'>
+            <Col md={7} lg={8} className='text-center mb-4 mb-md-0 p-2 p-lg-4 px-4 px-lg-5'>
               <div className='d-flex align-items-center justify-content-between'>
                 <h3 className='text-start m-0'>Checkout</h3>
                 <p className='m-0 mt-2 fw-semibold'>{`Subtotal ${(shoppingCart.length > 1 ? `(${shoppingCart.length} Items)` : '(1 Item)')}: $${totalPrice}`}</p>
@@ -32,7 +32,7 @@ export function Checkout () {
                 <CheckoutForm shippingPrice={shippingPrice} setShippingPrice={price => setShippingPrice(price)} />
               </div>
             </Col>
-            <Col md={4} className='p-4 ms-2 ms-lg-0 bg-white rounded-end-1'>
+            <Col className='p-4 m-1 ms-lg-0 rounded-1 bg-white rounded-end-1 custom-checkout-col shadow'>
               <h4>Resumen de compra</h4>
               <div className='d-flex flex-column my-4 mx-auto' style={{ maxWidth: '350px' }}>
                 <div className='d-flex justify-content-between'>
@@ -60,7 +60,7 @@ export function Checkout () {
               </h4>
               <CartItemCheckout />
             </Col>
-            <div className='d-flex pe-0 pe-lg-5 w-50' />
+            {/* <div className='d-flex pe-0 pe-lg-5 w-50' /> */}
 
           </Row>
         </Card>
