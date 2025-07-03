@@ -17,6 +17,7 @@ export function ImageCollection ({ handleFilter }) {
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true)
+          observer.unobserve(entry.target)
         }
       },
       { threshold: 0.2 }
@@ -24,6 +25,12 @@ export function ImageCollection ({ handleFilter }) {
 
     if (sectionRef.current) {
       observer.observe(sectionRef.current)
+      
+      const isInView = sectionRef.current.getBoundingClientRect().top < window.innerHeight
+      if (isInView) {
+        setIsVisible(true)
+        observer.unobserve(sectionRef.current)
+      }
     }
 
     return () => {
