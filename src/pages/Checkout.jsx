@@ -1,7 +1,7 @@
 import { Container, Card, Row, Col } from 'react-bootstrap'
 import { CheckoutForm } from '../components/CheckoutForm'
 import { CartItemCheckout } from '../components/CartItemCheckout'
-import { useContext, useState } from 'react'
+import { useContext, useState, useEffect } from 'react'
 import { ShoppingCartContext } from '../context/ShoppingCartContext'
 import { Seo } from '../components/Seo'
 
@@ -10,6 +10,13 @@ export function Checkout () {
   const [shippingPrice, setShippingPrice] = useState(0)
   const tax = 25.35
   const totalPriceCheckout = totalPrice + shippingPrice + tax
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  }, [])
 
   return (
     <main className='main flex-grow-1 bg-secondary text-white'>
@@ -60,8 +67,6 @@ export function Checkout () {
               </h4>
               <CartItemCheckout />
             </Col>
-            {/* <div className='d-flex pe-0 pe-lg-5 w-50' /> */}
-
           </Row>
         </Card>
       </Container>

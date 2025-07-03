@@ -1,7 +1,9 @@
 import { useEffect, useState, useRef, useContext } from 'react'
 import { Container, Row, Col, Form, Button, Spinner } from 'react-bootstrap'
 import { ShoppingCartContext } from '../context/ShoppingCartContext'
+import { AuthContext } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import { generateInvoicePdf } from '../utils/generateInvoicePdf'
 
 export const validateForm = (form) => {
   if (form.checkValidity()) {
@@ -391,18 +393,71 @@ function PaymentForm ({ userInfo, setShowComponent, setUserInfo }) {
 }
 
 function ReviewAndOrder ({ userInfo, setShowComponent }) {
-  const { emptyShoppingCart } = useContext(ShoppingCartContext)
+  const { shoppingCart, emptyShoppingCart } = useContext(ShoppingCartContext)
+  const { user } = useContext(AuthContext)
   const navigate = useNavigate()
+  const userToken = user.token
+
+  const handleSubmit2 = () => {
+    if (shoppingCart.length < 1) {
+      Swal.fire({
+        title: 'Lo sentimos, ocurrió un error...',
+        text: 'El carrito de compras está vacío!',
+        icon: 'error'
+      }).then(() => {
+        navigate('/')
+      })
+    } else {
+      Swal.fire({
+        title: 'Compra finalizada!',
+        text: 'Te enviaremos por mail los detalles de la compra',
+        icon: 'success'
+      }).then(() => {
+        emptyShoppingCart()
+        navigate('/')
+      })
+    }
+  }
 
   const handleSubmit = () => {
-    Swal.fire({
-      title: 'Compra finalizada!',
-      text: 'Te enviaremos por mail los detalles de la compra',
-      icon: 'success'
-    }).then(() => {
-      emptyShoppingCart()
-      navigate('/')
-    })
+    if (shoppingCart.length < 1) {
+      Swal.fire({
+        title: 'Lo sentimos, ocurrió un error...',
+        text: 'El carrito de compras está vacío!',
+        icon: 'error'
+      }).then(() => {
+        navigate('/')
+      })
+    } else {
+      const subtotal = shoppingCart.reduce((acc, p) => acc + p.price * p.quantity, 0)
+      const shipping = userInfo.shippingPrice || 0
+      const tax = 25.35
+      const total = subtotal + shipping + tax
+      let downloadBilling = false
+
+      Swal.fire({
+        title: 'Compra finalizada!',
+        text: 'Recibiras mas información por correo',
+        icon: 'success'
+      }).then((result) => {
+        Swal.fire({
+          title: '¿Quieres descargar el resumen de compra?',
+          text: 'Formato: pdf',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Descargar resumen de compra'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            downloadBilling = true
+          }
+          generateInvoicePdf(shoppingCart, userInfo, userToken, subtotal, shipping, tax, total, downloadBilling)
+          emptyShoppingCart()
+          navigate('/')
+        })
+      })
+    }
   }
 
   return (
