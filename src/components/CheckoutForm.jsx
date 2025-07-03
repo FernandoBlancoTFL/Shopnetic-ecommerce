@@ -447,6 +447,7 @@ function ReviewAndOrder ({ userInfo, setShowComponent }) {
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
           cancelButtonColor: '#d33',
+          cancelButtonText: 'Cancelar',
           confirmButtonText: 'Descargar resumen de compra'
         }).then((result) => {
           if (result.isConfirmed) {
