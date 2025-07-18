@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using shopnetic.api.Data;
 
@@ -11,9 +12,11 @@ using shopnetic.api.Data;
 namespace shopnetic.api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250718013742_ProductReviewsPropertyUpdate")]
+    partial class ProductReviewsPropertyUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,19 +52,12 @@ namespace shopnetic.api.Migrations
                     b.Property<double>("DiscountPercentage")
                         .HasColumnType("float");
 
-                    b.Property<int>("MinimumOrderQuantity")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Price")
+                    b.Property<double>("Price")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("float(18)");
 
                     b.Property<double>("Rating")
                         .HasColumnType("float");
-
-                    b.Property<string>("ReturnPolicy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ShippingInformation")
                         .IsRequired()
@@ -73,10 +69,6 @@ namespace shopnetic.api.Migrations
 
                     b.Property<int>("Stock")
                         .HasColumnType("int");
-
-                    b.Property<string>("Thumbnail")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -93,28 +85,6 @@ namespace shopnetic.api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("shopnetic.api.Models.ProductImage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductsImages");
                 });
 
             modelBuilder.Entity("shopnetic.api.Models.Review", b =>
@@ -177,49 +147,8 @@ namespace shopnetic.api.Migrations
                                 .HasForeignKey("ProductId");
                         });
 
-                    b.OwnsOne("shopnetic.api.Models.Meta", "Meta", b1 =>
-                        {
-                            b1.Property<int>("ProductId")
-                                .HasColumnType("int");
-
-                            b1.Property<string>("Barcode")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<DateTime>("CreatedAt")
-                                .HasColumnType("datetime2");
-
-                            b1.Property<DateTime>("UpdatedAt")
-                                .HasColumnType("datetime2");
-
-                            b1.Property<string>("qrCode")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.HasKey("ProductId");
-
-                            b1.ToTable("Products");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ProductId");
-                        });
-
                     b.Navigation("Dimensions")
                         .IsRequired();
-
-                    b.Navigation("Meta")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("shopnetic.api.Models.ProductImage", b =>
-                {
-                    b.HasOne("shopnetic.api.Models.Product", "Product")
-                        .WithMany("Images")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("shopnetic.api.Models.Review", b =>
@@ -235,8 +164,6 @@ namespace shopnetic.api.Migrations
 
             modelBuilder.Entity("shopnetic.api.Models.Product", b =>
                 {
-                    b.Navigation("Images");
-
                     b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
