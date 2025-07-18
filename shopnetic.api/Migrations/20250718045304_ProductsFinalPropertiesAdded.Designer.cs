@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using shopnetic.api.Data;
 
@@ -11,9 +12,11 @@ using shopnetic.api.Data;
 namespace shopnetic.api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250718045304_ProductsFinalPropertiesAdded")]
+    partial class ProductsFinalPropertiesAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,9 +55,9 @@ namespace shopnetic.api.Migrations
                     b.Property<int>("MinimumOrderQuantity")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("Price")
+                    b.Property<double>("Price")
                         .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("float(18)");
 
                     b.Property<double>("Rating")
                         .HasColumnType("float");
