@@ -12,6 +12,9 @@ namespace shopnetic.api.Data
         public AppDbContext(DbContextOptions options) : base(options) {}
 
         public DbSet<Product> Products { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+
+        public DbSet<ProductImage> ProductsImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

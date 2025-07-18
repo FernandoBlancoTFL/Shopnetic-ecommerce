@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using shopnetic.api.Models;
 
 namespace shopnetic.api.Dto
 {
@@ -12,22 +13,36 @@ namespace shopnetic.api.Dto
         [Required]
         public String Title { get; set; }
         [Required]
-
         public String Description { get; set; }
         [Required]
-
         public String Category { get; set; }
         [Required]
-
-        public double Price { get; set; }
+        public decimal Price { get; set; }
         [Required]
-
         public double DiscountPercentage { get; set; }
         [Required]
-
         public double Rating { get; set; }
         [Required]
-
         public int Stock { get; set; }
+        [Required]
+        public Dimensions Dimensions { get; set; }
+        [Required]
+        public String WarrantyInformation { get; set; }
+        [Required]
+        public String ShippingInformation { get; set; }
+        [Required]
+        public String AvailabilityStatus { get; set; }
+        [Required]
+        public ICollection<ReviewDto> Reviews { get; set; } = new List<ReviewDto>();
+        [Required]
+        public String ReturnPolicy { get; set; }
+        [Required]
+        public int MinimumOrderQuantity { get; set; }
+        [Required]
+        public Meta Meta { get; set; }
+        [Required]
+        public List<string> Images { get; set; } = new List<string>();
+        [Required]
+        public String Thumbnail { get; set; }
     }
 }
