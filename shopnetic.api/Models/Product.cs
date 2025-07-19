@@ -17,7 +17,7 @@ namespace shopnetic.api.Models
         public int Stock { get; set; }
         public String Brand { get; set; }
         public String Sku { get; set; }
-        public String weight { get; set; }
+        public int Weight { get; set; }
         public Dimensions Dimensions { get; set; }
         public String WarrantyInformation { get; set; }
         public String ShippingInformation { get; set; }

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using shopnetic.api;
 using shopnetic.api.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +27,8 @@ builder.Services.AddDbContext<AppDbContext>(options => {
 });
 
 var app = builder.Build();
+
+app.Initialize();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

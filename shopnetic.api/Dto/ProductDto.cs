@@ -25,6 +25,12 @@ namespace shopnetic.api.Dto
         [Required]
         public int Stock { get; set; }
         [Required]
+        public String Brand { get; set; }
+        [Required]
+        public String Sku { get; set; }
+        [Required]
+        public int Weight { get; set; }
+        [Required]
         public Dimensions Dimensions { get; set; }
         [Required]
         public String WarrantyInformation { get; set; }
