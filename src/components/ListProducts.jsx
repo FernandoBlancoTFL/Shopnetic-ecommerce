@@ -114,7 +114,7 @@ export function Products ({ filterURL, scrollToProducts }) {
         }
         return res.json()
       })
-      .then(response => {
+      .then(async response => {
         setProducts(response.products)
         setLoading(false)
       })

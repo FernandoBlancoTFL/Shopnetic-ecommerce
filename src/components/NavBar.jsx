@@ -4,6 +4,7 @@ import { ShoppingCart } from './ShoppingCart'
 import { LoginButton } from './LoginButton'
 import { Link, useLocation } from 'react-router-dom'
 import { SearchBar } from './SearchBar'
+import { PRODUCTS_URL } from '../constants/constants'
 
 export function NavBar ({ handleFilter }) {
   const searchRef = useRef()
@@ -13,9 +14,9 @@ export function NavBar ({ handleFilter }) {
 
   const handleSearch = (query) => {
     if (!query.trim()) {
-      handleFilter('https://dummyjson.com/products', 'Nuestros Productos')
+      handleFilter(PRODUCTS_URL, 'Nuestros Productos')
     } else {
-      handleFilter(`https://dummyjson.com/products/search?q=${encodeURIComponent(query)}`, `Resultados para "${query}"`)
+      handleFilter(`${PRODUCTS_URL}/search?q=${encodeURIComponent(query)}`, `Resultados para "${query}"`)
     }
   }
 
@@ -85,7 +86,7 @@ export function NavBar ({ handleFilter }) {
             <Nav.Link
               as={Link}
               to='/'
-              onClick={() => handleCategoryClick('https://dummyjson.com/products', 'Nuestros Productos')}
+              onClick={() => handleCategoryClick(PRODUCTS_URL, 'Nuestros Productos')}
               className={location.pathname === '/' ? 'text-primary fw-bold' : 'text-white'}
             >
               Inicio

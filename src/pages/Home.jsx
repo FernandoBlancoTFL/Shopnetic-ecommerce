@@ -7,6 +7,7 @@ import { ImageCollection } from '../components/ImageCollection'
 import { SearchBar } from '../components/SearchBar'
 import { NewsletterCard } from '../components/NewsletterCard'
 import { FilterMenuAccordion } from '../components/FilterMenuAccordion'
+import { PRODUCTS_URL } from '../constants/constants'
 import { Seo } from '../components/Seo'
 
 export function Home ({ filterURL, filterName, handleFilter }) {
@@ -48,9 +49,9 @@ export function Home ({ filterURL, filterName, handleFilter }) {
 
   const handleSearch = (query) => {
     if (!query.trim()) {
-      handleFilter('https://dummyjson.com/products', 'Nuestros Productos')
+      handleFilter(PRODUCTS_URL, 'Nuestros Productos')
     } else {
-      handleFilter(`https://dummyjson.com/products/search?q=${encodeURIComponent(query)}`, `Resultados para "${query}"`)
+      handleFilter(`${PRODUCTS_URL}/search?q=${encodeURIComponent(query)}`, `Resultados para "${query}"`)
     }
   }
 

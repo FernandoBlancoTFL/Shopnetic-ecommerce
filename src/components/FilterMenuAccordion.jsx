@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Collapse, Card, Accordion, Button } from 'react-bootstrap'
 import { BuyingButtons } from './BuyingButtons'
-import { CATEGORIES } from '../constants/constants'
+import { CATEGORIES, PRODUCTS_URL } from '../constants/constants'
 
 export function FilterMenuAccordion ({ menuOpen, activeKey, handleSelect, onApplyFilters, setWasFilterManuallyApplied }) {
   const [selectedCategory, setSelectedCategory] = useState(null)
@@ -32,7 +32,7 @@ export function FilterMenuAccordion ({ menuOpen, activeKey, handleSelect, onAppl
   }
 
   const applyFilters = () => {
-    let url = 'https://dummyjson.com/products'
+    let url = PRODUCTS_URL
     let label = 'Nuestros productos'
 
     if (selectedCategory) {

@@ -1,3 +1,5 @@
+export const PRODUCTS_URL = 'http://localhost:5281/api/products'
+
 export const ADMIN_USER = {
   firstName: 'Admin',
   password: '1234',
@@ -11,8 +13,6 @@ export const ADMIN_USER = {
   email: 'admin@mail.com',
   id: '101'
 }
-
-
 
 export const USERS_URL = 'https://684f5092f0c9c9848d2aaa70.mockapi.io/users'
 

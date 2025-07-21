@@ -11,12 +11,13 @@ import { Checkout } from './pages/Checkout'
 import { UsersCrud } from './pages/UsersCrud'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { AuthProvider } from './context/AuthContext'
+import { PRODUCTS_URL } from './constants/constants'
 import { useState } from 'react'
 import './css/App.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 export function App () {
-  const [productsURL, setProductsURL] = useState('https://dummyjson.com/products')
+  const [productsURL, setProductsURL] = useState(PRODUCTS_URL)
   const [filterName, setFilterName] = useState('Nuestros productos')
 
   const handleFilters = (filterURL, filterName) => {

@@ -9,6 +9,7 @@ import { useContext, useEffect, useState } from 'react'
 import { Spinner, Row, Col, Container, Card } from 'react-bootstrap'
 import { ShoppingCartContext } from '../context/ShoppingCartContext'
 import { CustomBreadcrumb } from '../components/CustomBreadcrumb'
+import { PRODUCTS_URL } from '../constants/constants'
 import { Box } from 'react-bootstrap-icons'
 import { Seo } from '../components/Seo'
 
@@ -23,7 +24,7 @@ export function ProductDetail () {
   const [showScrollButton, setShowScrollButton] = useState(false)
 
   useEffect(() => {
-    fetch(`https://dummyjson.com/products/${id}`)
+    fetch(`${PRODUCTS_URL}/${id}`)
       .then(res => res.json())
       .then(product => {
         setProduct(product)
@@ -41,7 +42,7 @@ export function ProductDetail () {
 
     const fetchRelated = async () => {
       try {
-        const response = await fetch(`https://dummyjson.com/products/category/${product.category}`)
+        const response = await fetch(`${PRODUCTS_URL}/category/${product.category}`)
         const data = await response.json()
 
         const filteredProducts = data.products.filter(p => p.id !== product.id)
