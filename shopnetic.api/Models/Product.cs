@@ -10,7 +10,8 @@ namespace shopnetic.api.Models
         public int Id { get; set; }
         public String Title { get; set; }
         public String Description { get; set; }
-        public String Category { get; set; }
+        public int CategoryId { get; set; }
+        public Category Category { get; set; }
         public decimal Price { get; set; }
         public double DiscountPercentage { get; set; }
         public double Rating { get; set; }

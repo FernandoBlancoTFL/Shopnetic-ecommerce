@@ -30,19 +30,35 @@ namespace shopnetic.api
             var jsonData = File.ReadAllText(filePath);
             var products = JsonSerializer.Deserialize<List<Product>>(jsonData, options);
 
-            if (products != null && products.Any())
+            if (products == null || !products.Any())
+                return;
+
+            var uniqueCategories = new Dictionary<string, Category>(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var product in products)
             {
-                foreach (var product in products)
+                if (string.IsNullOrWhiteSpace(product.Brand))
                 {
-                    if (string.IsNullOrWhiteSpace(product.Brand))
-                    {
-                        product.Brand = "N/A";
-                    }
+                    product.Brand = "N/A";
                 }
-                
-                context.Products.AddRange(products);
-                context.SaveChanges();
+
+                if (product.Category == null || string.IsNullOrWhiteSpace(product.Category.Name))
+                    continue;
+
+                var categoryName = product.Category.Name.Trim();
+
+                if (!uniqueCategories.ContainsKey(categoryName))
+                {
+                    var newCategory = new Category { Name = categoryName };
+                    uniqueCategories[categoryName] = newCategory;
+                    context.Categories.Add(newCategory);
+                }
+
+                product.Category = uniqueCategories[categoryName];
             }
+
+            context.Products.AddRange(products);
+            context.SaveChanges();
         }
     }
 }

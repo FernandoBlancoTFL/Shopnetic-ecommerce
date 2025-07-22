@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using shopnetic.api.Data;
 
@@ -11,9 +12,11 @@ using shopnetic.api.Data;
 namespace shopnetic.api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250720080506_ProductCategoryAdded")]
+    partial class ProductCategoryAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,11 +35,14 @@ namespace shopnetic.api.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
+                    b.HasIndex("ProductId")
                         .IsUnique();
 
                     b.ToTable("Categories");
@@ -57,9 +63,6 @@ namespace shopnetic.api.Migrations
                     b.Property<string>("Brand")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -109,8 +112,6 @@ namespace shopnetic.api.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
                 });
@@ -173,14 +174,19 @@ namespace shopnetic.api.Migrations
                     b.ToTable("Reviews");
                 });
 
-            modelBuilder.Entity("shopnetic.api.Models.Product", b =>
+            modelBuilder.Entity("shopnetic.api.Models.Category", b =>
                 {
-                    b.HasOne("shopnetic.api.Models.Category", "Category")
-                        .WithMany("Products")
-                        .HasForeignKey("CategoryId")
+                    b.HasOne("shopnetic.api.Models.Product", "Product")
+                        .WithOne("Category")
+                        .HasForeignKey("shopnetic.api.Models.Category", "ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("shopnetic.api.Models.Product", b =>
+                {
                     b.OwnsOne("shopnetic.api.Models.Dimensions", "Dimensions", b1 =>
                         {
                             b1.Property<int>("ProductId")
@@ -230,8 +236,6 @@ namespace shopnetic.api.Migrations
                                 .HasForeignKey("ProductId");
                         });
 
-                    b.Navigation("Category");
-
                     b.Navigation("Dimensions")
                         .IsRequired();
 
@@ -261,13 +265,11 @@ namespace shopnetic.api.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("shopnetic.api.Models.Category", b =>
-                {
-                    b.Navigation("Products");
-                });
-
             modelBuilder.Entity("shopnetic.api.Models.Product", b =>
                 {
+                    b.Navigation("Category")
+                        .IsRequired();
+
                     b.Navigation("Images");
 
                     b.Navigation("Reviews");
