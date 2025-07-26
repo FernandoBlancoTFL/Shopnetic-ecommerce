@@ -1,0 +1,58 @@
+@host = http://localhost:5281
+
+### Get all users
+
+GET {{host}}/api/users
+Accept: application/json
+
+###
+
+### Get user by id
+
+GET {{host}}/api/users/1
+Accept: application/json
+
+###
+
+### Create a new User
+
+POST {{host}}/api/users
+Content-Type: application/json
+
+{
+    "firstName": "Juan",
+    "lastName" : "Rodriguez",
+    "userName" : "Juancho16",
+    "email" : "juan@mail.com",
+    "password" : "juan123",
+    "country" : "Argentina",
+    "role" : "client",
+    "image" : "https://randomuser.me/api/portraits/men/75.jpg"
+}
+
+###
+
+### Update existing User
+
+PUT {{host}}/api/users/1
+Content-Type: application/json
+
+{
+    "id" : 1,
+    "firstName": "Juan",
+    "lastName" : "Rodriguez",
+    "userName" : "Juancho16",
+    "email" : "juan@mail.com",
+    "password" : "juan123456",
+    "country" : "Argentina",
+    "role" : "client",
+    "image" : "https://randomuser.me/api/portraits/men/75.jpg"
+}
+
+###
+
+### Delete User
+
+DELETE {{host}}/api/users/1
+
+###
