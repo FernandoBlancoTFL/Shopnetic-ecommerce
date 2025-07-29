@@ -1,0 +1,13 @@
+@host = http://localhost:5281
+
+### Create a new CartItem
+
+POST {{host}}/api/cartItems
+Content-Type: application/json
+
+{
+    "productId": 2,
+    "quantity" : 2
+}
+
+###

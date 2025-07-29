@@ -1,0 +1,8 @@
+@host = http://localhost:5281
+
+### Get car by user id
+
+GET {{host}}/api/carts/1
+Accept: application/json
+
+###

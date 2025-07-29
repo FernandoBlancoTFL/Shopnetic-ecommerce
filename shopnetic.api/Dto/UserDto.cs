@@ -11,22 +11,22 @@ namespace shopnetic.api.Models
         [Required]
         public int Id { get; set; }
         [Required]
-        public String firstName { get; set; }
+        public String FirstName { get; set; }
         [Required]
-        public String lastName { get; set; }
+        public String LastName { get; set; }
         [Required]
-        public String userName { get; set; }
+        public String UserName { get; set; }
         [Required]
-        public String email { get; set; }
+        public String Email { get; set; }
         [Required]
-        public String password { get; set; }
+        public String Password { get; set; }
         [Required]
-        public String country { get; set; }
+        public String Country { get; set; }
         [Required]
-        public DateTime created_at { get; set; }
+        public DateTime Created_at { get; set; }
         [Required]
-        public String role { get; set; }
+        public String Role { get; set; }
         [Required]
-        public String image { get; set; }
+        public String Image { get; set; }
     }
 }

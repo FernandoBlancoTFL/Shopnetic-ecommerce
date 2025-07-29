@@ -19,7 +19,7 @@ namespace shopnetic.api.Dto
         [Required]
         public decimal Price { get; set; }
         [Required]
-        public double DiscountPercentage { get; set; }
+        public decimal DiscountPercentage { get; set; }
         [Required]
         public double Rating { get; set; }
         [Required]
