@@ -1,0 +1,31 @@
+@host = http://localhost:5281
+
+### Create a new CartItem
+
+POST {{host}}/api/cartItems
+Content-Type: application/json
+
+{
+    "productId": 3,
+    "quantity" : 3
+}
+
+###
+
+### Update existing cartItem
+
+PUT {{host}}/api/cartItems/1
+Content-Type: application/json
+
+{
+    "productId" : 1,
+    "quantity": 2
+}
+
+###
+
+### Delete CartItem by ProductId
+
+DELETE {{host}}/api/cartItems/2
+
+###

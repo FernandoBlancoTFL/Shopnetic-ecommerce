@@ -23,29 +23,29 @@ namespace shopnetic.api.Controllers
         public UserDto ToDto(User user) => new UserDto
         {
             Id = user.Id,
-            firstName = user.firstName,
-            lastName = user.lastName,
-            userName = user.userName,
-            email = user.email,
-            password = user.password,
-            country = user.country,
-            created_at = user.created_at,
-            role = user.role,
-            image = user.image
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            UserName = user.UserName,
+            Email = user.Email,
+            Password = user.Password,
+            Country = user.Country,
+            Created_at = user.Created_at,
+            Role = user.Role,
+            Image = user.Image
         };
 
         public User ToEntity(UserDto userDto) => new User
         {
             Id = userDto.Id,
-            firstName = userDto.firstName,
-            lastName = userDto.lastName,
-            userName = userDto.userName,
-            email = userDto.email,
-            password = userDto.password,
-            country = userDto.country,
-            created_at = userDto.created_at,
-            role = userDto.role,
-            image = userDto.image
+            FirstName = userDto.FirstName,
+            LastName = userDto.LastName,
+            UserName = userDto.UserName,
+            Email = userDto.Email,
+            Password = userDto.Password,
+            Country = userDto.Country,
+            Created_at = userDto.Created_at,
+            Role = userDto.Role,
+            Image = userDto.Image
         };
 
         [HttpGet]
@@ -87,14 +87,14 @@ namespace shopnetic.api.Controllers
             if (user == null)
                 return NotFound();
 
-            user.firstName = userDto.firstName;
-            user.lastName = userDto.lastName;
-            user.userName = userDto.userName;
-            user.email = userDto.email;
-            user.password = userDto.password;
-            user.country = userDto.country;
-            user.role = userDto.role;
-            user.image = userDto.image;
+            user.FirstName = userDto.FirstName;
+            user.LastName = userDto.LastName;
+            user.UserName = userDto.UserName;
+            user.Email = userDto.Email;
+            user.Password = userDto.Password;
+            user.Country = userDto.Country;
+            user.Role = userDto.Role;
+            user.Image = userDto.Image;
 
             await _context.SaveChangesAsync();
             return NoContent();

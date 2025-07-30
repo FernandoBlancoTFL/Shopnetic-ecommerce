@@ -16,7 +16,8 @@ namespace shopnetic.api.Data
         public DbSet<ProductImage> ProductsImages { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<User> Users { get; set; }
-
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,9 +26,25 @@ namespace shopnetic.api.Data
                 .IsUnique();
 
             modelBuilder.Entity<Product>()
-                .Property(c => c.Price)
+                .Property(p => p.Price)
                 .HasPrecision(18, 2);
-                
+
+            modelBuilder.Entity<Cart>()
+                .Property(c => c.Total)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Cart>()
+                .Property(c => c.TotalDiscountedProducts)
+                .HasPrecision(18, 2);
+            
+            modelBuilder.Entity<CartItem>()
+                .Property(c => c.Total)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<CartItem>()
+                .Property(c => c.DiscountedTotal)
+                .HasPrecision(18, 2);
+
             base.OnModelCreating(modelBuilder);
         }
     }
