@@ -20,14 +20,14 @@ POST {{host}}/api/users
 Content-Type: application/json
 
 {
-    "firstName": "Juan",
-    "lastName" : "Rodriguez",
-    "userName" : "Juancho16",
-    "email" : "juan@mail.com",
-    "password" : "juan123",
+    "firstName": "Carlos",
+    "lastName" : "Diaz",
+    "userName" : "CDi32",
+    "email" : "carlos@mail.com",
+    "password" : "carlos123",
     "country" : "Argentina",
     "role" : "client",
-    "image" : "https://randomuser.me/api/portraits/men/75.jpg"
+    "image" : "https://randomuser.me/api/portraits/men/76.jpg"
 }
 
 ###
