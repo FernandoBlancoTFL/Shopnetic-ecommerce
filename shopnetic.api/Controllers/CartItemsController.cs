@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using shopnetic.api.Data;
@@ -11,6 +13,7 @@ using shopnetic.api.Models;
 namespace shopnetic.api.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class CartItemsController : ControllerBase
     {
@@ -41,10 +44,20 @@ namespace shopnetic.api.Controllers
                 }).ToList() ?? new List<CartItemDto>()
         };
 
+        private int? GetUserId()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (int.TryParse(userIdClaim, out var userId))
+                return userId;
+            return null;
+        }
+
         [HttpPost]
         public async Task<ActionResult<CartItemRequestDto>> CreateCartItem(CartItemRequestDto request)
         {
-            var userId = 1;
+            var userId = GetUserId();
+            if (userId == null)
+                return Unauthorized();
 
             var cart = await _context.Carts
                 .Include(c => c.Items)
@@ -54,7 +67,7 @@ namespace shopnetic.api.Controllers
             {
                 cart = new Cart
                 {
-                    UserId = userId,
+                    UserId = (int)userId,
                     Items = new List<CartItem>()
                 };
                 _context.Carts.Add(cart);
@@ -95,7 +108,9 @@ namespace shopnetic.api.Controllers
         [HttpDelete("{productid}")]
         public async Task<ActionResult> DeleteCartItemByProductId(int productid)
         {
-            var userId = 1;
+            var userId = GetUserId();
+            if (userId == null)
+                return Unauthorized();
 
             var cart = await _context.Carts
                 .Include(c => c.Items)
@@ -126,7 +141,9 @@ namespace shopnetic.api.Controllers
             if (productId != cartItemRequestDto.ProductId)
                 return BadRequest("Mismatched product ID");
 
-            var userId = 1;
+            var userId = GetUserId();
+            if (userId == null)
+                return Unauthorized();
 
             var cart = await _context.Carts
                 .Include(c => c.Items)

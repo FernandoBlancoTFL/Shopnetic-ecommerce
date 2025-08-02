@@ -1,2 +1,20 @@
-bin/
-obj/
+# Archivos compilados
+/bin/
+/obj/
+
+# VS/VSCode config
+.vscode/
+*.user
+*.suo
+
+# Archivos temporales
+*.log
+*.tmp
+*.DS_Store
+
+# EF Core
+**/Migrations/*.Designer.cs
+
+# App settings locales
+appsettings.Development.json
+appsettings.Local.json

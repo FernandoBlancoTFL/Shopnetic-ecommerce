@@ -8,14 +8,17 @@ namespace shopnetic.api.Models
     public class User
     {
         public int Id { get; set; }
-        public String FirstName { get; set; }
-        public String LastName { get; set; }
-        public String UserName { get; set; }
-        public String Email { get; set; }
-        public String Password { get; set; }
-        public String Country { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string UserName { get; set; }
+        public string Email { get; set; }
+        public string PasswordHash { get; set; }
+        public string Description { get; set; }
+        public string Country { get; set; }
         public DateTime Created_at { get; set; }
-        public String Role { get; set; }
-        public String Image { get; set; }
+        public string Role { get; set; }
+        public string Image { get; set; }
+        public string? RefreshToken { get; set; }
+        public DateTime? RefreshTokenExpiryTime { get; set; }
     }
 }

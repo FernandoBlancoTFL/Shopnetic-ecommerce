@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using shopnetic.api.Data;
@@ -10,6 +11,7 @@ using shopnetic.api.Models;
 namespace shopnetic.api.Controllers
 {
     [ApiController]
+    [Authorize(Roles = "admin")]
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
@@ -27,7 +29,8 @@ namespace shopnetic.api.Controllers
             LastName = user.LastName,
             UserName = user.UserName,
             Email = user.Email,
-            Password = user.Password,
+            Password = user.PasswordHash,
+            Description = user.Description,
             Country = user.Country,
             Created_at = user.Created_at,
             Role = user.Role,
@@ -41,7 +44,8 @@ namespace shopnetic.api.Controllers
             LastName = userDto.LastName,
             UserName = userDto.UserName,
             Email = userDto.Email,
-            Password = userDto.Password,
+            PasswordHash = userDto.Password,
+            Description = userDto.Description,
             Country = userDto.Country,
             Created_at = userDto.Created_at,
             Role = userDto.Role,
@@ -91,7 +95,8 @@ namespace shopnetic.api.Controllers
             user.LastName = userDto.LastName;
             user.UserName = userDto.UserName;
             user.Email = userDto.Email;
-            user.Password = userDto.Password;
+            user.PasswordHash = userDto.Password;
+            user.Description = userDto.Description;
             user.Country = userDto.Country;
             user.Role = userDto.Role;
             user.Image = userDto.Image;
