@@ -30,6 +30,7 @@ namespace shopnetic.api.Controllers
             UserName = user.UserName,
             Email = user.Email,
             Password = user.PasswordHash,
+            Description = user.Description,
             Country = user.Country,
             Created_at = user.Created_at,
             Role = user.Role,
@@ -44,6 +45,7 @@ namespace shopnetic.api.Controllers
             UserName = userDto.UserName,
             Email = userDto.Email,
             PasswordHash = userDto.Password,
+            Description = userDto.Description,
             Country = userDto.Country,
             Created_at = userDto.Created_at,
             Role = userDto.Role,
@@ -94,6 +96,7 @@ namespace shopnetic.api.Controllers
             user.UserName = userDto.UserName;
             user.Email = userDto.Email;
             user.PasswordHash = userDto.Password;
+            user.Description = userDto.Description;
             user.Country = userDto.Country;
             user.Role = userDto.Role;
             user.Image = userDto.Image;

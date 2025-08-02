@@ -21,6 +21,8 @@ namespace shopnetic.api.Models
         [Required]
         public string Password { get; set; }
         [Required]
+        public string Description { get; set; }
+        [Required]
         public string Country { get; set; }
         [Required]
         public DateTime Created_at { get; set; }

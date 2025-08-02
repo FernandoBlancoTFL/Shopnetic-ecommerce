@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("shopnetic.api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8350b2cd2672624150923b5e793182656a4a1627")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d60c6ed00e512803fe926dba4805b96b0a143bb3")]
 [assembly: System.Reflection.AssemblyProductAttribute("shopnetic.api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("shopnetic.api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

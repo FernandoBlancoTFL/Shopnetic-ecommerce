@@ -16,8 +16,9 @@ Content-Type: application/json
     "userName" : "JuanLZ18",
     "email" : "juan@mail.com",
     "password" : "juan123",
+    "description" : "Hola! soy Juan",
     "country" : "Argentina",
-    "role" : "admin",
+    "role" : "client",
     "image" : "https://randomuser.me/api/portraits/men/75.jpg"
 }
 
@@ -29,8 +30,8 @@ POST {{host}}/api/auth/login
 Content-Type: application/json
 
 {
-    "username": "JuanLZ18",
-    "password": "juan123"
+    "email": "admin@example.com",
+    "password": "1234"
 }
 
 ###

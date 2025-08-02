@@ -13,6 +13,7 @@ namespace shopnetic.api.Models
         public string UserName { get; set; }
         public string Email { get; set; }
         public string PasswordHash { get; set; }
+        public string Description { get; set; }
         public string Country { get; set; }
         public DateTime Created_at { get; set; }
         public string Role { get; set; }

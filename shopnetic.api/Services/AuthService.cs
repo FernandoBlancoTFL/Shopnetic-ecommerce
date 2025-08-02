@@ -19,7 +19,7 @@ namespace shopnetic.api.Services
     {
         public async Task<TokenResponseDto?> LoginAsync(UserRequestDto request)
         {
-            var user = await context.Users.FirstOrDefaultAsync(u => u.UserName == request.UserName);
+            var user = await context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
             if (user is null)
             {
                 return null;

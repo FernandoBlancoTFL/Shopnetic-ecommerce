@@ -167,7 +167,6 @@ C:\Users\Fernando\Desktop\Cursos\C#\New_Projects\Shopnetic_Api\shopnetic.api\obj
 C:\Users\Fernando\Desktop\Cursos\C#\New_Projects\Shopnetic_backend\shopnetic.api\bin\Debug\net9.0\appsettings.Development.json
 C:\Users\Fernando\Desktop\Cursos\C#\New_Projects\Shopnetic_backend\shopnetic.api\bin\Debug\net9.0\appsettings.json
 C:\Users\Fernando\Desktop\Cursos\C#\New_Projects\Shopnetic_backend\shopnetic.api\bin\Debug\net9.0\Data\products.json
-C:\Users\Fernando\Desktop\Cursos\C#\New_Projects\Shopnetic_backend\shopnetic.api\bin\Debug\net9.0\Mock\user.json
 C:\Users\Fernando\Desktop\Cursos\C#\New_Projects\Shopnetic_backend\shopnetic.api\bin\Debug\net9.0\shopnetic.api.staticwebassets.endpoints.json
 C:\Users\Fernando\Desktop\Cursos\C#\New_Projects\Shopnetic_backend\shopnetic.api\bin\Debug\net9.0\shopnetic.api.exe
 C:\Users\Fernando\Desktop\Cursos\C#\New_Projects\Shopnetic_backend\shopnetic.api\bin\Debug\net9.0\shopnetic.api.deps.json
@@ -332,3 +331,4 @@ C:\Users\Fernando\Desktop\Cursos\C#\New_Projects\Shopnetic_backend\shopnetic.api
 C:\Users\Fernando\Desktop\Cursos\C#\New_Projects\Shopnetic_backend\shopnetic.api\obj\Debug\net9.0\shopnetic.api.genruntimeconfig.cache
 C:\Users\Fernando\Desktop\Cursos\C#\New_Projects\Shopnetic_backend\shopnetic.api\obj\Debug\net9.0\ref\shopnetic.api.dll
 C:\Users\Fernando\Desktop\Cursos\C#\New_Projects\Shopnetic_backend\shopnetic.api\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Fernando\Desktop\Cursos\C#\New_Projects\Shopnetic_backend\shopnetic.api\bin\Debug\net9.0\Data\users.json
