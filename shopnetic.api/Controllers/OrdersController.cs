@@ -1,0 +1,85 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using shopnetic.api.Data;
+using shopnetic.api.Dto;
+using shopnetic.api.Models;
+
+namespace shopnetic.api.Controllers
+{
+    [ApiController]
+    [Authorize]
+    [Route("api/[controller]")]
+    public class OrdersController : ControllerBase
+    {
+        public readonly AppDbContext _context;
+
+        public OrdersController(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        public OrderDto ToDto(Order order) => new OrderDto
+        {
+            Id = order.Id,
+            UserId = order.UserId,
+            Subtotal = order.Subtotal,
+            Tax = order.Tax,
+            ShipmentPrice = order.ShipmentPrice,
+            Total = order.Subtotal + order.Tax + order.ShipmentPrice,
+            Status = order.Status,
+            Items = order.Items?
+                .Select(o => new OrderItemDto
+                {
+                    ProductId = o.ProductId,
+                    ProductTitle = o.Product.Title,
+                    ProductImage = o.Product.Images.OrderBy(i => i.Id).FirstOrDefault()?.Url,
+                    Price = o.Price,
+                    Quantity = o.Quantity,
+                }).ToList() ?? new List<OrderItemDto>()
+        };
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<OrderDto>>> GetOrdersByUserId()
+        {
+            int id = 1;
+
+            var orders = await _context.Orders
+                .Include(o => o.Items)
+                    .ThenInclude(oi => oi.Product)
+                        .ThenInclude(p => p.Images)
+                .Where(o => o.UserId == id).ToListAsync();
+            if (orders == null)
+                return NotFound();
+
+            return orders.Select(ToDto).ToList();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateOrder(int id, OrderRequestDto orderRequestDto)
+        {
+            if (id != orderRequestDto.OrderId)
+                return BadRequest();
+
+            var order = await _context.Orders.FindAsync(orderRequestDto.OrderId);
+            if (order == null)
+                return NotFound();
+
+            if (orderRequestDto.Status != null)
+            {
+                order.Status = "completed";
+            }
+            if (orderRequestDto.ShipmentPrice != null)
+            {
+                order.ShipmentPrice = (decimal)orderRequestDto.ShipmentPrice;
+            }
+
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+    }
+}

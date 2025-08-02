@@ -38,6 +38,8 @@ namespace shopnetic.api.Controllers
                     Id = c.Id,
                     CartId = c.CartId,
                     ProductId = c.ProductId,
+                    ProductTitle = c.Product.Title,
+                    ProductImage = c.Product.Images.OrderBy(i => i.Id).FirstOrDefault()?.Url,
                     Quantity = c.Quantity,
                     Total = c.Total,
                     DiscountedTotal = Math.Round(c.DiscountedTotal, 2)
@@ -61,6 +63,8 @@ namespace shopnetic.api.Controllers
 
             var cart = await _context.Carts
                 .Include(c => c.Items)
+                    .ThenInclude(ci => ci.Product)
+                        .ThenInclude(p => p.Images)
                 .FirstOrDefaultAsync(c => c.UserId == userId);
 
             if (cart == null)
@@ -73,7 +77,9 @@ namespace shopnetic.api.Controllers
                 _context.Carts.Add(cart);
             }
 
-            var product = await _context.Products.FindAsync(request.ProductId);
+            var product = await _context.Products
+                .Include(p => p.Images)
+                .FirstOrDefaultAsync(p => p.Id == request.ProductId);
             if (product == null) return NotFound("Product not found");
 
             var existingItem = cart.Items.FirstOrDefault(i => i.ProductId == request.ProductId);

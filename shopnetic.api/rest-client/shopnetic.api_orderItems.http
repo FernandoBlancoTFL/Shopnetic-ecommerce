@@ -4,10 +4,10 @@
 # ⚠️ IMPORTANT: reemplace accessToken to a valid one before doing the test
 @accessToken = {{accessToken}}
 
-### Get car by user id
+### Create a new OrderItem By UserId
 
-GET {{host}}/api/carts/1
-Accept: application/json
+POST {{host}}/api/orderItems/1
+Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 ###
