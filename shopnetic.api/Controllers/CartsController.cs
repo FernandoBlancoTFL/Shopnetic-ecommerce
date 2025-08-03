@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using shopnetic.api.Data;
@@ -11,6 +12,7 @@ using shopnetic.api.Models;
 namespace shopnetic.api.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class CartsController : ControllerBase
     {
@@ -35,6 +37,8 @@ namespace shopnetic.api.Controllers
                     Id = c.Id,
                     CartId = c.CartId,
                     ProductId = c.ProductId,
+                    ProductTitle = c.Product.Title,
+                    ProductImage = c.Product.Images.OrderBy(i => i.Id).FirstOrDefault()?.Url,
                     Quantity = c.Quantity,
                     Total = c.Total,
                     DiscountedTotal = c.DiscountedTotal
@@ -46,6 +50,8 @@ namespace shopnetic.api.Controllers
         {
             var cart = await _context.Carts
                 .Include(c => c.Items)
+                    .ThenInclude(ci => ci.Product)
+                        .ThenInclude(p => p.Images)
                 .FirstOrDefaultAsync(c => c.UserId == id);
             if (cart == null)
                 return NotFound();
