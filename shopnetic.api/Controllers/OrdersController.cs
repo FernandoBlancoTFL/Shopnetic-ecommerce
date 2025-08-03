@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -43,16 +44,26 @@ namespace shopnetic.api.Controllers
                 }).ToList() ?? new List<OrderItemDto>()
         };
 
+        private int? GetUserId()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (int.TryParse(userIdClaim, out var userId))
+                return userId;
+            return null;
+        }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderDto>>> GetOrdersByUserId()
         {
-            int id = 1;
+            var userId = GetUserId();
+            if (userId == null)
+                return Unauthorized();
 
             var orders = await _context.Orders
                 .Include(o => o.Items)
                     .ThenInclude(oi => oi.Product)
                         .ThenInclude(p => p.Images)
-                .Where(o => o.UserId == id).ToListAsync();
+                .Where(o => o.UserId == userId).ToListAsync();
             if (orders == null)
                 return NotFound();
 
