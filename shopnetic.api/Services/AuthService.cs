@@ -38,7 +38,8 @@ namespace shopnetic.api.Services
             return new TokenResponseDto
             {
                 AccessToken = CreateToken(user),
-                RefreshToken = await GenerateAndSaveRefreshTokenAsync(user)
+                RefreshToken = await GenerateAndSaveRefreshTokenAsync(user),
+                User = user
             };
         }
 
@@ -58,6 +59,7 @@ namespace shopnetic.api.Services
             user.UserName = request.UserName;
             user.Email = request.Email;
             user.PasswordHash = hashedPassword;
+            user.Description = request.Description;
             user.Country = request.Country;
             user.Role = request.Role;
             user.Image = request.Image;
@@ -129,6 +131,27 @@ namespace shopnetic.api.Services
             );
 
             return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
+        }
+
+        private UserDto ToDto(User user) => new UserDto
+        {
+            Id = user.Id,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            UserName = user.UserName,
+            Email = user.Email,
+            Password = user.PasswordHash,
+            Description = user.Description,
+            Country = user.Country,
+            Created_at = user.Created_at,
+            Role = user.Role,
+            Image = user.Image
+        };
+
+        public async Task<UserDto?> GetCurrentUserAsync(int userIdClaim)
+        {
+            var user = await context.Users.FindAsync(userIdClaim);
+            return ToDto(user);
         }
     }
 }

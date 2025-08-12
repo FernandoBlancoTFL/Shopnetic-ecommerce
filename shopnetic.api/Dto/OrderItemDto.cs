@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using shopnetic.api.Models;
 
 namespace shopnetic.api.Dto
 {
@@ -12,5 +13,9 @@ namespace shopnetic.api.Dto
         public string ProductImage { get; set; }
         public decimal Price { get; set; }
         public int Quantity { get; set; }
+        public string Category { get; set; }
+        public string Brand { get; set; }
+        public decimal Weight { get; set; }
+        public double Width { get; set; }
     }
 }

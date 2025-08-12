@@ -39,7 +39,11 @@ namespace shopnetic.api.Controllers
                     ProductTitle = o.Product.Title,
                     ProductImage = o.Product.Images.OrderBy(i => i.Id).FirstOrDefault()?.Url,
                     Price = o.Price,
-                    Quantity = o.Quantity
+                    Quantity = o.Quantity,
+                    Category = o.Product.Category.Name,
+                    Brand = o.Product.Brand,
+                    Weight = o.Product.Weight,
+                    Width = o.Product.Dimensions.Width,
                 }).ToList() ?? new List<OrderItemDto>()
         };
 
@@ -51,6 +55,11 @@ namespace shopnetic.api.Controllers
                 .Include(c => c.Items)
                 .FirstOrDefaultAsync(c => c.UserId == userId);
             if (cart == null) return NotFound("Cart not found");
+
+            if (!cart.Items.Any())
+            {
+                return BadRequest("No products found in cart");
+            }
 
             var tax = 10.00M;
             var shipmentPrice = 0.00M;
@@ -102,6 +111,12 @@ namespace shopnetic.api.Controllers
                 .Include(o => o.Items)
                     .ThenInclude(oi => oi.Product)
                         .ThenInclude(p => p.Images)
+                .Include(o => o.Items)
+                    .ThenInclude(oi => oi.Product)
+                        .ThenInclude(p => p.Category)
+                .Include(o => o.Items)
+                    .ThenInclude(oi => oi.Product)
+                        .ThenInclude(p => p.Dimensions)
                 .FirstOrDefaultAsync(o => o.Id == order.Id);
 
             return ToDto(savedOrder);
