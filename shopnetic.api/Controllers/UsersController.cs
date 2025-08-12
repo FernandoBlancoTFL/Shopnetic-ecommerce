@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using shopnetic.api.Data;
@@ -22,7 +23,7 @@ namespace shopnetic.api.Controllers
             _context = context;
         }
 
-        public UserDto ToDto(User user) => new UserDto
+        private UserDto ToDto(User user) => new UserDto
         {
             Id = user.Id,
             FirstName = user.FirstName,
@@ -37,20 +38,26 @@ namespace shopnetic.api.Controllers
             Image = user.Image
         };
 
-        public User ToEntity(UserDto userDto) => new User
+        private User ToEntity(UserDto userDto)
         {
-            Id = userDto.Id,
-            FirstName = userDto.FirstName,
-            LastName = userDto.LastName,
-            UserName = userDto.UserName,
-            Email = userDto.Email,
-            PasswordHash = userDto.Password,
-            Description = userDto.Description,
-            Country = userDto.Country,
-            Created_at = userDto.Created_at,
-            Role = userDto.Role,
-            Image = userDto.Image
-        };
+            var user = new User
+            {
+                Id = userDto.Id,
+                FirstName = userDto.FirstName,
+                LastName = userDto.LastName,
+                UserName = userDto.UserName,
+                Email = userDto.Email,
+                Description = userDto.Description,
+                Country = userDto.Country,
+                Created_at = userDto.Created_at,
+                Role = userDto.Role,
+                Image = userDto.Image
+            };
+
+            user.PasswordHash = new PasswordHasher<User>().HashPassword(user, userDto.Password);
+
+            return user;
+        }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
@@ -95,7 +102,7 @@ namespace shopnetic.api.Controllers
             user.LastName = userDto.LastName;
             user.UserName = userDto.UserName;
             user.Email = userDto.Email;
-            user.PasswordHash = userDto.Password;
+            user.PasswordHash = new PasswordHasher<User>().HashPassword(user, userDto.Password);
             user.Description = userDto.Description;
             user.Country = userDto.Country;
             user.Role = userDto.Role;
@@ -116,6 +123,35 @@ namespace shopnetic.api.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        [HttpPost("reset-db")]
+        public IActionResult ResetDatabase()
+        {
+            _context.CartItems.RemoveRange(_context.CartItems);
+            _context.Carts.RemoveRange(_context.Carts);
+            _context.Categories.RemoveRange(_context.Categories);
+            _context.OrderItems.RemoveRange(_context.OrderItems);
+            _context.Orders.RemoveRange(_context.Orders);
+            _context.Products.RemoveRange(_context.Products);
+            _context.ProductsImages.RemoveRange(_context.ProductsImages);
+            _context.Reviews.RemoveRange(_context.Reviews);
+            _context.Users.RemoveRange(_context.Users);
+            _context.SaveChanges();
+
+            _context.Database.ExecuteSqlRaw("DBCC CHECKIDENT ('CartItems', RESEED, 0);");
+            _context.Database.ExecuteSqlRaw("DBCC CHECKIDENT ('Carts', RESEED, 0);");
+            _context.Database.ExecuteSqlRaw("DBCC CHECKIDENT ('Categories', RESEED, 0);");
+            _context.Database.ExecuteSqlRaw("DBCC CHECKIDENT ('OrderItems', RESEED, 0);");
+            _context.Database.ExecuteSqlRaw("DBCC CHECKIDENT ('Orders', RESEED, 0);");
+            _context.Database.ExecuteSqlRaw("DBCC CHECKIDENT ('Products', RESEED, 0);");
+            _context.Database.ExecuteSqlRaw("DBCC CHECKIDENT ('ProductsImages', RESEED, 0);");
+            _context.Database.ExecuteSqlRaw("DBCC CHECKIDENT ('Reviews', RESEED, 0);");
+            _context.Database.ExecuteSqlRaw("DBCC CHECKIDENT ('Users', RESEED, 0);");
+
+            SeedData.Initialize(_context);
+
+            return Ok(new { message = "Database restarted with initial data" });
         }
     }
 }

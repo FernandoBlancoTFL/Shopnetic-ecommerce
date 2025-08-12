@@ -41,6 +41,10 @@ namespace shopnetic.api.Controllers
                     ProductImage = o.Product.Images.OrderBy(i => i.Id).FirstOrDefault()?.Url,
                     Price = o.Price,
                     Quantity = o.Quantity,
+                    Category = o.Product.Category.Name,
+                    Brand = o.Product.Brand,
+                    Weight = o.Product.Weight,
+                    Width = o.Product.Weight
                 }).ToList() ?? new List<OrderItemDto>()
         };
 
@@ -63,6 +67,9 @@ namespace shopnetic.api.Controllers
                 .Include(o => o.Items)
                     .ThenInclude(oi => oi.Product)
                         .ThenInclude(p => p.Images)
+                .Include(o => o.Items)
+                    .ThenInclude(oi => oi.Product)
+                        .ThenInclude(p => p.Category)
                 .Where(o => o.UserId == userId).ToListAsync();
             if (orders == null)
                 return NotFound();
@@ -70,27 +77,50 @@ namespace shopnetic.api.Controllers
             return orders.Select(ToDto).ToList();
         }
 
+
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateOrder(int id, OrderRequestDto orderRequestDto)
+        public async Task<ActionResult<OrderDto>> UpdateOrder(int id, OrderRequestDto orderRequestDto)
         {
             if (id != orderRequestDto.OrderId)
                 return BadRequest();
 
-            var order = await _context.Orders.FindAsync(orderRequestDto.OrderId);
+            var order = await _context.Orders
+                .Include(o => o.Items)
+                    .ThenInclude(oi => oi.Product)
+                        .ThenInclude(p => p.Images)
+                .Include(o => o.Items)
+                    .ThenInclude(oi => oi.Product)
+                        .ThenInclude(p => p.Category)
+                .FirstOrDefaultAsync(o => o.Id == orderRequestDto.OrderId);
             if (order == null)
                 return NotFound();
 
             if (orderRequestDto.Status != null)
             {
-                order.Status = "completed";
+                order.Status = orderRequestDto.Status;
+
+                foreach (var item in order.Items)
+                {
+                    var product = item.Product;
+                    if (product != null)
+                    {
+                        if (product.Stock - item.Quantity < 0)
+                        {
+                            return BadRequest("Not enough product stock!");
+                        }
+                        product.Stock -= item.Quantity;
+                    }
+                }
             }
+
             if (orderRequestDto.ShipmentPrice != null)
             {
                 order.ShipmentPrice = (decimal)orderRequestDto.ShipmentPrice;
             }
 
             await _context.SaveChangesAsync();
-            return NoContent();
+
+            return ToDto(order);
         }
     }
 }

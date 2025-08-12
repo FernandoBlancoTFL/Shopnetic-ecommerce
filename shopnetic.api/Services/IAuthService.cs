@@ -12,5 +12,7 @@ namespace shopnetic.api.Services
         Task<User?> RegisterAsync(UserDto request);
         Task<TokenResponseDto?> LoginAsync(UserRequestDto request);
         Task<TokenResponseDto?> RefreshTokensAsync(RefreshTokenRequestDto request);
+        Task<UserDto?> GetCurrentUserAsync(int userIdClaim);
+
     }
 }

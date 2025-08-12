@@ -4,7 +4,7 @@
 # ⚠️ IMPORTANT: reemplace accessToken to a valid one before doing the test
 @accessToken = {{accessToken}}
 
-### Get order by user id
+### Get user orders by user id
 
 GET {{host}}/api/orders
 Accept: application/json
@@ -14,14 +14,14 @@ Authorization: Bearer {{accessToken}}
 
 ### Update existing order status
 
-PUT {{host}}/api/orders/18
+PUT {{host}}/api/orders/45
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
-    "OrderId" : 18,
+    "OrderId" : 45,
     "Status" : null,
-    "ShipmentPrice" : 15.00
+    "ShipmentPrice" : 10.00
 }
 
 ###

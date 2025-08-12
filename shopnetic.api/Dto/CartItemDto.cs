@@ -21,6 +21,9 @@ namespace shopnetic.api.Dto
         [Required]
         public int Quantity { get; set; }
         [Required]
+        public int Stock { get; set; }
+
+        [Required]
         public decimal Total { get; set; }
         [Required]
         public decimal DiscountedTotal { get; set; }

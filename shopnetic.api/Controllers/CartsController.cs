@@ -22,7 +22,7 @@ namespace shopnetic.api.Controllers
         {
             _context = context;
         }
-        
+
         public CartDto ToDto(Cart cart) => new CartDto
         {
             Id = cart.Id,
@@ -40,6 +40,7 @@ namespace shopnetic.api.Controllers
                     ProductTitle = c.Product.Title,
                     ProductImage = c.Product.Images.OrderBy(i => i.Id).FirstOrDefault()?.Url,
                     Quantity = c.Quantity,
+                    Stock = c.Stock,
                     Total = c.Total,
                     DiscountedTotal = c.DiscountedTotal
                 }).ToList() ?? new List<CartItemDto>()

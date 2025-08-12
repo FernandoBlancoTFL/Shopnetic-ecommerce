@@ -14,11 +14,17 @@ namespace shopnetic.api
         public static void Initialize(this IApplicationBuilder app)
         {
             using var scope = app.ApplicationServices.CreateScope();
-            using var context = scope.ServiceProvider.GetService<AppDbContext>();
+            var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            Seed(context);
+        }
 
-            if (context == null)
-                return;
+        public static void Initialize(AppDbContext context)
+        {
+            Seed(context);
+        }
 
+        private static void Seed(AppDbContext context)
+        {
             if (!context.Products.Any())
             {
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Data", "products.json");
@@ -95,7 +101,6 @@ namespace shopnetic.api
                 context.Users.AddRange(users);
                 context.SaveChanges();
             }
-
         }
     }
 }

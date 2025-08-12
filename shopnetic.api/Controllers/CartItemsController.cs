@@ -41,6 +41,7 @@ namespace shopnetic.api.Controllers
                     ProductTitle = c.Product.Title,
                     ProductImage = c.Product.Images.OrderBy(i => i.Id).FirstOrDefault()?.Url,
                     Quantity = c.Quantity,
+                    Stock = c.Stock,
                     Total = c.Total,
                     DiscountedTotal = Math.Round(c.DiscountedTotal, 2)
                 }).ToList() ?? new List<CartItemDto>()
@@ -61,55 +62,76 @@ namespace shopnetic.api.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            var cart = await _context.Carts
-                .Include(c => c.Items)
-                    .ThenInclude(ci => ci.Product)
-                        .ThenInclude(p => p.Images)
-                .FirstOrDefaultAsync(c => c.UserId == userId);
+            using var transaction = await _context.Database.BeginTransactionAsync();
 
-            if (cart == null)
+            try
             {
-                cart = new Cart
+                var cart = await _context.Carts
+                    .Include(c => c.Items)
+                        .ThenInclude(ci => ci.Product)
+                            .ThenInclude(p => p.Images)
+                    .FirstOrDefaultAsync(c => c.UserId == userId);
+
+                if (cart == null)
                 {
-                    UserId = (int)userId,
-                    Items = new List<CartItem>()
-                };
-                _context.Carts.Add(cart);
-            }
+                    cart = new Cart
+                    {
+                        UserId = (int)userId,
+                        Items = new List<CartItem>()
+                    };
+                    _context.Carts.Add(cart);
+                    await _context.SaveChangesAsync();
+                }
 
-            var product = await _context.Products
-                .Include(p => p.Images)
-                .FirstOrDefaultAsync(p => p.Id == request.ProductId);
-            if (product == null) return NotFound("Product not found");
+                // Verificar si el producto existe
+                var product = await _context.Products
+                    .Include(p => p.Images)
+                    .FirstOrDefaultAsync(p => p.Id == request.ProductId);
 
-            var existingItem = cart.Items.FirstOrDefault(i => i.ProductId == request.ProductId);
-            if (existingItem != null)
-            {
-                existingItem.Quantity += request.Quantity;
-                existingItem.Total = (decimal)(existingItem.Quantity * product.Price);
-                existingItem.DiscountedTotal = (decimal)(existingItem.Total - (existingItem.Total * product.DiscountPercentage / 100));
-            }
-            else
-            {
-                var newItem = new CartItem
+                if (product == null)
+                    return NotFound("Product not found");
+
+                var existingItem = await _context.CartItems
+                    .FirstOrDefaultAsync(i => i.CartId == cart.Id && i.ProductId == request.ProductId);
+
+                if (existingItem != null)
                 {
-                    ProductId = request.ProductId,
-                    Quantity = request.Quantity,
-                    Total = (decimal)(request.Quantity * product.Price),
-                    DiscountedTotal = (decimal)((request.Quantity * product.Price) - ((request.Quantity * product.Price) * product.DiscountPercentage / 100))
-                };
-                cart.Items.Add(newItem);
+                    existingItem.Quantity = request.Quantity;
+                    existingItem.Total = (decimal)(existingItem.Quantity * product.Price);
+                    existingItem.DiscountedTotal = (decimal)(existingItem.Total - (existingItem.Total * product.DiscountPercentage / 100));
+                    existingItem.Stock = product.Stock - existingItem.Quantity;
+                }
+                else
+                {
+                    var newItem = new CartItem
+                    {
+                        CartId = cart.Id,
+                        ProductId = request.ProductId,
+                        Quantity = request.Quantity,
+                        Total = (decimal)(request.Quantity * product.Price),
+                        DiscountedTotal = (decimal)((request.Quantity * product.Price) - ((request.Quantity * product.Price) * product.DiscountPercentage / 100)),
+                        Stock = product.Stock - request.Quantity
+                    };
+                    _context.CartItems.Add(newItem);
+                }
+
+                cart.TotalQuantity = cart.Items.Sum(i => i.Quantity);
+                cart.Total = cart.Items.Sum(i => i.Total);
+                cart.TotalProducts = cart.Items.Count;
+                cart.TotalDiscountedProducts = cart.Items.Sum(i => i.DiscountedTotal);
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return Ok(ToDto(cart));
             }
-
-            cart.TotalQuantity = cart.Items.Sum(i => i.Quantity);
-            cart.Total = cart.Items.Sum(i => i.Total);
-            cart.TotalProducts = cart.Items.Count;
-            cart.TotalDiscountedProducts = cart.Items.Sum(i => i.DiscountedTotal);
-
-            await _context.SaveChangesAsync();
-
-            return Ok(ToDto(cart));
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return StatusCode(500, $"Error al agregar producto al carrito: {ex.Message}");
+            }
         }
+
 
         [HttpDelete("{productid}")]
         public async Task<ActionResult> DeleteCartItemByProductId(int productid)
@@ -138,11 +160,35 @@ namespace shopnetic.api.Controllers
 
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(ToDto(cart));
+        }
+
+        [HttpDelete("empty-car")]
+        public async Task<ActionResult> EmptyCarByUserId()
+        {
+            var userId = GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            var cart = await _context.Carts
+                .Include(c => c.Items)
+                .FirstOrDefaultAsync(c => c.UserId == userId);
+            if (cart == null)
+                return NotFound();
+
+            _context.CartItems.RemoveRange(cart.Items);
+            cart.Total = 0.00M;
+            cart.TotalDiscountedProducts = 0.00M;
+            cart.TotalProducts = 0;
+            cart.TotalQuantity = 0;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(ToDto(cart));
         }
 
         [HttpPut("{productId}")]
-        public async Task<ActionResult> UpdateCartItem(int productId, CartItemRequestDto cartItemRequestDto)
+        public async Task<ActionResult<CartDto>> UpdateCartItem(int productId, CartItemRequestDto cartItemRequestDto)
         {
             if (productId != cartItemRequestDto.ProductId)
                 return BadRequest("Mismatched product ID");
@@ -153,6 +199,8 @@ namespace shopnetic.api.Controllers
 
             var cart = await _context.Carts
                 .Include(c => c.Items)
+                    .ThenInclude(ci => ci.Product)
+                        .ThenInclude(p => p.Images)
                 .FirstOrDefaultAsync(c => c.UserId == userId);
             if (cart == null)
                 return NotFound("Cart not found");
@@ -162,13 +210,21 @@ namespace shopnetic.api.Controllers
             if (cartItem == null)
                 return NotFound("Cart item not found");
 
-            var product = await _context.Products.FindAsync(productId);
-            if (product == null)
-                return NotFound("Product not found");
+            if (cartItemRequestDto.Quantity <= 0)
+            {
+                _context.CartItems.Remove(cartItem);
+                cart.Items.Remove(cartItem);
+            }
+            else
+            {
+                var product = await _context.Products.FindAsync(productId);
+                if (product == null)
+                    return NotFound("Product not found");
 
-            cartItem.Quantity = cartItemRequestDto.Quantity;
-            cartItem.Total = (decimal)(cartItem.Quantity * product.Price);
-            cartItem.DiscountedTotal = (decimal)(cartItem.Total - (cartItem.Total * product.DiscountPercentage / 100));
+                cartItem.Quantity = cartItemRequestDto.Quantity;
+                cartItem.Total = (decimal)(cartItem.Quantity * product.Price);
+                cartItem.DiscountedTotal = (decimal)(cartItem.Total - (cartItem.Total * product.DiscountPercentage / 100));
+            }
 
             cart.TotalQuantity = cart.Items.Sum(i => i.Quantity);
             cart.Total = cart.Items.Sum(i => i.Total);
@@ -177,7 +233,7 @@ namespace shopnetic.api.Controllers
 
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(ToDto(cart));
         }
 
 
