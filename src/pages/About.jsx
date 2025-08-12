@@ -27,18 +27,6 @@ export function About () {
             <p>
               Nuestro objetivo es ofrecerte una experiencia de compra sencilla, rápida y segura, con productos de calidad seleccionados cuidadosamente.
             </p>
-            <p>
-              Utilizamos la{' '}
-              <a
-                href='https://dummyjson.com/docs/products'
-                target='_blank'
-                rel='noopener noreferrer'
-                className='text-decoration-underline text-primary fw-semibold'
-              >
-                DummyJSON API
-              </a>{' '}
-              para mostrar los productos más variados y populares.
-            </p>
           </div>
         </div>
 

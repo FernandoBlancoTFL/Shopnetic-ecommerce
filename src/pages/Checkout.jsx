@@ -1,15 +1,13 @@
-import { Container, Card, Row, Col } from 'react-bootstrap'
+import { Container, Card, Row, Col, Spinner } from 'react-bootstrap'
 import { CheckoutForm } from '../components/CheckoutForm'
 import { CartItemCheckout } from '../components/CartItemCheckout'
 import { useContext, useState, useEffect } from 'react'
-import { ShoppingCartContext } from '../context/ShoppingCartContext'
 import { Seo } from '../components/Seo'
+import { OrderContext } from '../context/OrderContext'
 
 export function Checkout () {
-  const { shoppingCart, totalPrice } = useContext(ShoppingCartContext)
+  const { order, loadingOrder } = useContext(OrderContext)
   const [shippingPrice, setShippingPrice] = useState(0)
-  const tax = 25.35
-  const totalPriceCheckout = totalPrice + shippingPrice + tax
 
   useEffect(() => {
     window.scrollTo({
@@ -17,6 +15,14 @@ export function Checkout () {
       behavior: 'smooth'
     })
   }, [])
+
+  if (loadingOrder) {
+    return (
+      <div className='d-flex justify-content-center align-items-center vh-100'>
+        <Spinner animation='border' />
+      </div>
+    )
+  }
 
   return (
     <main className='main flex-grow-1 bg-secondary text-white'>
@@ -32,11 +38,11 @@ export function Checkout () {
             <Col md={7} lg={8} className='text-center mb-4 mb-md-0 p-2 p-lg-4 px-4 px-lg-5'>
               <div className='d-flex align-items-center justify-content-between'>
                 <h3 className='text-start m-0'>Checkout</h3>
-                <p className='m-0 mt-2 fw-semibold'>{`Subtotal ${(shoppingCart.length > 1 ? `(${shoppingCart.length} Items)` : '(1 Item)')}: $${totalPrice}`}</p>
+                <p className='m-0 mt-2 fw-semibold'>{`Subtotal ${(order.items.length > 1 ? `(${order.items.length} Items)` : '(1 Item)')}: $${order.subtotal}`}</p>
               </div>
               <hr className='border-white-50' />
               <div className='d-flex justify-content-center w-100' style={{ minHeight: '400px' }}>
-                <CheckoutForm shippingPrice={shippingPrice} setShippingPrice={price => setShippingPrice(price)} />
+                <CheckoutForm shippingPrice={order.shipmentPrice} setShippingPrice={price => setShippingPrice(price)} />
               </div>
             </Col>
             <Col className='p-4 m-1 ms-lg-0 rounded-1 bg-white rounded-end-1 custom-checkout-col shadow'>
@@ -44,7 +50,7 @@ export function Checkout () {
               <div className='d-flex flex-column my-4 mx-auto' style={{ maxWidth: '350px' }}>
                 <div className='d-flex justify-content-between'>
                   <p>Subtotal:</p>
-                  <p>$ {totalPrice}</p>
+                  <p>$ {order.subtotal}</p>
                 </div>
                 <div className='d-flex justify-content-between'>
                   <p>Envio:</p>
@@ -52,17 +58,17 @@ export function Checkout () {
                 </div>
                 <div className='d-flex justify-content-between'>
                   <p>Impuesto:</p>
-                  <p>$ {tax}</p>
+                  <p>$ {(order.tax).toFixed(2)}</p>
                 </div>
                 <hr className='border-white-50' />
                 <div className='d-flex justify-content-between'>
                   <p>Total:</p>
-                  <p>$ {totalPriceCheckout.toFixed(2)}</p>
+                  <p>$ {order.total}</p>
                 </div>
                 <hr className='border-white-50' />
               </div>
-              <h4><i class='bi bi-cart3' /> Carrito {shoppingCart
-                ? (shoppingCart.length > 1 ? `(${shoppingCart.length} Items)` : '(1 Item)')
+              <h4><i class='bi bi-cart3' /> Carrito {order.items
+                ? (order.items.length > 1 ? `(${order.items.length} Items)` : '(1 Item)')
                 : '(0 Items)'}
               </h4>
               <CartItemCheckout />

@@ -4,22 +4,88 @@ import { BuyingButtons } from './BuyingButtons'
 import { Button, Offcanvas, ListGroup, Badge } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { ShoppingCartContext } from '../context/ShoppingCartContext'
+import { OrderContext } from '../context/OrderContext'
+import { AuthContext } from '../context/AuthContext'
+import { getUserCartFromLocalStorage, getUserCartProductsFromLocalStorage, setUserCartProductsToLocalStorage, setUserCartToLocalStorage } from '../utils/userCartFromLocalStorage'
 
 export function ShoppingCart ({ isPositionFixed = false }) {
-  const { shoppingCart, totalPrice, addProductToCart, reduceProductFromCartById, emptyShoppingCart } = useContext(ShoppingCartContext)
+  const { user } = useContext(AuthContext)
+  const { shoppingCart, shoppingCartProducts, addProductToCart, getUserShoppingCartByUserId, handleProductQuantity, emptyShoppingCart } = useContext(ShoppingCartContext)
+  const { createUserOrderByUserId } = useContext(OrderContext)
+  const [cart, setCar] = useState([])
   const [show, setShow] = useState(false)
-  const [cartSize, setCartSize] = useState(shoppingCart.length)
+  const [cartSize, setCartSize] = useState(shoppingCartProducts ? shoppingCartProducts.length : 0)
   const [animate, setAnimate] = useState(false)
   const handleClose = () => setShow(false)
   const handleShow = () => setShow(true)
 
   useEffect(() => {
-    if (shoppingCart.length > cartSize) {
+    if (shoppingCartProducts.length > cartSize) {
       setAnimate(true)
       setTimeout(() => setAnimate(false), 800)
     }
-    setCartSize(shoppingCart.length)
-  }, [shoppingCart])
+    setCartSize(shoppingCartProducts.length)
+  }, [shoppingCartProducts])
+
+  useEffect(() => {
+    if (user) {
+      const syncCart = async () => {
+        const guestCart = getUserCartProductsFromLocalStorage()
+
+        const products = await getUserShoppingCartByUserId()
+
+        if (!guestCart || guestCart.length === 0) return
+
+        Swal.fire({
+          title: 'Unión de carrito de compras',
+          text: 'Hemos detectado que agregaste productos al carrito antes de iniciar sesión. ¿Quieres unir los productos almacenados en tu carrito de compras?',
+          icon: 'warning',
+          showCancelButton: true,
+          cancelButtonText: 'Cancelar',
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Unir carritos',
+          customClass: {
+            popup: 'my-swal-popup',
+            backdrop: 'my-swal-backdrop'
+          },
+          willOpen: () => {
+            const swalEl = document.querySelector('.swal2-popup')
+            const backdropEl = document.querySelector('.swal2-backdrop')
+            if (swalEl) swalEl.style.setProperty('z-index', '9999', 'important')
+            if (backdropEl) backdropEl.style.setProperty('z-index', '9998', 'important')
+          }
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            for (const guestProduct of guestCart) {
+              const existingProduct = products.find(
+                p => p.productId === guestProduct.productId
+              )
+
+              if (!existingProduct) {
+                await addProductToCart(guestProduct.productId, guestProduct.quantity)
+              } else if (existingProduct.quantity !== guestProduct.quantity) {
+                await addProductToCart(
+                  guestProduct.productId,
+                  guestProduct.quantity
+                )
+              }
+            }
+
+            setUserCartToLocalStorage([])
+            setUserCartProductsToLocalStorage([])
+          }
+        })
+      }
+
+      syncCart()
+    }
+    if (!user) {
+      getUserShoppingCartByUserId()
+      setUserCartToLocalStorage([])
+      setUserCartProductsToLocalStorage([])
+    }
+  }, [user])
 
   const handleEmptyCart = () => {
     if (!isPositionFixed) {
@@ -51,6 +117,14 @@ export function ShoppingCart ({ isPositionFixed = false }) {
     })
   }
 
+  const handleFinishBuy = async () => {
+    handleClose()
+    if (!user) return
+
+    await createUserOrderByUserId()
+    await emptyShoppingCart()
+  }
+
   return (
     <>
       <Button
@@ -62,11 +136,11 @@ export function ShoppingCart ({ isPositionFixed = false }) {
         <div style={{ position: 'relative', display: 'inline-block' }}>
           <i className={`bi bi-cart-fill ${isPositionFixed ? '' : 'fs-2'}`} />
 
-          {shoppingCart.length > 0
+          {shoppingCartProducts.length > 0
             ? isPositionFixed
               ? (
                 <Badge bg='danger' pill className='ms-2'>
-                  {shoppingCart.length}
+                  {shoppingCartProducts.length}
                 </Badge>
                 )
               : (
@@ -81,7 +155,7 @@ export function ShoppingCart ({ isPositionFixed = false }) {
                     padding: '4px 6px'
                   }}
                 >
-                  {shoppingCart.length}
+                  {shoppingCartProducts.length}
                 </Badge>
                 )
             : null}
@@ -93,24 +167,24 @@ export function ShoppingCart ({ isPositionFixed = false }) {
           <Offcanvas.Title>Carrito de Compras</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          {shoppingCart.length === 0
+          {shoppingCartProducts.length === 0
             ? (
               <p className='text-center'>No hay productos en el carrito.</p>
               )
             : (
               <ListGroup variant='flush'>
-                {shoppingCart.map((item, index) => (
+                {shoppingCartProducts.map((item, index) => (
                   <ListGroup.Item key={index}>
                     <CartItem
                       item={item}
                       addProductToCart={addProductToCart}
-                      reduceProductFromCartById={reduceProductFromCartById}
+                      handleProductQuantity={handleProductQuantity}
                       setShow={setShow}
                     />
                   </ListGroup.Item>
                 )
                 )}
-                <h5 className='mx-auto mt-3'>Total: $ {totalPrice}</h5>
+                <h5 className='mx-auto mt-3'>Total: $ {shoppingCart.totalDiscountedProducts}</h5>
                 <BuyingButtons
                   firstButtonText='Finalizar compra'
                   secondButtonText='Vaciar carrito'
@@ -121,7 +195,7 @@ export function ShoppingCart ({ isPositionFixed = false }) {
                   firstButtonFontSize='fs-7'
                   secondButtonFontSize='fs-7'
                   buttonSize='sm'
-                  firstButtonEvent={handleClose}
+                  firstButtonEvent={() => handleFinishBuy()}
                   firstButtonAs={Link}
                   firstButtonTo='/checkout'
                   secondButtonEvent={() => handleEmptyCart()}

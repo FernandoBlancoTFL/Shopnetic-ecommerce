@@ -85,7 +85,7 @@ export async function generateInvoicePdf (shoppingCart, userInfo, userToken, sub
       color: bgColor
     })
 
-    drawText(p.title, marginX, cursorY)
+    drawText(p.productTitle, marginX, cursorY)
     drawText(p.quantity, marginX + 250, cursorY)
     drawText(`$${p.price}`, marginX + 320, cursorY)
     drawText(`$${(p.price * p.quantity).toFixed(2)}`, marginX + 420, cursorY)
@@ -108,10 +108,10 @@ export async function generateInvoicePdf (shoppingCart, userInfo, userToken, sub
   drawText(`$${subtotal.toFixed(2)}`, marginX + 420, cursorY)
   cursorY -= 20
   drawText('Impuesto:', marginX + 320, cursorY)
-  drawText(`$${tax.toFixed(2)}`, marginX + 420, cursorY)
+  drawText(`$${tax}`, marginX + 420, cursorY)
   cursorY -= 20
   drawText('Envío:', marginX + 320, cursorY)
-  drawText(`$${shippingPrice.toFixed(2)}`, marginX + 420, cursorY)
+  drawText(`$${shippingPrice}`, marginX + 420, cursorY)
   cursorY -= 20
 
   drawText('Total:', marginX + 320, cursorY, 14, { color: rgb(0, 0, 0) })
@@ -126,13 +126,6 @@ export async function generateInvoicePdf (shoppingCart, userInfo, userToken, sub
   const url = URL.createObjectURL(blob)
 
   if (downloadBilling) {
-    const link = document.createElement('a')
-    link.href = url
-    link.download = 'factura_shopnetic.pdf'
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-  } else {
     window.open(url, '_blank')
   }
 }

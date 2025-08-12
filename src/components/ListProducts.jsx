@@ -6,21 +6,26 @@ import { StarRating } from './StarRating'
 import { CustomPagination } from './CustomPagination'
 
 export function ListOfProducts ({ products, currentPage, setCurrentPage, scrollToProducts }) {
-  const { handleAddProductToCart, clickedIds } = useContext(ShoppingCartContext)
+  const { shoppingCartProducts, getUserShoppingCartByUserId, handleAddProductToCart } = useContext(ShoppingCartContext)
   const productsPerPage = 9
   const indexOfLastProduct = currentPage * productsPerPage
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage
   const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct)
   const totalPages = Math.ceil(products.length / productsPerPage)
 
-  const getPriceWithoutDiscount = (product) => {
-    return (product.price / (1 - (product.discountPercentage / 100))).toFixed(2)
+  const getPriceWithDiscount = (product) => {
+    return (product.price - product.price * (product.discountPercentage / 100)).toFixed(2)
   }
 
   const handlePageChange = (number) => {
     setCurrentPage(number)
     if (scrollToProducts) scrollToProducts()
   }
+
+  useEffect(() => {
+    const updateShoppingCart = async () => await getUserShoppingCartByUserId()
+    updateShoppingCart()
+  }, [])
 
   return (
     <>
@@ -57,8 +62,8 @@ export function ListOfProducts ({ products, currentPage, setCurrentPage, scrollT
                   <Card.Title className='text-truncate mb-0 text-white'>{product.title}</Card.Title>
                   <div className='d-flex flex-wrap justify-content-between align-items-center m-1' onClick={(e) => { e.stopPropagation(); e.preventDefault() }}>
                     <div className='d-flex gap-2 align-items-center'>
-                      <Card.Text className='text-success fw-bold mb-0' style={{ fontSize: '18px' }}>$ {product.price}</Card.Text>
-                      <Card.Text style={{ fontSize: '14px' }}><s>$ {getPriceWithoutDiscount(product)}</s></Card.Text>
+                      <Card.Text className='text-success fw-bold mb-0' style={{ fontSize: '18px' }}>$ {getPriceWithDiscount(product)}</Card.Text>
+                      <Card.Text style={{ fontSize: '14px' }}><s>$ {product.price}</s></Card.Text>
                     </div>
                     <StarRating rating={product.rating} size='12px' />
                   </div>
@@ -66,11 +71,11 @@ export function ListOfProducts ({ products, currentPage, setCurrentPage, scrollT
                   <div className='d-flex flex-wrap justify-content-between align-items-center m-1' onClick={(e) => { e.stopPropagation(); e.preventDefault() }}>
                     <Button
                       style={{ marginTop: '10px', minWidth: '80px', width: '100%', padding: '3px 5px' }}
-                      variant={clickedIds.includes(product.id) ? 'success' : 'primary'}
-                      disabled={clickedIds.includes(product.id)}
-                      onClick={() => handleAddProductToCart(product)}
+                      variant={shoppingCartProducts.some(p => p.productId === product.id) ? 'success' : 'primary'}
+                      disabled={shoppingCartProducts.some(p => p.productId === product.id)}
+                      onClick={() => handleAddProductToCart(product.id)}
                     >
-                      {clickedIds.includes(product.id) ? 'Agregado' : 'Agregar al carrito'}
+                      {shoppingCartProducts.some(p => p.productId === product.id) ? 'Agregado' : 'Agregar al carrito'}
                     </Button>
                   </div>
                 </Card.Body>

@@ -3,16 +3,16 @@ import { Button } from 'react-bootstrap'
 import * as Icon from 'react-bootstrap-icons'
 import { ShoppingCartContext } from '../context/ShoppingCartContext'
 
-export function QuantitySelector ({ item, handleAddProductToCart, reduceProductFromCartById, insertProductQuantity, shouldDecreaseToZero = false, isProductInCart = false }) {
-  const { clickedIds } = useContext(ShoppingCartContext)
-  const [productQuantity, setProductQuantity] = useState(item.quantity)
+export function QuantitySelector ({ item, handleAddProductToCart, handleProductQuantity, insertProductQuantity, shouldDecreaseToZero = false, isProductInCart = false }) {
+  const { shoppingCartProducts } = useContext(ShoppingCartContext)
+  const [productQuantity, setProductQuantity] = useState(item)
 
   useEffect(() => {
-    if (!clickedIds.includes(item.id)) {
+    if (!shoppingCartProducts.some(p => p.productId === item.id)) {
       setProductQuantity(1)
       insertProductQuantity(1)
     }
-  }, [clickedIds, item.id])
+  }, [shoppingCartProducts, item.id])
 
   const decrease = () => {
     if (!isProductInCart) {
@@ -21,7 +21,7 @@ export function QuantitySelector ({ item, handleAddProductToCart, reduceProductF
       insertProductQuantity(newQuantity - 1)
     } else {
       if (item.quantity > 1 || shouldDecreaseToZero) {
-        reduceProductFromCartById(item.id)
+        handleProductQuantity(item.productId, (item.quantity - 1))
       }
     }
   }
@@ -34,7 +34,7 @@ export function QuantitySelector ({ item, handleAddProductToCart, reduceProductF
       insertProductQuantity(newQuantity + 1)
     } else {
       if (item.quantity + 1 <= item.stock) {
-        handleAddProductToCart(item)
+        handleAddProductToCart(item, (item.quantity + 1))
       }
     }
   }

@@ -8,7 +8,7 @@ export function UserProfile () {
   const { user } = useContext(AuthContext)
   const [showPassword, setShowPassword] = useState(false)
 
-  const formattedDate = new Date(user.accountCreationDate).toLocaleDateString('es-AR', {
+  const formattedDate = new Date(user.created_at).toLocaleDateString('es-AR', {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric'
@@ -44,7 +44,7 @@ export function UserProfile () {
                 />
                 <h2 className='card-title'>{user.firstName} {user.lastname}</h2>
                 <h5 className='text-muted mb-2'>@{user.userName}</h5>
-                <p className='text-muted'>Usuario</p>
+                <p className='text-muted'>{user.role}</p>
 
                 <p className='mt-3'>{user.description}</p>
 
@@ -67,7 +67,7 @@ export function UserProfile () {
                     <h6 className='mb-0 text-muted'>Contraseña:</h6>
                     <div className='d-flex justify-content-center align-items-center'>
                       <span className='mx-5 me-2'>
-                        {showPassword ? user.password : '•'.repeat(user.password.length)}
+                        {showPassword ? 'hardcodedPassword' : '•'.repeat(5)}
                       </span>
                       <i
                         className={`mx-3 bi ${showPassword ? 'bi-eye-slash-fill' : 'bi-eye-fill'}`}

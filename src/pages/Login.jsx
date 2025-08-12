@@ -2,51 +2,61 @@ import { useContext, useState, useEffect } from 'react'
 import { Button, Form, Container, Card, Row, Col } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
-import { ADMIN_USER, USERS_URL } from '../constants/constants'
+import { AUTH_URL } from '../constants/constants'
 import { Seo } from '../components/Seo'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 export function Login () {
-  const [user, setUser] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const { login } = useContext(AuthContext)
   const navigate = useNavigate()
 
+  const userData = {
+    email,
+    password
+  }
+
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
-
-  const getUserByUserName = async () => {
-    const response = await fetch(USERS_URL)
-    const data = await response.json()
-    const userData = data.find(userFromList => userFromList.userName === user)
-    return userData
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)
 
-    const userData = await getUserByUserName()
-    if (user === 'admin' && password === '1234') {
-      login(ADMIN_USER)
-      navigate('/')
-    } else if (userData && userData.password === password) {
-      login(userData)
-      navigate('/')
-    } else {
-      toast.error('Datos incorrectos', {
-        position: 'top-right',
-        autoClose: 1500,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: false,
-        theme: 'colored'
+    try {
+      const response = await fetch(`${AUTH_URL}/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
       })
+
+      if (!response.ok) {
+        toast.error('Datos incorrectos', {
+          position: 'top-right',
+          autoClose: 2000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          theme: 'colored'
+        })
+        const errorMessage = await response.text()
+        throw new Error(errorMessage)
+      }
+
+      const result = await response.json()
+      login(result)
+      navigate('/')
+    } catch (error) {
+      console.error('Petition error:', error.message)
+    } finally {
       setIsLoading(false)
     }
   }
@@ -75,10 +85,10 @@ export function Login () {
                     <i className='bi bi-person' />
                     <input
                       className='no-border-input w-75'
-                      type='text'
-                      placeholder='Usuario'
-                      value={user}
-                      onChange={(e) => setUser(e.target.value)}
+                      type='email'
+                      placeholder='Email'
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       required
                     />
                   </div>
@@ -114,9 +124,21 @@ export function Login () {
                       : 'Ingresar'}
                   </Button>
 
+                  <div className='mt-3 text-center'>
+                    <Link to='/register' className='login-link'>
+                      ¿Todavía no estás registrado? Registrate aqui
+                    </Link>
+                  </div>
+                  <div className='mt-2 text-center'>
+                    <Link onClick={() => alert('Funcionalidad en desarrollo')} className='login-link'>
+                      ¿Olvidaste la contraseña?
+                    </Link>
+                  </div>
+
                   <div className='d-flex flex-column mt-3'>
-                    <p className='text-black m-0 fw-semibold text-white'>Cuenta administrador:</p>
-                    <p className='text-black m-0 text-white'>Usuario: admin - Contraseña: 1234</p>
+                    <p className='m-0 fw-semibold text-white'>Cuenta administrador:</p>
+                    <p className='m-0 text-white'>Email: admin@example.com</p>
+                    <p className='m-0 text-white'>Contraseña: 1234</p>
                   </div>
                 </Form>
               </Card.Body>

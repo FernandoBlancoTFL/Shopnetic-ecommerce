@@ -104,7 +104,7 @@ export function Home ({ filterURL, filterName, handleFilter }) {
             <h2 className='mb-4' ref={titleRef}>{filterName}</h2>
             <div className='d-flex justify-content-between align-items-center gap-2 mb-3'>
               <Button
-                className='p-1 h-100 rounded-4'
+                className='p-1 h-100 rounded-4 shadow-sm'
                 variant={menuOpen ? 'primary' : 'light'}
                 onClick={toggleMenu}
                 style={{ minWidth: '110px' }}
@@ -118,7 +118,7 @@ export function Home ({ filterURL, filterName, handleFilter }) {
                     )}
 
               </Button>
-              <div className='p-2 px-3 rounded-4' style={{ width: '400px', backgroundColor: '#121212' }}>
+              <div className='p-2 px-3 rounded-4 shadow-sm' style={{ width: '400px', backgroundColor: '#121212' }}>
                 <SearchBar ref={searchRef} onSearch={handleSearch} />
               </div>
             </div>

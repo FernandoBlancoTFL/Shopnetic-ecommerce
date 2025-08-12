@@ -6,6 +6,9 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 import * as bootstrap from 'bootstrap'
 import { Button } from 'react-bootstrap'
 import { CustomPagination } from '../components/CustomPagination'
+import { USERS_URL } from '../constants/constants'
+import { getUserAccessTokenFromLocalStorage } from '../utils/getUserAccessTokenFromLocalStorage'
+import { getUserProfileUrlImage } from '../utils/getUserProfileUrlImage'
 import { Seo } from '../components/Seo'
 
 export function UsersCrud () {
@@ -13,7 +16,7 @@ export function UsersCrud () {
   const [selectedUser, setSelectedUser] = useState(null)
   const [newUser, setNewUser] = useState({
     firstName: '',
-    lastname: '',
+    lastName: '',
     userName: '',
     email: '',
     password: '',
@@ -26,6 +29,7 @@ export function UsersCrud () {
   const indexOfFirstUser = indexOfLastUser - usersPerPage
   const currentUsers = usersData.slice(indexOfFirstUser, indexOfLastUser)
   const totalPages = Math.ceil(usersData.length / usersPerPage)
+  const tokenFromLocalStorage = getUserAccessTokenFromLocalStorage()
 
   const refreshUsersPreservingPage = async (change = 0) => {
     await getUsers(true)
@@ -42,16 +46,19 @@ export function UsersCrud () {
   }, [])
 
   const getUsers = async (preservePage = false) => {
-    try {
-      const response = await fetch('https://684f5092f0c9c9848d2aaa70.mockapi.io/users')
-      if (!response.ok) throw new Error('Error al obtener los usuarios')
-      const data = await response.json()
-      setUsersData(data)
-
-      if (!preservePage) setCurrentPage(1)
-    } catch (error) {
-      console.error(error.message)
+    const response = await fetch(USERS_URL, {
+      headers: {
+        Authorization: `Bearer ${tokenFromLocalStorage}`
+      }
+    })
+    if (!response.ok) {
+      const errorMessage = await response.text()
+      throw new Error(errorMessage)
     }
+    const usersResponse = await response.json()
+    setUsersData(usersResponse)
+
+    if (!preservePage) setCurrentPage(1)
   }
 
   const handleEditClick = (user) => {
@@ -66,16 +73,18 @@ export function UsersCrud () {
   }
 
   const putUser = async () => {
+    console.log(selectedUser)
     try {
-      const response = await fetch(`https://684f5092f0c9c9848d2aaa70.mockapi.io/users/${selectedUser.id}`, {
+      const response = await fetch(`${USERS_URL}/${selectedUser.id}`, {
         method: 'PUT',
         headers: {
+          Authorization: `Bearer ${tokenFromLocalStorage}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(selectedUser)
       })
 
-      if (!response.ok) throw new Error('Error al modificar el usuario')
+      if (!response.ok) throw new Error('Error user modification')
 
       refreshUsersPreservingPage(0)
 
@@ -84,8 +93,6 @@ export function UsersCrud () {
         text: 'Los datos del usuario han sido editados',
         icon: 'success'
       })
-
-      const data = await response.json()
     } catch (error) {
       console.error(error.message)
     }
@@ -101,15 +108,13 @@ export function UsersCrud () {
   const handleAddUser = async () => {
     const maxId = Math.max(...usersData.map(u => parseInt(u.id)), 0)
     const formattedDate = new Date().toISOString()
-    const userImageURL = await getUrlByUserId(maxId + 1)
-    const userToken = await getTokenByUserId(maxId + 1)
+    const userImageURL = await getUserProfileUrlImage()
 
     const userToAdd = {
       ...newUser,
       image: userImageURL,
-      token: userToken,
-      accountCreationDate: formattedDate,
-      id: (maxId + 1).toString()
+      created_at: formattedDate,
+      role: 'cliente'
     }
 
     const addedUser = await postUser(userToAdd)
@@ -124,7 +129,7 @@ export function UsersCrud () {
       modal.hide()
       setNewUser({
         firstName: '',
-        lastname: '',
+        lastName: '',
         userName: '',
         email: '',
         password: '',
@@ -141,9 +146,10 @@ export function UsersCrud () {
 
   const postUser = async (user) => {
     try {
-      const response = await fetch('https://684f5092f0c9c9848d2aaa70.mockapi.io/users', {
+      const response = await fetch(USERS_URL, {
         method: 'POST',
         headers: {
+          Authorization: `Bearer ${tokenFromLocalStorage}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(user)
@@ -171,11 +177,15 @@ export function UsersCrud () {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`https://684f5092f0c9c9848d2aaa70.mockapi.io/users/${userId}`, {
+          const response = await fetch(`${USERS_URL}/${userId}`, {
+            headers: {
+              Authorization: `Bearer ${tokenFromLocalStorage}`,
+              'Content-Type': 'application/json'
+            },
             method: 'DELETE'
           })
 
-          if (!response.ok) throw new Error('Error al eliminar al usuario')
+          if (!response.ok) throw new Error('Error deleting user')
 
           refreshUsersPreservingPage(-1)
 
@@ -194,30 +204,6 @@ export function UsersCrud () {
         }
       }
     })
-  }
-
-  const getUrlByUserId = async (userId) => {
-    try {
-      const response = await fetch(`https://randomuser.me/api/?seed=${userId}`)
-      if (!response.ok) throw new Error('Error al obtener la URL')
-      const data = await response.json()
-      const imageURL = data.results[0].picture.large
-      return imageURL
-    } catch (error) {
-      console.error(error.message)
-    }
-  }
-
-  const getTokenByUserId = async (userId) => {
-    try {
-      const response = await fetch(`https://68538e95a2a37a1d6f48f361.mockapi.io/token/${userId}`)
-      if (!response.ok) throw new Error('Error al obtener los tokens')
-      const data = await response.json()
-      const userToken = data.token
-      return userToken
-    } catch (error) {
-      console.error(error.message)
-    }
   }
 
   const handlePageChange = (number) => {
@@ -272,8 +258,8 @@ export function UsersCrud () {
                     </div>
                   </div>
                 </td>
-                <td>Cliente</td>
-                <td>{new Date(user.accountCreationDate).toLocaleDateString('es-AR', {
+                <td>{user.role}</td>
+                <td>{new Date(user.created_at).toLocaleDateString('es-AR', {
                   day: '2-digit',
                   month: '2-digit',
                   year: 'numeric'
@@ -282,7 +268,7 @@ export function UsersCrud () {
                 <td className='text-center'>
                   <div className='d-flex flex-wrap justify-content-center gap-2'>
                     <button className='btn btn-sm btn-outline-light' onClick={() => handleEditClick(user)}>Modificar</button>
-                    <button className='btn btn-sm btn-outline-danger' onClick={() => deleteUser(user.id)}>Eliminar</button>
+                    {user.role === 'admin' || <button className='btn btn-sm btn-outline-danger' onClick={() => deleteUser(user.id)}>Eliminar</button>}
                   </div>
                 </td>
               </tr>

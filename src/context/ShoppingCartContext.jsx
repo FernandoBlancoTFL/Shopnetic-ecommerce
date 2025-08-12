@@ -1,59 +1,59 @@
-import { createContext, useState, useEffect } from 'react'
+import { createContext, useState, useContext, useEffect } from 'react'
+import { USER_SHOPPING_CART_URL, SHOPPING_CART_URL, PRODUCTS_URL } from '../constants/constants'
+import { AuthContext } from './AuthContext'
+import { getUserAccessTokenFromLocalStorage } from '../utils/getUserAccessTokenFromLocalStorage'
+import { getUserCartFromLocalStorage, getUserCartProductsFromLocalStorage, setUserCartToLocalStorage, setUserCartProductsToLocalStorage } from '../utils/userCartFromLocalStorage'
 
 export const ShoppingCartContext = createContext()
 
 export function ShoppingCartProvider ({ children }) {
-  const [shoppingCart, setShoppingCart] = useState(() => {
-    const cartFromLocalStorage = window.localStorage.getItem('shoppingCart')
-    return cartFromLocalStorage ? JSON.parse(cartFromLocalStorage) : []
-  })
-  const [clickedIds, setClickedIds] = useState(() => {
-    const clickedIds = window.localStorage.getItem('clickedIds')
-    return clickedIds ? JSON.parse(clickedIds) : []
-  })
-  const totalPrice = Number(shoppingCart.reduce((acc, item) => acc + (item.price * item.quantity), 0).toFixed(2))
+  const { user } = useContext(AuthContext)
+  const tokenFromLocalStorage = getUserAccessTokenFromLocalStorage()
+  const [shoppingCart, setShoppingCart] = useState([])
+  const [shoppingCartProducts, setShoppingCartProducts] = useState([])
 
   useEffect(() => {
-    window.localStorage.setItem('shoppingCart', JSON.stringify(shoppingCart))
-  }, [shoppingCart])
+    if (!user) {
+      setUserCartToLocalStorage(shoppingCart)
+    }
+  }, [shoppingCart, user])
 
   useEffect(() => {
-    window.localStorage.setItem('clickedIds', JSON.stringify(clickedIds))
-  }, [clickedIds])
-
-  const getOrInitializeProductInCart = (product) => {
-    if ('quantity' in product) {
-      return product
+    if (!user) {
+      setUserCartProductsToLocalStorage(shoppingCartProducts)
     }
+  }, [shoppingCartProducts, user])
 
-    const existingProduct = shoppingCart.find(item => item.id === product.id)
-
-    if (existingProduct) {
-      return existingProduct
-    }
-
-    return { ...product, quantity: 1 }
-  }
-
-  const addProductToCart = (product) => {
-    const productWithQuantity = getOrInitializeProductInCart(product)
-
-    setShoppingCart(prevCart => {
-      const exists = prevCart.some(item => item.id === product.id)
-      if (exists) {
-        return prevCart.map(item =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        )
+  const getUserShoppingCartByUserId = async () => {
+    if (!user) {
+      setShoppingCart(getUserCartFromLocalStorage())
+      setShoppingCartProducts(getUserCartProductsFromLocalStorage())
+    } else {
+      const response = await fetch(`${USER_SHOPPING_CART_URL}/${user.id}`, {
+        headers: {
+          Authorization: `Bearer ${tokenFromLocalStorage}`
+        }
+      })
+      if (!response.ok) {
+        const errorMessage = await response.text()
+        throw new Error(errorMessage)
       }
-      return [...prevCart, productWithQuantity]
-    })
+      const shoppingCartResponse = await response.json()
+      setShoppingCart(shoppingCartResponse)
+      setShoppingCartProducts(shoppingCartResponse.items)
+      return shoppingCartResponse.items
+    }
   }
 
-  const handleClickedIds = (productId) => {
-    setClickedIds([...clickedIds, productId])
-  }
+  useEffect(() => {
+    const loadCart = async () => {
+      await getUserShoppingCartByUserId()
+    }
 
-  const handleAddProductToCart = (product, shouldShowAlert = true) => {
+    loadCart()
+  }, [])
+
+  const handleAddProductToCart = (productId, shouldShowAlert = true) => {
     if (shouldShowAlert) {
       Swal.fire({
         toast: true,
@@ -72,39 +72,203 @@ export function ShoppingCartProvider ({ children }) {
         }
       })
     }
-    handleClickedIds(product.id)
-    addProductToCart(product)
+    addProductToCart(productId)
   }
 
-  const emptyShoppingCart = () => {
-    setShoppingCart([])
-    setClickedIds([])
-  }
-
-  const reduceProductFromCartById = productId => {
-    setShoppingCart(prevCart => {
-      const existingIndex = prevCart.findIndex(item => item.id === productId)
-      if (existingIndex !== -1) {
-        const newCart = [...prevCart]
-        if (newCart[existingIndex].quantity > 1) {
-          newCart[existingIndex].quantity -= 1
-          return newCart
-        } else {
-          setClickedIds(prevIds => prevIds.filter(id => id !== productId))
-          return newCart.filter(item => item.id !== productId)
-        }
-      }
-      return prevCart
+  const getProductByProductId = async (productId) => {
+    const response = await fetch(`${PRODUCTS_URL}/${productId}`, {
     })
+    if (!response.ok) {
+      const errorMessage = await response.text()
+      throw new Error(errorMessage)
+    }
+    return await response.json()
   }
 
-  const removeProductFromCartById = productId => {
-    setShoppingCart(prevCart => prevCart.filter(item => item.id !== productId))
-    setClickedIds(prevIds => prevIds.filter(id => id !== productId))
+  function calculateCart (products) {
+    const cartId = 1
+
+    const items = products.map(product => ({
+      id: product.id,
+      cartId,
+      productId: product.productId,
+      productTitle: product.productTitle,
+      productImage: product.productImage,
+      quantity: product.quantity,
+      stock: product.stock,
+      total: Number(product.total.toFixed(2)),
+      discountedTotal: Number(product.discountedTotal)
+    }))
+
+    const total = items.reduce((acc, item) => acc + item.total, 0)
+    const totalDiscountedProducts = items.reduce((acc, item) => acc + item.discountedTotal, 0)
+    const totalProducts = items.length
+    const totalQuantity = items.reduce((acc, item) => acc + item.quantity, 0)
+
+    return {
+      id: 1,
+      userId: 1,
+      total: Number(total.toFixed(2)),
+      totalDiscountedProducts: Number(totalDiscountedProducts.toFixed(2)),
+      totalProducts,
+      totalQuantity,
+      items
+    }
+  }
+
+  const addProductToCart = async (productId, productQuantity = 1) => {
+    if (!user) {
+      const product = await getProductByProductId(productId)
+
+      const productWithQuantity = {
+        id: 1,
+        cartId: 1,
+        productId: product.id,
+        productTitle: product.title,
+        productImage: product.images[0],
+        quantity: productQuantity,
+        stock: product.stock,
+        total: product.price * productQuantity,
+        discountedTotal: (product.price - (product.price * (product.discountPercentage / 100))).toFixed(2)
+      }
+
+      setShoppingCartProducts(prevCart => {
+        const exists = prevCart.some(item => item.productId === productWithQuantity.productId)
+        const updatedCart = exists
+          ? prevCart.map(item =>
+            item.productId === productWithQuantity.productId
+              ? { ...item, quantity: productQuantity }
+              : item
+          )
+          : [...prevCart, productWithQuantity]
+
+        const newShoppingCart = calculateCart(updatedCart)
+        setShoppingCart(newShoppingCart)
+        return updatedCart
+      })
+    } else {
+      const response = await fetch(SHOPPING_CART_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${tokenFromLocalStorage}`
+        },
+        body: JSON.stringify({
+          productId,
+          quantity: productQuantity
+        })
+      })
+      if (!response.ok) {
+        const errorMessage = await response.text()
+        throw new Error(errorMessage)
+      }
+      const shoppingCartResponse = await response.json()
+      setShoppingCart(shoppingCartResponse)
+      setShoppingCartProducts(shoppingCartResponse.items)
+    }
+  }
+
+  const handleProductQuantity = async (productId, newQuantity) => {
+    if (!user) {
+      setShoppingCartProducts(prevProducts => {
+        let updatedProducts
+        if (newQuantity > 0) {
+          updatedProducts = prevProducts.map(product =>
+            product.productId === productId
+              ? { ...product, quantity: newQuantity }
+              : product
+          )
+        } else {
+          updatedProducts = prevProducts.filter(product => product.productId !== productId)
+        }
+        setUserCartProductsToLocalStorage(updatedProducts)
+        const newShoppingCart = calculateCart(updatedProducts)
+        setShoppingCart(newShoppingCart)
+        return updatedProducts
+      })
+    } else {
+      const response = await fetch(`${SHOPPING_CART_URL}/${productId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${tokenFromLocalStorage}`
+        },
+        body: JSON.stringify({
+          productId,
+          quantity: newQuantity
+        })
+      })
+      if (!response.ok) {
+        const errorMessage = await response.text()
+        throw new Error(errorMessage)
+      }
+      const shoppingCartResponse = await response.json()
+      setShoppingCart(shoppingCartResponse)
+      setShoppingCartProducts(shoppingCartResponse.items)
+    }
+  }
+
+  const removeProductFromCartByProductId = async (productId) => {
+    if (!user) {
+      setShoppingCartProducts(prevProducts => {
+        const updatedProducts = prevProducts.filter(product => product.productId !== productId)
+        setUserCartProductsToLocalStorage(updatedProducts)
+        const newShoppingCart = calculateCart(updatedProducts)
+        setShoppingCart(newShoppingCart)
+        return updatedProducts
+      })
+    } else {
+      const response = await fetch(`${SHOPPING_CART_URL}/${productId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${tokenFromLocalStorage}`
+        }
+      })
+      if (!response.ok) {
+        const errorMessage = await response.text()
+        throw new Error(errorMessage)
+      }
+      const shoppingCartResponse = await response.json()
+      setShoppingCart(shoppingCartResponse)
+      setShoppingCartProducts(shoppingCartResponse.items)
+    }
+  }
+
+  const emptyShoppingCart = async () => {
+    if (!user) {
+      setUserCartProductsToLocalStorage([])
+      setUserCartToLocalStorage([])
+      setShoppingCart([])
+      setShoppingCartProducts([])
+    } else {
+      const response = await fetch(`${SHOPPING_CART_URL}/empty-car`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${tokenFromLocalStorage}`
+        }
+      })
+      if (!response.ok) {
+        const errorMessage = await response.text()
+        throw new Error(errorMessage)
+      }
+      const shoppingCartResponse = await response.json()
+      setShoppingCart(shoppingCartResponse)
+      setShoppingCartProducts(shoppingCartResponse.items)
+    }
   }
 
   return (
-    <ShoppingCartContext.Provider value={{ shoppingCart, totalPrice, addProductToCart, handleAddProductToCart, getOrInitializeProductInCart, removeProductFromCartById, reduceProductFromCartById, emptyShoppingCart, clickedIds, handleClickedIds }}>
+    <ShoppingCartContext.Provider value={{
+      shoppingCart,
+      shoppingCartProducts,
+      getUserShoppingCartByUserId,
+      handleAddProductToCart,
+      addProductToCart,
+      handleProductQuantity,
+      removeProductFromCartByProductId,
+      emptyShoppingCart
+    }}
+    >
       {children}
     </ShoppingCartContext.Provider>
   )

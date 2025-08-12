@@ -1,12 +1,19 @@
 import { useState } from 'react'
 import { USERS_URL } from '../constants/constants'
+import { getUserAccessTokenFromLocalStorage } from '../utils/getUserAccessTokenFromLocalStorage'
 
 export function AddUserModal ({ newUser, handleNewInputChange, handleAddUser }) {
   const [errors, setErrors] = useState({})
   const [userAdded, setUserAdded] = useState(false)
+  const tokenFromLocalStorage = getUserAccessTokenFromLocalStorage()
 
   const isUserNameTaken = async () => {
-    const response = await fetch(USERS_URL)
+    const response = await fetch(USERS_URL, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${tokenFromLocalStorage}`
+      }
+    })
     const data = await response.json()
     const exists = data.some(user => user.userName === newUser.userName)
     return exists

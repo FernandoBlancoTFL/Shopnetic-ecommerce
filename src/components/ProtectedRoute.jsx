@@ -1,14 +1,20 @@
 import { Navigate, useLocation } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
-import { ShoppingCartContext } from '../context/ShoppingCartContext'
-import { useContext } from 'react'
+import { OrderContext } from '../context/OrderContext'
+import { useContext, useEffect, useState } from 'react'
 
 export function ProtectedRoute ({ children }) {
   const { user, loading } = useContext(AuthContext)
-  const { shoppingCart } = useContext(ShoppingCartContext)
+  const { order, loadingOrder, getUserOrders } = useContext(OrderContext)
+  const [redirect, setRedirect] = useState(false)
   const location = useLocation()
 
-  if (loading) {
+  useEffect(() => {
+    const timer = setTimeout(() => setRedirect(true), 4000)
+    return () => clearTimeout(timer)
+  }, [])
+
+  if (loading || loadingOrder) {
     return null
   }
 
@@ -20,10 +26,9 @@ export function ProtectedRoute ({ children }) {
     return <Navigate to='/' />
   }
 
-  if (location.pathname === '/checkout' && shoppingCart.length === 0) {
+  if (location.pathname === '/checkout' && (!order.items || order.items.length === 0)) {
     return <Navigate to='/' />
   }
 
   return children
 }
-

@@ -22,10 +22,10 @@ export function EditUserModal ({ selectedUser, handleInputChange, onSave }) {
     } else if (selectedUser.firstName.length > 25) {
       newErrors.firstName = 'El nombre no puede tener más de 25 caracteres'
     }
-    if (!selectedUser.lastname.trim()) {
-      newErrors.lastname = 'El apellido es obligatorio'
-    } else if (selectedUser.lastname.length > 25) {
-      newErrors.lastname = 'El apellido no puede tener más de 25 caracteres'
+    if (!selectedUser.lastName.trim()) {
+      newErrors.lastName = 'El apellido es obligatorio'
+    } else if (selectedUser.lastName.length > 25) {
+      newErrors.lastName = 'El apellido no puede tener más de 25 caracteres'
     }
     if (!selectedUser.password.trim()) newErrors.password = 'La contraseña es obligatoria'
 
@@ -69,8 +69,8 @@ export function EditUserModal ({ selectedUser, handleInputChange, onSave }) {
                 </div>
                 <div className='col-md-6'>
                   <label className='form-label'>Apellido</label>
-                  <input type='text' className={`form-control ${errors.lastname ? 'is-invalid' : ''}`} name='lastname' value={selectedUser.lastname} onChange={handleInputChange} />
-                  {errors.lastname && <div className='invalid-feedback'>{errors.lastname}</div>}
+                  <input type='text' className={`form-control ${errors.lastName ? 'is-invalid' : ''}`} name='lastName' value={selectedUser.lastName} onChange={handleInputChange} />
+                  {errors.lastName && <div className='invalid-feedback'>{errors.lastName}</div>}
                 </div>
                 <div className='col-md-12'>
                   <label className='form-label'>Contraseña</label>

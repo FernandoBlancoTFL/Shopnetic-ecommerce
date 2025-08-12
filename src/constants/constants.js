@@ -1,20 +1,16 @@
 export const PRODUCTS_URL = 'http://localhost:5281/api/products'
 
-export const ADMIN_USER = {
-  firstName: 'Admin',
-  password: '1234',
-  userName: 'admin',
-  image: 'https://i.pravatar.cc/300?img=12',
-  token: 'eyJhbGciOiJIUzI1NiIsInR5',
-  lastname: 'User',
-  description: 'Encargado de la gestión y supervisión de todo el sistema. Fanático de la eficiencia, el código limpio y el mate.',
-  country: 'Argentina',
-  accountCreationDate: '2024-10-16T01:08:20.312Z',
-  email: 'admin@mail.com',
-  id: '101'
-}
+export const AUTH_URL = 'http://localhost:5281/api/auth'
 
-export const USERS_URL = 'https://684f5092f0c9c9848d2aaa70.mockapi.io/users'
+export const USER_SHOPPING_CART_URL = 'http://localhost:5281/api/carts'
+
+export const SHOPPING_CART_URL = 'http://localhost:5281/api/cartItems'
+
+export const ORDER_ITEM_URL = 'http://localhost:5281/api/orderItems'
+
+export const ORDER_URL = 'http://localhost:5281/api/orders'
+
+export const USERS_URL = 'http://localhost:5281/api/users'
 
 export const CATEGORIES = [
   { label: 'Fragancias', value: 'fragrances' },

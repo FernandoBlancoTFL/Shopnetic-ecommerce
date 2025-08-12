@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef, useContext } from 'react'
 import { Container, Row, Col, Form, Button, Spinner } from 'react-bootstrap'
-import { ShoppingCartContext } from '../context/ShoppingCartContext'
 import { AuthContext } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { generateInvoicePdf } from '../utils/generateInvoicePdf'
+import { OrderContext } from '../context/OrderContext'
 
 export const validateForm = (form) => {
   if (form.checkValidity()) {
@@ -154,6 +154,8 @@ function AddressForm ({ userInfo, setShowComponent, setUserInfo }) {
 
 function ShippingMethod ({ userInfo, setUserInfo, setShowComponent, setShippingPrice, shippingPrice }) {
   const [selected, setSelected] = useState(userInfo?.shippingMethod || 'Standard')
+  const { order, modifyOrder } = useContext(OrderContext)
+  const [shipmentPrice, setShipmentPrice] = useState(0)
   const formRef = useRef(null)
 
   const handleSubmit = (e) => {
@@ -166,6 +168,7 @@ function ShippingMethod ({ userInfo, setUserInfo, setShowComponent, setShippingP
         shippingMethod: selected,
         shippingPrice
       }))
+      modifyOrder(order.id, shipmentPrice, null)
       setShowComponent(3)
     }
   }
@@ -174,12 +177,15 @@ function ShippingMethod ({ userInfo, setUserInfo, setShowComponent, setShippingP
     switch (selected) {
       case 'Standard':
         setShippingPrice(0)
+        setShipmentPrice(0)
         break
       case 'Premium':
         setShippingPrice(10.00)
+        setShipmentPrice(10.00)
         break
       case 'Express':
         setShippingPrice(15.00)
+        setShipmentPrice(15.00)
         break
     }
   }, [selected, setShippingPrice])
@@ -393,34 +399,13 @@ function PaymentForm ({ userInfo, setShowComponent, setUserInfo }) {
 }
 
 function ReviewAndOrder ({ userInfo, setShowComponent }) {
-  const { shoppingCart, emptyShoppingCart } = useContext(ShoppingCartContext)
+  const { order, modifyOrder } = useContext(OrderContext)
   const { user } = useContext(AuthContext)
   const navigate = useNavigate()
-  const userToken = user.token
-
-  const handleSubmit2 = () => {
-    if (shoppingCart.length < 1) {
-      Swal.fire({
-        title: 'Lo sentimos, ocurrió un error...',
-        text: 'El carrito de compras está vacío!',
-        icon: 'error'
-      }).then(() => {
-        navigate('/')
-      })
-    } else {
-      Swal.fire({
-        title: 'Compra finalizada!',
-        text: 'Te enviaremos por mail los detalles de la compra',
-        icon: 'success'
-      }).then(() => {
-        emptyShoppingCart()
-        navigate('/')
-      })
-    }
-  }
+  const userToken = 'AODFH2546468AFA'
 
   const handleSubmit = () => {
-    if (shoppingCart.length < 1) {
+    if ((order.items).length < 1) {
       Swal.fire({
         title: 'Lo sentimos, ocurrió un error...',
         text: 'El carrito de compras está vacío!',
@@ -429,11 +414,13 @@ function ReviewAndOrder ({ userInfo, setShowComponent }) {
         navigate('/')
       })
     } else {
-      const subtotal = shoppingCart.reduce((acc, p) => acc + p.price * p.quantity, 0)
-      const shipping = userInfo.shippingPrice || 0
-      const tax = 25.35
-      const total = subtotal + shipping + tax
+      const subtotal = order.subtotal
+      const shipping = (order.shipmentPrice).toFixed(2)
+      const tax = (order.tax).toFixed(2)
+      const total = order.total
       let downloadBilling = false
+
+      modifyOrder(order.id, order.shipmentPrice, 'completed')
 
       Swal.fire({
         title: 'Compra finalizada!',
@@ -453,8 +440,7 @@ function ReviewAndOrder ({ userInfo, setShowComponent }) {
           if (result.isConfirmed) {
             downloadBilling = true
           }
-          generateInvoicePdf(shoppingCart, userInfo, userToken, subtotal, shipping, tax, total, downloadBilling)
-          emptyShoppingCart()
+          generateInvoicePdf(order.items, userInfo, userToken, subtotal, shipping, tax, total, downloadBilling)
           navigate('/')
         })
       })

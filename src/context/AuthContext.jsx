@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from 'react'
-import { ADMIN_USER, USERS_URL } from '../constants/constants'
+import { AUTH_URL } from '../constants/constants'
 
 export const AuthContext = createContext()
 
@@ -8,36 +8,45 @@ export function AuthProvider ({ children }) {
   const [loading, setLoading] = useState(true)
 
   const getUserByToken = async (tokenFromLocalStorage) => {
-    const response = await fetch(USERS_URL)
-    const data = await response.json()
-    const userData = data.find(user => user.token === tokenFromLocalStorage)
-    return userData
+    const response = await fetch(`${AUTH_URL}/me`, {
+      headers: {
+        Authorization: `Bearer ${tokenFromLocalStorage}`
+      }
+    })
+    if (!response.ok) {
+      const errorMessage = await response.text()
+      throw new Error(errorMessage)
+    }
+    const user = await response.json()
+    return user
   }
 
   useEffect(() => {
     const loadUser = async () => {
-      const tokenFromLocalStorage = window.localStorage.getItem('authToken')
+      const tokenFromLocalStorage = window.localStorage.getItem('accessToken')
 
-      if (tokenFromLocalStorage === ADMIN_USER.token) {
-        setUser(ADMIN_USER)
-      } else if (tokenFromLocalStorage) {
-        const userFromApi = await getUserByToken(tokenFromLocalStorage)
-        setUser(userFromApi)
+      if (tokenFromLocalStorage == null) {
+        setLoading(false)
+        return
       }
 
+      const userFromApi = await getUserByToken(tokenFromLocalStorage)
+      setUser(userFromApi)
       setLoading(false)
     }
 
     loadUser()
   }, [])
 
-  const login = (user) => {
-    window.localStorage.setItem('authToken', user.token)
-    setUser(user)
+  const login = (userResponse) => {
+    window.localStorage.setItem('accessToken', userResponse.accessToken)
+    window.localStorage.setItem('refreshToken', userResponse.refreshToken)
+    setUser(userResponse.user)
   }
 
   const logout = () => {
-    window.localStorage.removeItem('authToken')
+    window.localStorage.removeItem('accessToken')
+    window.localStorage.removeItem('refreshToken')
     setUser(null)
   }
 

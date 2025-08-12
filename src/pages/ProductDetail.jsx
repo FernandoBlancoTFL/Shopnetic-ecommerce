@@ -4,7 +4,7 @@ import { StarRating } from '../components/StarRating'
 import { UserReview } from '../components/UserReview'
 import { CategoryCarousel } from '../components/CategoryCarousel'
 import { ShoppingCart } from '../components/ShoppingCart'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useNavigate } from 'react-router-dom'
 import { useContext, useEffect, useState } from 'react'
 import { Spinner, Row, Col, Container, Card } from 'react-bootstrap'
 import { ShoppingCartContext } from '../context/ShoppingCartContext'
@@ -12,16 +12,21 @@ import { CustomBreadcrumb } from '../components/CustomBreadcrumb'
 import { PRODUCTS_URL } from '../constants/constants'
 import { Box } from 'react-bootstrap-icons'
 import { Seo } from '../components/Seo'
+import { OrderContext } from '../context/OrderContext'
+import { AuthContext } from '../context/AuthContext'
 
 export function ProductDetail () {
   const { id } = useParams()
-  const { addProductToCart, getOrInitializeProductInCart, handleAddProductToCart, removeProductFromCartById, reduceProductFromCartById, clickedIds } = useContext(ShoppingCartContext)
+  const { user } = useContext(AuthContext)
+  const { shoppingCartProducts, addProductToCart, handleAddProductToCart, handleProductQuantity, removeProductFromCartByProductId } = useContext(ShoppingCartContext)
+  const { order, createUserOrderByUserId } = useContext(OrderContext)
   const [product, setProduct] = useState(null)
   const [productQuantity, setProductQuantity] = useState(1)
   const [loading, setLoading] = useState(true)
   const [mainImage, setMainImage] = useState('')
   const [relatedProducts, setRelatedProducts] = useState([])
   const [showScrollButton, setShowScrollButton] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     fetch(`${PRODUCTS_URL}/${id}`)
@@ -68,15 +73,27 @@ export function ProductDetail () {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  const insertProductQuantity = (quantity) => {
-    setProductQuantity(quantity)
+  const createOrderByProductId = async (productId, productQuantity) => {
+    if (!user) return
+
+    if (!shoppingCartProducts.find(p => p.productId === productId)) {
+      await addProductToCart(productId, productQuantity)
+    }
+    if (user) {
+      await createUserOrderByUserId()
+    }
   }
 
-  const handleAddProductToCartWithquantity = (product, shouldShowAlert) => {
-    const newProductQuantity = productQuantity
-    const productWithQuantity = getOrInitializeProductInCart(product)
-    productWithQuantity.quantity = newProductQuantity
-    handleAddProductToCart(productWithQuantity, shouldShowAlert)
+  const getProductQuantityFromShoppingCart = (productId) => {
+    return (shoppingCartProducts.find(p => p.productId === productId)?.quantity || productQuantity)
+  }
+
+  const getProductFromShoppingCart = (productId) => {
+    return (shoppingCartProducts.find(p => p.productId === productId) || productQuantity)
+  }
+
+  const insertProductQuantity = (quantity) => {
+    setProductQuantity(quantity)
   }
 
   useEffect(() => {
@@ -92,7 +109,7 @@ export function ProductDetail () {
   }
 
   if (!product) return <h3>No se encontró el producto</h3>
-  const priceWithoutDiscount = (product.price / (1 - (product.discountPercentage / 100))).toFixed(2)
+  const productPrice = (product.price - product.price * (product.discountPercentage / 100)).toFixed(2)
 
   return (
     <>
@@ -141,30 +158,33 @@ export function ProductDetail () {
                   <p style={{ fontSize: '14px', marginBottom: '5px', color: '#ff8f00' }}>{product.rating}</p>
                   <h3><StarRating rating={product.rating} size={14} /></h3>
                 </div>
-                <h6 className='mb-0'><s>$ {priceWithoutDiscount}</s></h6>
+                <h6 className='mb-0'><s>$ {product.price}</s></h6>
                 <div className='d-flex align-items-center gap-2 mb-3'>
-                  <h4 className='mb-0'>$ {product.price}</h4>
+                  <h4 className='mb-0'>$ {productPrice}</h4>
                   <h6 className='mb-0 text-success'>{product.discountPercentage}% OFF</h6>
                 </div>
                 <p className='text-muted'>{product.description}</p>
                 <p className='mb-1'>{product.availabilityStatus}</p>
                 <div className='d-flex align-items-center gap-2 mb-2'>
-                  <p className='mb-0'>Cantidad: {clickedIds.includes(product.id)
-                    ? (getOrInitializeProductInCart(product).quantity > 1 ? <strong>{getOrInitializeProductInCart(product).quantity} unidades</strong> : <strong>{getOrInitializeProductInCart(product).quantity} unidad</strong>)
-                    : (productQuantity > 1 ? <strong>{productQuantity} unidades</strong> : <strong>{productQuantity} unidad</strong>)}
-                  </p>
+                  <p className='mb-0'>Cantidad: {getProductQuantityFromShoppingCart(product.id) > 1 ? `${getProductQuantityFromShoppingCart(product.id)} unidades` : '1 unidad'}</p>
                   <p className='text-muted mb-0'>({product.stock > 50 ? '+50 disponibles' : `${product.stock} disponibles`})</p>
                 </div>
-                <QuantitySelector item={getOrInitializeProductInCart(product)} handleAddProductToCart={addProductToCart} reduceProductFromCartById={reduceProductFromCartById} insertProductQuantity={quantity => insertProductQuantity(quantity)} shouldDecreaseToZero={false} isProductInCart={clickedIds.includes(product.id)} />
+                <QuantitySelector
+                  item={getProductFromShoppingCart(product.id)}
+                  handleAddProductToCart={addProductToCart}
+                  insertProductQuantity={quantity => insertProductQuantity(quantity)}
+                  shouldDecreaseToZero={false}
+                  isProductInCart={shoppingCartProducts.some(p => p.productId === product.id)}
+                />
                 <BuyingButtons
-                  firstButtonText={clickedIds.includes(product.id) ? 'Eliminar del carrito 🗑️' : 'Agregar al carrito 🛒'}
+                  firstButtonText={shoppingCartProducts.some(p => p.productId === product.id) ? 'Eliminar del carrito 🗑️' : 'Agregar al carrito 🛒'}
                   secondButtonText='Comprar 🛍'
-                  firstButtonVariant={clickedIds.includes(product.id) ? 'danger' : 'success'}
+                  firstButtonVariant={shoppingCartProducts.some(p => p.productId === product.id) ? 'danger' : 'success'}
                   secondButtonVariant='primary'
-                  firstButtonEvent={clickedIds.includes(product.id) ? () => removeProductFromCartById(product.id) : () => handleAddProductToCartWithquantity(product)}
+                  firstButtonEvent={shoppingCartProducts.some(p => p.productId === product.id) ? () => removeProductFromCartByProductId(product.id) : () => addProductToCart(product.id, productQuantity)}
                   secondButtonAs={Link}
                   secondButtonTo='/checkout'
-                  secondButtonEvent={clickedIds.includes(product.id) ? null : () => handleAddProductToCartWithquantity(product, false)}
+                  secondButtonEvent={() => createOrderByProductId(product.id, getProductQuantityFromShoppingCart(product.id))}
                   buttonSize='lg'
                 />
                 <div className='d-flex flex-wrap my-3 flex-md-nowrap gap-1 gap-md-5 justify-content-center justify-content-md-start '>

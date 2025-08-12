@@ -2,6 +2,8 @@ import { useContext } from 'react'
 import { Button, Dropdown } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
+import { USERS_URL } from '../constants/constants'
+import { getUserAccessTokenFromLocalStorage } from '../utils/getUserAccessTokenFromLocalStorage'
 
 function LoginButtonDisplay ({ user, isMobile }) {
   return (
@@ -50,6 +52,50 @@ function UserDropdownButton ({ user, logout, isMobile = false }) {
     })
   }
 
+  const handleResetDB = async () => {
+    const tokenFromLocalStorage = getUserAccessTokenFromLocalStorage()
+
+    Swal.fire({
+      title: 'Reinicio de Base de datos',
+      text: '¿Quieres reiniciar la base de datos completamente?',
+      icon: 'warning',
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Reiniciar base de datos',
+      customClass: {
+        popup: 'my-swal-popup',
+        backdrop: 'my-swal-backdrop'
+      },
+      willOpen: () => {
+        const swalEl = document.querySelector('.swal2-popup')
+        const backdropEl = document.querySelector('.swal2-backdrop')
+        if (swalEl) swalEl.style.setProperty('z-index', '9999', 'important')
+        if (backdropEl) backdropEl.style.setProperty('z-index', '9998', 'important')
+      }
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const response = await fetch(`${USERS_URL}/reset-db`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${tokenFromLocalStorage}`
+          }
+        })
+        if (!response.ok) {
+          const errorMessage = await response.text()
+          throw new Error(errorMessage)
+        }
+
+        Swal.fire({
+          title: 'Reiniciado!',
+          text: 'La base de datos se ha reiniciado con éxito',
+          icon: 'success'
+        })
+      }
+    })
+  }
+
   return (
     <Dropdown>
       <Dropdown.Toggle
@@ -72,8 +118,12 @@ function UserDropdownButton ({ user, logout, isMobile = false }) {
 
       <Dropdown.Menu className={`${isMobile ? 'dropdown-center' : ''}`}>
         <Dropdown.Item as={Link} to='/userProfile'>Perfil</Dropdown.Item>
+        <Dropdown.Item as={Link} to='/userOrders'>Mis Ordenes</Dropdown.Item>
         {user.userName === 'admin' && (
-          <Dropdown.Item as={Link} to='/userAdmin'>Administrar usuarios</Dropdown.Item>
+          <div>
+            <Dropdown.Item as={Link} to='/userAdmin'>Administrar usuarios</Dropdown.Item>
+            <Dropdown.Item onClick={() => handleResetDB()}>Reiniciar Base de Datos</Dropdown.Item>
+          </div>
         )}
         <Dropdown.Item onClick={handleLogout}>Cerrar sesión</Dropdown.Item>
       </Dropdown.Menu>
@@ -83,11 +133,13 @@ function UserDropdownButton ({ user, logout, isMobile = false }) {
 }
 
 export function LoginButton ({ isMobile = false }) {
-  const { user, logout } = useContext(AuthContext)
+  const { user, logout, loading } = useContext(AuthContext)
 
   return (
-    user
-      ? <UserDropdownButton user={user} logout={logout} isMobile={isMobile} />
-      : <LoginButtonDisplay user={user} isMobile={isMobile} />
+    loading
+      ? <LoginButtonDisplay user={user} isMobile={isMobile} />
+      : user
+        ? <UserDropdownButton user={user} logout={logout} isMobile={isMobile} />
+        : <LoginButtonDisplay user={user} isMobile={isMobile} />
   )
 }
