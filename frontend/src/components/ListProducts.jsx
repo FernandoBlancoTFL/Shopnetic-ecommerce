@@ -1,0 +1,145 @@
+import { Row, Col, Card, Button, Carousel } from 'react-bootstrap'
+import { useContext, useEffect, useState } from 'react'
+import { ShoppingCartContext } from '../context/ShoppingCartContext'
+import { Link } from 'react-router-dom'
+import { StarRating } from './StarRating'
+import { CustomPagination } from './CustomPagination'
+
+export function ListOfProducts ({ products, currentPage, setCurrentPage, scrollToProducts }) {
+  const { shoppingCartProducts, getUserShoppingCartByUserId, handleAddProductToCart } = useContext(ShoppingCartContext)
+  const productsPerPage = 9
+  const indexOfLastProduct = currentPage * productsPerPage
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage
+  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct)
+  const totalPages = Math.ceil(products.length / productsPerPage)
+
+  const getPriceWithDiscount = (product) => {
+    return (product.price - product.price * (product.discountPercentage / 100)).toFixed(2)
+  }
+
+  const handlePageChange = (number) => {
+    setCurrentPage(number)
+    if (scrollToProducts) scrollToProducts()
+  }
+
+  useEffect(() => {
+    const updateShoppingCart = async () => await getUserShoppingCartByUserId()
+    updateShoppingCart()
+  }, [])
+
+  return (
+    <>
+      <Row xs={1} sm={1} md={2} lg={3} xl={3} className='g-4'>
+        {currentProducts.map(product => (
+          <Col key={product.id}>
+            <Link to={`/product/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+              <Card className='overflow-hidden border-0 shadow-sm bg-white rounded' style={{ height: '430px' }}>
+                {product.images.length > 1
+                  ? (
+                    <Carousel interval={null} indicators={false} className='p-2'>
+                      {product.images.slice(0, 3).map((img, index) => (
+                        <Carousel.Item key={index}>
+                          <img
+                            className='d-block w-100 zoom-img'
+                            src={img}
+                            alt={`Imagen ${index + 1}`}
+                            style={{ height: '185px', objectFit: 'contain', transition: 'transform 0.3s ease-in-out' }}
+                          />
+                        </Carousel.Item>
+                      ))}
+                    </Carousel>
+                    )
+                  : (
+                    <Card.Img
+                      className='p-2 zoom-img'
+                      variant='top'
+                      src={product.thumbnail}
+                      style={{ height: '200px', objectFit: 'contain', transition: 'transform 0.3s ease-in-out' }}
+                    />
+                    )}
+
+                <Card.Body className='d-flex flex-column bg-dark text-white rounded-bottom'>
+                  <Card.Title className='text-truncate mb-0 text-white'>{product.title}</Card.Title>
+                  <div className='d-flex flex-wrap justify-content-between align-items-center m-1' onClick={(e) => { e.stopPropagation(); e.preventDefault() }}>
+                    <div className='d-flex gap-2 align-items-center'>
+                      <Card.Text className='text-success fw-bold mb-0' style={{ fontSize: '18px' }}>$ {getPriceWithDiscount(product)}</Card.Text>
+                      <Card.Text style={{ fontSize: '14px' }}><s>$ {product.price}</s></Card.Text>
+                    </div>
+                    <StarRating rating={product.rating} size='12px' />
+                  </div>
+                  <Card.Text className='truncate-description mb-0'>{product.description}</Card.Text>
+                  <div className='d-flex flex-wrap justify-content-between align-items-center m-1' onClick={(e) => { e.stopPropagation(); e.preventDefault() }}>
+                    <Button
+                      style={{ marginTop: '10px', minWidth: '80px', width: '100%', padding: '3px 5px' }}
+                      variant={shoppingCartProducts.some(p => p.productId === product.id) ? 'success' : 'primary'}
+                      disabled={shoppingCartProducts.some(p => p.productId === product.id)}
+                      onClick={() => handleAddProductToCart(product.id)}
+                    >
+                      {shoppingCartProducts.some(p => p.productId === product.id) ? 'Agregado' : 'Agregar al carrito'}
+                    </Button>
+                  </div>
+                </Card.Body>
+              </Card>
+            </Link>
+          </Col>
+        ))}
+      </Row>
+
+      <div className='d-flex justify-content-center mt-4'>
+        <CustomPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      </div>
+    </>
+  )
+}
+
+function NoProductsResult () {
+  const [message, setMessage] = useState('Cargando productos...')
+
+  return <h3>{message}</h3>
+}
+
+export function Products ({ filterURL, scrollToProducts }) {
+  const [products, setProducts] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [hasError, setHasError] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+
+  useEffect(() => {
+    setCurrentPage(1)
+
+    setLoading(true)
+    fetch(filterURL)
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`)
+        }
+        return res.json()
+      })
+      .then(async response => {
+        setProducts(response.products)
+        setLoading(false)
+      })
+      .catch(error => {
+        console.error('Error al obtener los productos:', error)
+        setLoading(true)
+        setHasError(true)
+      })
+  }, [filterURL])
+
+  if (hasError) return <h3>Error al cargar los productos. Inténtalo más tarde.</h3>
+
+  return (
+    loading
+      ? <NoProductsResult />
+      : <ListOfProducts
+          products={products}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          scrollToProducts={scrollToProducts}
+        />
+  )
+}
