@@ -16,7 +16,7 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(
             "http://localhost:5173",
-            "https://shopneticfb.netlify.app/"
+            "https://shopneticfb.netlify.app"
         )
               .AllowAnyHeader()
               .AllowAnyMethod();
