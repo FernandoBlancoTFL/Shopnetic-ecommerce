@@ -6,6 +6,11 @@ Este proyecto es un ecommerce desarrollado con el framework **React**, como trab
 Además, este proyecto cuenta con un backend diseñado y desarrollado por mí para cubrir las necesidades de la aplicación.
 El repositorio está organizado en dos carpetas principales: frontend y backend, correspondientes a cada parte del sistema.
 
+## 🚀 Deploy del sitio web
+
+Puedes ver el proyecto en funcionamiento en este enlace:  
+[🔗 Watch Demo](https://shopneticfb.netlify.app/)
+
 #### 🧩 Backend
 
 ---
