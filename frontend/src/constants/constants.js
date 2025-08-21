@@ -1,16 +1,16 @@
-export const PRODUCTS_URL = 'http://localhost:5281/api/products'
+export const PRODUCTS_URL = 'http://shopnetic.somee.com/api/products'
 
-export const AUTH_URL = 'http://localhost:5281/api/auth'
+export const AUTH_URL = 'http://shopnetic.somee.com/api/auth'
 
-export const USER_SHOPPING_CART_URL = 'http://localhost:5281/api/carts'
+export const USER_SHOPPING_CART_URL = 'http://shopnetic.somee.com/api/carts'
 
-export const SHOPPING_CART_URL = 'http://localhost:5281/api/cartItems'
+export const SHOPPING_CART_URL = 'http://shopnetic.somee.com/api/cartItems'
 
-export const ORDER_ITEM_URL = 'http://localhost:5281/api/orderItems'
+export const ORDER_ITEM_URL = 'http://shopnetic.somee.com/api/orderItems'
 
-export const ORDER_URL = 'http://localhost:5281/api/orders'
+export const ORDER_URL = 'http://shopnetic.somee.com/api/orders'
 
-export const USERS_URL = 'http://localhost:5281/api/users'
+export const USERS_URL = 'http://shopnetic.somee.com/api/users'
 
 export const CATEGORIES = [
   { label: 'Fragancias', value: 'fragrances' },

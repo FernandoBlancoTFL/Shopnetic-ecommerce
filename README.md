@@ -1,6 +1,6 @@
 ## Shopnetic Ecommerce
 
-![Vista principal](frontend/docs/img/Portada.png)
+![Vista principal](frontend/docs/img/Frontpage.png)
 
 Este proyecto es un ecommerce desarrollado con el framework **React**, como trabajo final del curso de React de **Talento Tech**. El objetivo es aplicar los conocimientos aprendidos y sumar nuevas prácticas profesionales en el desarrollo frontend. 
 Además, este proyecto cuenta con un backend diseñado y desarrollado por mí para cubrir las necesidades de la aplicación.
@@ -111,6 +111,12 @@ npm run dev
 ❗ Importante
 Este repositorio contiene tanto el backend como el frontend del proyecto.
 Para su correcto funcionamiento, asegurate de configurar ambos entornos de forma independiente y seguir las instrucciones respectivas.
+
+### Configuración de URLs
+El frontend utiliza un archivo `src/constants/constants.js` donde están definidas las URLs del backend.
+
+- Para ejecutar en local: cambiar la URL a `http://localhost:5281`.
+- Para producción (deploy en Netlify): dejar la URL de producción `http://shopnetic.somee.com`.
 
 ---
 
