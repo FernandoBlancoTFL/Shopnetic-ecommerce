@@ -9,7 +9,7 @@ El repositorio está organizado en dos carpetas principales: frontend y backend,
 ## 🚀 Deploy del sitio web
 
 Puedes ver el proyecto en funcionamiento en este enlace:  
-[🔗 Watch Demo](https://shopneticfb.netlify.app/)
+[🔗 Ver Demo](https://shopneticfb.netlify.app/)
 
 #### 🧩 Backend
 
