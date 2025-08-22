@@ -82,8 +82,6 @@ export function ShoppingCart ({ isPositionFixed = false }) {
     }
     if (!user) {
       getUserShoppingCartByUserId()
-      setUserCartToLocalStorage([])
-      setUserCartProductsToLocalStorage([])
     }
   }, [user])
 

@@ -74,7 +74,9 @@ export function ProductDetail () {
   }
 
   const createOrderByProductId = async (productId, productQuantity) => {
-    if (!user) return
+    if (!user) {
+      addProductToCart(productId, productQuantity)
+    }
 
     if (!shoppingCartProducts.find(p => p.productId === productId)) {
       await addProductToCart(productId, productQuantity)
@@ -181,7 +183,7 @@ export function ProductDetail () {
                   secondButtonText='Comprar 🛍'
                   firstButtonVariant={shoppingCartProducts.some(p => p.productId === product.id) ? 'danger' : 'success'}
                   secondButtonVariant='primary'
-                  firstButtonEvent={shoppingCartProducts.some(p => p.productId === product.id) ? () => removeProductFromCartByProductId(product.id) : () => addProductToCart(product.id, productQuantity)}
+                  firstButtonEvent={shoppingCartProducts.some(p => p.productId === product.id) ? () => removeProductFromCartByProductId(product.id) : () => handleAddProductToCart(product.id, productQuantity)}
                   secondButtonAs={Link}
                   secondButtonTo='/checkout'
                   secondButtonEvent={() => createOrderByProductId(product.id, getProductQuantityFromShoppingCart(product.id))}

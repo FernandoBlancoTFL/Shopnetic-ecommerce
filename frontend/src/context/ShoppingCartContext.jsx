@@ -211,6 +211,7 @@ export function ShoppingCartProvider ({ children }) {
   const removeProductFromCartByProductId = async (productId) => {
     if (!user) {
       setShoppingCartProducts(prevProducts => {
+        console.log(prevProducts)
         const updatedProducts = prevProducts.filter(product => product.productId !== productId)
         setUserCartProductsToLocalStorage(updatedProducts)
         const newShoppingCart = calculateCart(updatedProducts)

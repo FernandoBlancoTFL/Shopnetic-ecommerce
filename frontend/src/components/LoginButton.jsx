@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
 import { USERS_URL } from '../constants/constants'
 import { getUserAccessTokenFromLocalStorage } from '../utils/getUserAccessTokenFromLocalStorage'
+import { setUserCartToLocalStorage, setUserCartProductsToLocalStorage } from '../utils/userCartFromLocalStorage'
 
 function LoginButtonDisplay ({ user, isMobile }) {
   return (
@@ -48,6 +49,8 @@ function UserDropdownButton ({ user, logout, isMobile = false }) {
     }).then((result) => {
       if (result.isConfirmed) {
         logout()
+        setUserCartToLocalStorage([])
+        setUserCartProductsToLocalStorage([])
       }
     })
   }

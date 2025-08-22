@@ -24,6 +24,11 @@ export function Login () {
     window.scrollTo(0, 0)
   }, [])
 
+  const fillAdminCredentials = () => {
+    setEmail('admin@example.com')
+    setPassword('1234')
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)
@@ -124,6 +129,15 @@ export function Login () {
                       : 'Ingresar'}
                   </Button>
 
+                  <Button
+                    variant='secondary'
+                    type='button'
+                    onClick={fillAdminCredentials}
+                    className='w-100 rounded-pill mt-2'
+                  >
+                    Autocompletar Admin
+                  </Button>
+
                   <div className='mt-3 text-center'>
                     <Link to='/register' className='login-link'>
                       ¿Todavía no estás registrado? Registrate aqui
@@ -133,12 +147,6 @@ export function Login () {
                     <Link onClick={() => alert('Funcionalidad en desarrollo')} className='login-link'>
                       ¿Olvidaste la contraseña?
                     </Link>
-                  </div>
-
-                  <div className='d-flex flex-column mt-3'>
-                    <p className='m-0 fw-semibold text-white'>Cuenta administrador:</p>
-                    <p className='m-0 text-white'>Email: admin@example.com</p>
-                    <p className='m-0 text-white'>Contraseña: 1234</p>
                   </div>
                 </Form>
               </Card.Body>

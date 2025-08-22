@@ -7,6 +7,8 @@ export function QuantitySelector ({ item, handleAddProductToCart, handleProductQ
   const { shoppingCartProducts } = useContext(ShoppingCartContext)
   const [productQuantity, setProductQuantity] = useState(item)
 
+  //console.log(item)
+
   useEffect(() => {
     if (!shoppingCartProducts.some(p => p.productId === item.id)) {
       setProductQuantity(1)

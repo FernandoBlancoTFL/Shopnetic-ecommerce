@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { QuantitySelector } from './QuantitySelector'
-import { Container } from 'react-bootstrap'
+import { Container, Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 
 export function CartItem ({ item, addProductToCart, handleProductQuantity, setShow }) {
@@ -29,13 +29,21 @@ export function CartItem ({ item, addProductToCart, handleProductQuantity, setSh
   return (
     <div className='position-relative'>
       <Link
-        to={`/product/${item.id}`}
+        to={`/product/${item.productId}`}
         className='position-absolute top-0 end-0 m-0 text-primary'
         style={{ zIndex: 10 }}
         onClick={() => setShow(false)}
       >
         <i className='bi bi-info-circle-fill fs-3' style={{ cursor: 'pointer' }} />
       </Link>
+
+      <Button
+        className='position-absolute end-0 mt-5 text-primary bg-transparent p-0 border-0'
+        style={{ top: '5px', zIndex: 10 }}
+        onClick={() => handleProductQuantity(item.productId, 0)}
+      >
+        <i className='bi bi-trash fs-3 text-danger' style={{ cursor: 'pointer' }} />
+      </Button>
 
       <Container className='d-flex justify-content-center gap-2 pe-5'>
         <div className='d-flex flex-column justify-content-between align-items-center py-2'>

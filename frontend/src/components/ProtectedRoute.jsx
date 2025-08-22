@@ -5,18 +5,20 @@ import { useContext, useEffect, useState } from 'react'
 
 export function ProtectedRoute ({ children }) {
   const { user, loading } = useContext(AuthContext)
-  const { order, loadingOrder, getUserOrders } = useContext(OrderContext)
+  const { order, loadingOrder } = useContext(OrderContext)
   const [redirect, setRedirect] = useState(false)
   const location = useLocation()
 
   useEffect(() => {
-    const timer = setTimeout(() => setRedirect(true), 4000)
-    return () => clearTimeout(timer)
-  }, [])
+    let timer
+    if (location.pathname === '/checkout') {
+      timer = setTimeout(() => {
+        setRedirect(true)
+      }, 3000)
+    }
 
-  if (loading || loadingOrder) {
-    return null
-  }
+    return () => clearTimeout(timer)
+  }, [location.pathname, loadingOrder])
 
   if (!user) {
     return <Navigate to='/login' state={{ from: location }} replace />
@@ -26,7 +28,15 @@ export function ProtectedRoute ({ children }) {
     return <Navigate to='/' />
   }
 
-  if (location.pathname === '/checkout' && (!order.items || order.items.length === 0)) {
+  if (loading || (location.pathname === '/checkout' && loadingOrder)) {
+    return null
+  }
+
+  if (
+    location.pathname === '/checkout' &&
+    redirect &&
+    (!order.items || order.items.length === 0)
+  ) {
     return <Navigate to='/' />
   }
 
