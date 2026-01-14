@@ -19,9 +19,9 @@ Puedes ver el proyecto en funcionamiento en este enlace:
 
 1. Cloná el repositorio.
 
-2. Abrí la carpeta backend con Visual Studio y permití que instale automáticamente las dependencias de NuGet.
+2. Abrí la carpeta backend con Visual Studio y permití que instale automáticamente las dependencias de NuGet (también puedes realizarlo con comandos).
 
-3. Configurá el archivo appsettings.Development.json con tu ConnectionString.
+3. Configurá el archivo appsettings.json reemplazandolo con tu ConnectionString de la Base de Datos.
 
 4. Generá la base de datos desde el código (Code First) usando la consola del Administrador de Paquetes NuGet:
 
@@ -33,11 +33,17 @@ Update-Database
 
 Esto cargará automáticamente productos y usuarios en la base de datos.
 
-5. Para ejecutar el programa puedes usar el siguiente comando sobre la carpeta raiz del proyecto (carpeta shopnetic.api):
+5. Para ejecutar el programa localmente puedes usar el siguiente comando sobre la carpeta raiz del proyecto (carpeta shopnetic.api):
 
 ```bash
 dotnet run
 ```
+
+---
+
+### 💡 Consejos
+
+- Los Endpoints de la aplicación pueden ejecutarse directamente desde el VSC. Para eso necesitas la extensión REST Client y una vez instalada dirigirse a la carpeta "backend/shopnetic.api/rest-client" para poder observar los distintos endpoints junto a ejemplos para hacer las peticiones.
 
 ---
 
